@@ -22,7 +22,7 @@ public class TradeHistory {
     private User user;
 
     @Column(name = "market", nullable = false)
-    private Coin coin;
+    private int market;
 
     @Column(nullable = false)
     private float price;
