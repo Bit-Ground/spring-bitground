@@ -3,7 +3,11 @@ package bit.bitgroundspring.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -13,32 +17,39 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // 댓글 ID (자동 증가)
+    private Integer id;
 
+    // ✅ 게시글(Post) 참조 (ManyToOne)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId", nullable = false)
-    private Post post; // 해당 댓글이 속한 게시글 (외래키)
+    @JoinColumn(name = "postId", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_post"))
+    private Post post;
 
+    // ✅ 작성자(User) 참조 (ManyToOne, 삭제 시 SET NULL)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
-    private User user; // 댓글 작성 유저 (외래키)
+    @JoinColumn(name = "userId", foreignKey = @ForeignKey(name = "fk_comment_user"))
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private User user;
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
-    private String content; // 댓글 내용
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String content;
 
-    @Column(name = "createdAt", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt; // 댓글 작성일 (기본값: 현재 시간)
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 
-    @Column(name = "likes", columnDefinition = "INT DEFAULT 0")
-    private int likes; // 댓글 추천수 (기본값: 0)
+    @Column(nullable = false)
+    private Integer likes = 0;
 
-    // 기본 생성자
-    public Comment() {}
+    // ✅ 대댓글 (자기 자신을 참조하는 self-join)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parentId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Comment parent;
 
-    // 생성자 (필요 시 추가)
-    public Comment(Post post, User user, String content) {
-        this.post = post;
-        this.user = user;
-        this.content = content;
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> replies;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = this.createdAt == null ? LocalDateTime.now() : this.createdAt;
     }
 }
