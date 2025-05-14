@@ -2,7 +2,6 @@ package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,17 +12,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "userId")
+    private Integer id;
 
     @Column(nullable = false)
-    private String provider;    // oauth2 제공자 (google, naver, kakao)
+    private String provider;
 
     @Column(nullable = false)
-    private String providerId;  // oauth2 제공자의 subject id
+    private String providerId;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @Column
@@ -49,4 +50,3 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 }
-

@@ -17,7 +17,7 @@ public class Notice {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
-    private User user; // 공지 작성자 (외래키)
+    private User userId; // 공지 작성자 (외래키)
 
     @Column(name = "title", nullable = false, length = 255)
     private String title; // 공지 제목
@@ -32,8 +32,8 @@ public class Notice {
     public Notice() {}
 
     // 생성자 (필요 시 추가)
-    public Notice(User user, String title, String content) {
-        this.user = user;
+    public Notice(User userId, String title, String content) {
+        this.userId = userId;
         this.title = title;
         this.content = content;
     }

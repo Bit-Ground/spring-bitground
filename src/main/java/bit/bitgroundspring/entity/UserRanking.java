@@ -18,14 +18,14 @@ public class UserRanking {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
-    private User user;
+    private User userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seasonId", referencedColumnName = "id", nullable = false)
     private Season season;
 
-    @Column(name = "rank", nullable = false)
-    private Integer rank;
+    @Column(name = "ranks", nullable = false)
+    private Integer ranks;
 
     @Column(name = "totalValue", nullable = false)
     private Float totalValue;
