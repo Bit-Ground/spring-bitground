@@ -5,7 +5,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @Setter
 @Builder
@@ -49,4 +49,5 @@ public class User {
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
 }
