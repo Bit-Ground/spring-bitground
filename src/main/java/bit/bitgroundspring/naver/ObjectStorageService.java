@@ -1,4 +1,4 @@
-package naver.storage;
+package bit.bitgroundspring.naver;
 
 import org.springframework.web.multipart.MultipartFile;
 
