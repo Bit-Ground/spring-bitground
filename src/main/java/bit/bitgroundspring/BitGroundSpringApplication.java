@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
-//@SpringBootApplication
-@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+@SpringBootApplication
+//@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 @EntityScan
 @EnableJpaRepositories
 public class BitGroundSpringApplication {
