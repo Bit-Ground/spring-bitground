@@ -13,5 +13,5 @@ public class NaverConfig {
 	private String accessKey;
 	private String secretKey;
 	private String regionName;
-	private String endPoint;	
+	private String endPoint;
 }
