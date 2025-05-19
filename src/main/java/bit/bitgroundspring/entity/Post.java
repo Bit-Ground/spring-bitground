@@ -17,7 +17,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
-    private User user; // 작성한 유저 (외래키)
+    private User userId; // 작성한 유저 (외래키)
 
     @Column(name = "title", nullable = false, length = 255, columnDefinition = "VARCHAR(255) DEFAULT ''")
     private String title; // 게시글 제목
@@ -53,8 +53,8 @@ public class Post {
     public Post() {}
 
     // 생성자 (필요시 추가)
-    public Post(User user, String title, String content, String filePath, String fileName) {
-        this.user = user;
+    public Post(User userId, String title, String content, String filePath, String fileName) {
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.filePath = filePath;

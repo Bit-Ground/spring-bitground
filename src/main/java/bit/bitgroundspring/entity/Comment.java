@@ -28,7 +28,7 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", foreignKey = @ForeignKey(name = "fk_comment_user"))
     @OnDelete(action = OnDeleteAction.SET_NULL)
-    private User user;
+    private User userId;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
