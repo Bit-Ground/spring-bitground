@@ -17,7 +17,7 @@ public class Inquiry {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
-    private User user; // 문의 작성자 (외래키)
+    private User userId; // 문의 작성자 (외래키)
 
     @Column(name = "title", nullable = false, length = 255)
     private String title; // 문의 제목
@@ -45,8 +45,8 @@ public class Inquiry {
     public Inquiry() {}
 
     // 생성자 (필요 시 추가)
-    public Inquiry(User user, String title, String content, String filePath, String fileName, String extension, OrderStatus status) {
-        this.user = user;
+    public Inquiry(User userId, String title, String content, String filePath, String fileName, String extension, OrderStatus status) {
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.filePath = filePath;

@@ -17,11 +17,11 @@ public class FavoriteCoin {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")  // 복합키의 userId 필드를 사용하여 user 엔티티를 매핑
     @JoinColumn(name = "userId", nullable = false)
-    private User user; // 유저 정보
+    private User userId; // 유저 정보
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "market", referencedColumnName = "market", nullable = false)
-    private Coin coin; // market을 coins 테이블의 market을 참조하도록 설정
+    private Coin market; // market을 coins 테이블의 market을 참조하도록 설정
 
     @Column(name = "createdAt", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt; // 관심 코인 등록 시간
@@ -30,9 +30,9 @@ public class FavoriteCoin {
     public FavoriteCoin() {}
 
     // 생성자
-    public FavoriteCoin(User user, Coin coin) {
-        this.id = new FavoriteCoinId(user.getId(), coin.getMarket());  // market을 사용하여 복합키 설정
-        this.user = user;
-        this.coin = coin;
+    public FavoriteCoin(User userId, Coin coin) {
+        this.id = new FavoriteCoinId(userId.getId(), coin.getMarket());  // market을 사용하여 복합키 설정
+        this.userId = userId;
+        this.market = coin;
     }
 }

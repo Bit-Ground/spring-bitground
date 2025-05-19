@@ -1,17 +1,18 @@
 package bit.bitgroundspring.entity;
 
+import jakarta.persistence.Embeddable;
 import lombok.*;
-
 import java.io.Serializable;
 import java.util.Objects;
 
+@Embeddable
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserAssetId implements Serializable {
     private Integer userId;
-    private Integer market;
+    private String market;
 
     @Override
     public boolean equals(Object o) {
