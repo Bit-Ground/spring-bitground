@@ -19,10 +19,10 @@ public class User {
     private Integer id;
 
     @Column(nullable = false)
-    private String provider;
+    private String provider; // oauth2 제공자 (google, naver, kakao)
 
     @Column(nullable = false)
-    private String providerId;
+    private String providerId; // oauth2 제공자의 subject id
 
     @Column(nullable = false)
     private String name;
