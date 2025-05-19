@@ -2,26 +2,28 @@ package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import bit.bitgroundspring.entity.TradeType;
 
 @Entity
 @Table(name = "trade_history")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TradeHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
-    // ✅ 외래키: users.id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
     private User user;
 
-    @Column(name = "market", nullable = false)
-    private int market;
+    @Column(nullable = false)
+    private String market;
 
     @Column(nullable = false)
     private float price;
@@ -33,11 +35,6 @@ public class TradeHistory {
     @Column(nullable = false)
     private TradeType type;
 
-    @Column(name = "createdAt", nullable = false)
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
+    @Column(nullable = false)
+    private Timestamp createdAt;
 }

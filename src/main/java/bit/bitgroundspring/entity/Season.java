@@ -1,35 +1,37 @@
 package bit.bitgroundspring.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import bit.bitgroundspring.entity.SeasonStatus;
 
 @Entity
 @Table(name = "seasons")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Season {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "startAt")
-    private LocalDateTime startAt = LocalDateTime.now();
+    private LocalDateTime startAt;
 
-    @Column(name = "endAt")
     private LocalDateTime endAt;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
     private SeasonStatus status = SeasonStatus.INPROGRESS;
 
-    @Column(name = "rewardCalculated")
-    private boolean rewardCalculated;
+    private Boolean rewardCalculated;
+
+    @PrePersist
+    public void prePersist() {
+        this.startAt = LocalDateTime.now();
+    }
 }
