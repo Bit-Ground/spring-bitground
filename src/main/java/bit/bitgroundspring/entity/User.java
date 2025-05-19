@@ -4,9 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @Setter
 @Builder
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer userId;
 
     @Column(nullable = false)
     private String provider;    // oauth2 제공자 (google, naver, kakao)
@@ -38,6 +39,33 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    // 외래키 관계 설정 (Cascade 옵션 추가)
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<UserAsset> userAssets;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TradeHistory> tradeHistories;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PendingOrder> pendingOrders;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRanking> userRankings;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Inquiry> inquiries;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notice> notices;
+
+
+    // 생성일과 수정일 자동 설정
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -49,4 +77,3 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 }
-

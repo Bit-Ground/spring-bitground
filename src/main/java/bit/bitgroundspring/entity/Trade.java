@@ -20,7 +20,7 @@ public class Trade {
 
     // User와 다대일 관계 (N:1)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "userId", nullable = false)
     private User user;
 
     // Coin과 다대일 관계 (N:1)

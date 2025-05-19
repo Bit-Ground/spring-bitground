@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class TradeHistory {
 
     @Id
@@ -35,9 +34,8 @@ public class TradeHistory {
     private TradeType type;
 
     @Column(name = "createdAt", nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();  // 기본값
+    private LocalDateTime createdAt;
 
-    // 생성자나 @PrePersist 사용 가능
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
