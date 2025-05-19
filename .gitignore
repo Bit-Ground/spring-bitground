@@ -37,6 +37,5 @@ out/
 .vscode/
 
 ### naver ###
-*.properties
 *.yml
 *.yaml
