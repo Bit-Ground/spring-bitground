@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,9 @@ import java.io.IOException;
 @Component
 public class OidcAuthenticationFailureHandler implements AuthenticationFailureHandler {
     
+    @Value("${react.host}")
+    private String reactHost;
+    
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
@@ -24,7 +28,7 @@ public class OidcAuthenticationFailureHandler implements AuthenticationFailureHa
         log.error("Authentication failed: {}", errorMessage);
         
         // 클라이언트로 리다이렉트 (오류 정보 포함)
-        String targetUrl = UriComponentsBuilder.fromUriString("/")
+        String targetUrl = UriComponentsBuilder.fromUriString(reactHost + "/login")
                 .queryParam("error", errorMessage)
                 .build().toUriString();
         
