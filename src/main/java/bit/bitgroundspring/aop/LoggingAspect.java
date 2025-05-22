@@ -23,22 +23,23 @@ public class LoggingAspect {
     
     @Around("@within(loggable) || @annotation(loggable)")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint, Loggable loggable) throws Throwable {
+        String className = joinPoint.getTarget().getClass().getSimpleName();
         String methodName = joinPoint.getSignature().getName();
         String description = loggable.value().isEmpty() ? "" : "[" + loggable.value() + "]";
         Object[] args = joinPoint.getArgs();
         
         // 입력 인자 로깅 (길이 제한 적용)
         String argsString = formatArguments(args);
-        log.info(">>>>{} {} - Arguments: {}", description, methodName, argsString);
+        log.info(">>>>{} {}.{} - Arguments: {}", description, className, methodName, argsString);
         
         try {
             Object result = joinPoint.proceed();
             // 반환값 로깅 (길이 제한 적용)
             String resultString = formatValue(result);
-            log.info("<<<<{} {} (Success) - Return: {}", description, methodName, resultString);
+            log.info("<<<<{} {}.{} (Success) - Return: {}", description, className, methodName, resultString);
             return result;
         } catch (Exception e) {
-            log.error("!!!!{} {} (Error: {})", description, methodName, e.getMessage());
+            log.error("!!!!{} {}.{} (Error: {})", description, className, methodName, e.getMessage());
             throw e;
         }
     }
