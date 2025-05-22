@@ -1,0 +1,825 @@
+2025-05-22 15:55:46 [restartedMain] INFO  b.b.BitGroundSpringApplication - Starting BitGroundSpringApplication using Java 17.0.15 with PID 17837 (/Users/lee/naver1210/copy/spring-bitground/build/classes/java/main started by lee in /Users/lee/naver1210/copy/spring-bitground)
+2025-05-22 15:55:46 [restartedMain] INFO  b.b.BitGroundSpringApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-22 15:55:46 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 15:55:46 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-22 15:55:46 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.security.token.RefreshTokenRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2025-05-22 15:55:46 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 5 ms. Found 1 JPA repository interface.
+2025-05-22 15:55:46 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 15:55:46 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-05-22 15:55:46 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-05-22 15:55:46 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 2 ms. Found 1 Redis repository interface.
+2025-05-22 15:55:46 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8090 (http)
+2025-05-22 15:55:46 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 15:55:46 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 15:55:46 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 15:55:46 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 240 ms
+2025-05-22 15:55:46 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-22 15:55:46 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-22 15:55:46 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-22 15:55:46 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+2025-05-22 15:55:46 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5541f95a
+2025-05-22 15:55:46 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+2025-05-22 15:55:46 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 8.0.40
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-22 15:55:46 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000038: Composite-id class does not override equals(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 15:55:46 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000039: Composite-id class does not override hashCode(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 15:55:46 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-22 15:55:47 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 15:55:47 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-05-22 15:55:47 [restartedMain] INFO  b.b.naver.NcpObjectStorageService - NcpObjectStorageService 생성
+2025-05-22 15:55:47 [restartedMain] DEBUG o.s.s.c.a.a.c.AuthenticationConfiguration$DefaultPasswordEncoderAuthenticationManagerBuilder - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-05-22 15:55:47 [restartedMain] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter, JwtAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-05-22 15:55:47 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8090 (http) with context path '/'
+2025-05-22 15:55:47 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8091 (http)
+2025-05-22 15:55:47 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 15:55:47 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 15:55:47 [restartedMain] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 15:55:47 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 31 ms
+2025-05-22 15:55:47 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2025-05-22 15:55:47 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8091 (http) with context path '/'
+2025-05-22 15:55:47 [restartedMain] INFO  b.b.BitGroundSpringApplication - Started BitGroundSpringApplication in 1.511 seconds (process running for 873.939)
+2025-05-22 15:55:47 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-05-22 15:55:52 [http-nio-8091-exec-1] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServletRegistration'
+2025-05-22 15:55:52 [http-nio-8091-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServletRegistration'
+2025-05-22 15:55:52 [http-nio-8091-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-05-22 15:55:52 [http-nio-8091-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:55:52 [http-nio-8091-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:55:52 [http-nio-8091-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:56:07 [http-nio-8091-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:56:07 [http-nio-8091-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:56:07 [http-nio-8091-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:56:22 [http-nio-8091-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:56:22 [http-nio-8091-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:56:22 [http-nio-8091-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:56:37 [http-nio-8091-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:56:37 [http-nio-8091-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:56:37 [http-nio-8091-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:56:52 [http-nio-8091-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:56:52 [http-nio-8091-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:56:52 [http-nio-8091-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:57:07 [http-nio-8091-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:57:07 [http-nio-8091-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:57:07 [http-nio-8091-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:57:22 [http-nio-8091-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:57:22 [http-nio-8091-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:57:22 [http-nio-8091-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:57:37 [http-nio-8091-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:57:37 [http-nio-8091-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:57:37 [http-nio-8091-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:57:52 [http-nio-8091-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:57:52 [http-nio-8091-exec-9] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:57:52 [http-nio-8091-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:58:07 [http-nio-8091-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:58:07 [http-nio-8091-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:58:07 [http-nio-8091-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:58:22 [http-nio-8091-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:58:22 [http-nio-8091-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:58:22 [http-nio-8091-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:58:37 [http-nio-8091-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:58:37 [http-nio-8091-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:58:37 [http-nio-8091-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:58:52 [http-nio-8091-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:58:52 [http-nio-8091-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:58:52 [http-nio-8091-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:59:07 [http-nio-8091-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:59:07 [http-nio-8091-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:59:07 [http-nio-8091-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:59:22 [http-nio-8091-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:59:22 [http-nio-8091-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:59:22 [http-nio-8091-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:59:37 [http-nio-8091-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:59:37 [http-nio-8091-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:59:37 [http-nio-8091-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 15:59:52 [http-nio-8091-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 15:59:52 [http-nio-8091-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 15:59:52 [http-nio-8091-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:00:07 [http-nio-8091-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:00:07 [http-nio-8091-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:00:07 [http-nio-8091-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:00:22 [http-nio-8091-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:00:22 [http-nio-8091-exec-9] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:00:22 [http-nio-8091-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:00:37 [http-nio-8091-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:00:37 [http-nio-8091-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:00:37 [http-nio-8091-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:00:52 [http-nio-8091-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:00:52 [http-nio-8091-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:00:52 [http-nio-8091-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:01:07 [http-nio-8091-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:01:07 [http-nio-8091-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:01:07 [http-nio-8091-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:01:22 [http-nio-8091-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:01:22 [http-nio-8091-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:01:22 [http-nio-8091-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:01:37 [http-nio-8091-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:01:37 [http-nio-8091-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:01:37 [http-nio-8091-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:01:52 [http-nio-8091-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:01:52 [http-nio-8091-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:01:52 [http-nio-8091-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:02:07 [http-nio-8091-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:02:07 [http-nio-8091-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:02:07 [http-nio-8091-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:02:19 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 4 class path changes (0 additions, 0 deletions, 4 modifications)
+2025-05-22 16:02:19 [Thread-12] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:02:19 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:02:19 [Thread-12] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:02:19 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:02:19 [Thread-12] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2025-05-22 16:02:19 [Thread-12] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Destroying Spring FrameworkServlet 'dispatcherServletRegistration'
+2025-05-22 16:02:19 [Thread-12] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:02:19 [Thread-12] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
+2025-05-22 16:02:19 [Thread-12] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
+2025-05-22 16:02:19.594 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - Starting BitGroundSpringApplication using Java 17.0.15 with PID 17837 (/Users/lee/naver1210/copy/spring-bitground/build/classes/java/main started by lee in /Users/lee/naver1210/copy/spring-bitground)
+2025-05-22 16:02:19.594 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-22 16:02:19.744 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:02:19.744 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-22 16:02:19.750 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.security.token.RefreshTokenRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2025-05-22 16:02:19.752 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 7 ms. Found 1 JPA repository interface.
+2025-05-22 16:02:19.753 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:02:19.754 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-05-22 16:02:19.755 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-05-22 16:02:19.757 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 2 ms. Found 1 Redis repository interface.
+2025-05-22 16:02:19.859 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8090 (http)
+2025-05-22 16:02:19.860 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:02:19.860 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:02:19.867 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:02:19.867 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 272 ms
+2025-05-22 16:02:19.909 [restartedMain] DEBUG o.s.web.filter.ServerHttpObservationFilter - Filter 'webMvcObservationFilter' configured for use
+2025-05-22 16:02:19.960 [restartedMain] INFO  org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-22 16:02:19.961 [restartedMain] INFO  o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-22 16:02:19.966 [restartedMain] INFO  o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-22 16:02:19.966 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Starting...
+2025-05-22 16:02:20.037 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3e19bfc9
+2025-05-22 16:02:20.037 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Start completed.
+2025-05-22 16:02:20.043 [restartedMain] INFO  org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-4)']
+	Database driver: undefined/unknown
+	Database version: 8.0.40
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-22 16:02:20.075 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000038: Composite-id class does not override equals(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:02:20.075 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000039: Composite-id class does not override hashCode(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:02:20.136 [restartedMain] INFO  o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-22 16:02:20.396 [restartedMain] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:02:20.511 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-05-22 16:02:20.522 [restartedMain] INFO  bit.bitgroundspring.naver.NcpObjectStorageService - NcpObjectStorageService 생성
+2025-05-22 16:02:20.546 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - HTTP GET https://kauth.kakao.com/.well-known/openid-configuration
+2025-05-22 16:02:20.546 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Accept=[application/json, application/cbor, application/*+json]
+2025-05-22 16:02:20.586 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+2025-05-22 16:02:20.587 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Reading to [java.util.Map<java.lang.String, java.lang.Object>]
+2025-05-22 16:02:20.587 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - HTTP GET https://nid.naver.com/.well-known/openid-configuration
+2025-05-22 16:02:20.588 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Accept=[application/json, application/cbor, application/*+json]
+2025-05-22 16:02:20.646 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+2025-05-22 16:02:20.646 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Reading to [java.util.Map<java.lang.String, java.lang.Object>]
+2025-05-22 16:02:20.671 [restartedMain] DEBUG o.s.s.c.a.a.c.AuthenticationConfiguration$DefaultPasswordEncoderAuthenticationManagerBuilder - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-05-22 16:02:20.707 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 6 mappings in 'requestMappingHandlerMapping'
+2025-05-22 16:02:20.767 [restartedMain] DEBUG o.s.web.servlet.handler.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-05-22 16:02:20.882 [restartedMain] DEBUG o.s.security.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter, JwtAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-05-22 16:02:20.933 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-05-22 16:02:20.949 [restartedMain] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-05-22 16:02:21.100 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8090 (http) with context path '/'
+2025-05-22 16:02:21.126 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8091 (http)
+2025-05-22 16:02:21.126 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:02:21.126 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:02:21.133 [restartedMain] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:02:21.133 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 32 ms
+2025-05-22 16:02:21.138 [restartedMain] INFO  o.s.b.actuate.endpoint.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2025-05-22 16:02:21.142 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 1 mappings in 'requestMappingHandlerMapping'
+2025-05-22 16:02:21.144 [restartedMain] DEBUG o.s.web.servlet.handler.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-05-22 16:02:21.149 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-05-22 16:02:21.151 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8091 (http) with context path '/'
+2025-05-22 16:02:21.158 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - Started BitGroundSpringApplication in 1.582 seconds (process running for 1267.368)
+2025-05-22 16:02:21.159 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-05-22 16:02:22.409 [http-nio-8091-exec-1] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServletRegistration'
+2025-05-22 16:02:22.409 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServletRegistration'
+2025-05-22 16:02:22.410 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected StandardServletMultipartResolver
+2025-05-22 16:02:22.410 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected AcceptHeaderLocaleResolver
+2025-05-22 16:02:22.410 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected FixedThemeResolver
+2025-05-22 16:02:22.410 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@55b0d18a
+2025-05-22 16:02:22.410 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.support.SessionFlashMapManager@fdac8fc
+2025-05-22 16:02:22.410 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-05-22 16:02:22.410 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-05-22 16:02:22.411 [http-nio-8091-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:02:22.412 [http-nio-8091-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:02:22.413 [http-nio-8091-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:02:22.415 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/actuator/prometheus", parameters={}
+2025-05-22 16:02:22.417 [http-nio-8091-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/octet-stream" to []
+2025-05-22 16:02:22.420 [http-nio-8091-exec-1] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Found 'Content-Type:application/openmetrics-text;version=1.0.0;charset=utf-8' in response
+2025-05-22 16:02:22.423 [http-nio-8091-exec-1] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Writing [{35, 32, 84, 89, 80, 69, 32, 97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 95, 114, 101, 97, 1 (truncated)...]
+2025-05-22 16:02:22.423 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-05-22 16:02:37.405 [http-nio-8091-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:02:37.405 [http-nio-8091-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:02:37.406 [http-nio-8091-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:02:37.406 [http-nio-8091-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/actuator/prometheus", parameters={}
+2025-05-22 16:02:37.406 [http-nio-8091-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/octet-stream" to []
+2025-05-22 16:02:37.410 [http-nio-8091-exec-2] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Found 'Content-Type:application/openmetrics-text;version=1.0.0;charset=utf-8' in response
+2025-05-22 16:02:37.413 [http-nio-8091-exec-2] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Writing [{35, 32, 84, 89, 80, 69, 32, 97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 95, 114, 101, 97, 1 (truncated)...]
+2025-05-22 16:02:37.414 [http-nio-8091-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-05-22 16:02:52.407 [http-nio-8091-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:02:52.408 [http-nio-8091-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:02:52.408 [http-nio-8091-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:02:52.409 [http-nio-8091-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/actuator/prometheus", parameters={}
+2025-05-22 16:02:52.410 [http-nio-8091-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/octet-stream" to []
+2025-05-22 16:02:52.414 [http-nio-8091-exec-3] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Found 'Content-Type:application/openmetrics-text;version=1.0.0;charset=utf-8' in response
+2025-05-22 16:02:52.417 [http-nio-8091-exec-3] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Writing [{35, 32, 84, 89, 80, 69, 32, 97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 95, 114, 101, 97, 1 (truncated)...]
+2025-05-22 16:02:52.418 [http-nio-8091-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-05-22 16:02:52.803 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 4 class path changes (0 additions, 0 deletions, 4 modifications)
+2025-05-22 16:02:52.805 [Thread-16] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:02:52.808 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:02:52.808 [Thread-16] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:02:52.810 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:02:52.812 [Thread-16] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2025-05-22 16:02:52.812 [Thread-16] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Destroying Spring FrameworkServlet 'dispatcherServletRegistration'
+2025-05-22 16:02:52.931 [Thread-16] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:02:52.932 [Thread-16] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown initiated...
+2025-05-22 16:02:52.933 [Thread-16] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown completed.
+2025-05-22 16:02:53.001 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - Starting BitGroundSpringApplication using Java 17.0.15 with PID 17837 (/Users/lee/naver1210/copy/spring-bitground/build/classes/java/main started by lee in /Users/lee/naver1210/copy/spring-bitground)
+2025-05-22 16:02:53.002 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-22 16:02:53.130 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:02:53.130 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-22 16:02:53.135 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.security.token.RefreshTokenRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2025-05-22 16:02:53.137 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 5 ms. Found 1 JPA repository interface.
+2025-05-22 16:02:53.138 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:02:53.138 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-05-22 16:02:53.141 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-05-22 16:02:53.142 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 3 ms. Found 1 Redis repository interface.
+2025-05-22 16:02:53.231 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8090 (http)
+2025-05-22 16:02:53.231 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:02:53.231 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:02:53.238 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:02:53.238 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 236 ms
+2025-05-22 16:02:53.277 [restartedMain] DEBUG o.s.web.filter.ServerHttpObservationFilter - Filter 'webMvcObservationFilter' configured for use
+2025-05-22 16:02:53.322 [restartedMain] INFO  org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-22 16:02:53.323 [restartedMain] INFO  o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-22 16:02:53.327 [restartedMain] INFO  o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-22 16:02:53.327 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Starting...
+2025-05-22 16:02:53.394 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-5 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4b4ab19a
+2025-05-22 16:02:53.394 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Start completed.
+2025-05-22 16:02:53.399 [restartedMain] INFO  org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-5)']
+	Database driver: undefined/unknown
+	Database version: 8.0.40
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-22 16:02:53.433 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000038: Composite-id class does not override equals(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:02:53.433 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000039: Composite-id class does not override hashCode(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:02:53.492 [restartedMain] INFO  o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-22 16:02:53.740 [restartedMain] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:02:53.857 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-05-22 16:02:53.869 [restartedMain] INFO  bit.bitgroundspring.naver.NcpObjectStorageService - NcpObjectStorageService 생성
+2025-05-22 16:02:53.891 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - HTTP GET https://kauth.kakao.com/.well-known/openid-configuration
+2025-05-22 16:02:53.892 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Accept=[application/json, application/cbor, application/*+json]
+2025-05-22 16:02:53.921 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+2025-05-22 16:02:53.921 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Reading to [java.util.Map<java.lang.String, java.lang.Object>]
+2025-05-22 16:02:53.922 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - HTTP GET https://nid.naver.com/.well-known/openid-configuration
+2025-05-22 16:02:53.922 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Accept=[application/json, application/cbor, application/*+json]
+2025-05-22 16:02:53.960 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+2025-05-22 16:02:53.960 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Reading to [java.util.Map<java.lang.String, java.lang.Object>]
+2025-05-22 16:02:53.987 [restartedMain] DEBUG o.s.s.c.a.a.c.AuthenticationConfiguration$DefaultPasswordEncoderAuthenticationManagerBuilder - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-05-22 16:02:54.014 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 6 mappings in 'requestMappingHandlerMapping'
+2025-05-22 16:02:54.072 [restartedMain] DEBUG o.s.web.servlet.handler.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-05-22 16:02:54.174 [restartedMain] DEBUG o.s.security.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter, JwtAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-05-22 16:02:54.221 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-05-22 16:02:54.239 [restartedMain] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-05-22 16:02:54.368 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8090 (http) with context path '/'
+2025-05-22 16:02:54.395 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8091 (http)
+2025-05-22 16:02:54.395 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:02:54.395 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:02:54.401 [restartedMain] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:02:54.401 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 32 ms
+2025-05-22 16:02:54.405 [restartedMain] INFO  o.s.b.actuate.endpoint.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2025-05-22 16:02:54.409 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 1 mappings in 'requestMappingHandlerMapping'
+2025-05-22 16:02:54.411 [restartedMain] DEBUG o.s.web.servlet.handler.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-05-22 16:02:54.415 [restartedMain] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-05-22 16:02:54.418 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8091 (http) with context path '/'
+2025-05-22 16:02:54.424 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - Started BitGroundSpringApplication in 1.434 seconds (process running for 1300.635)
+2025-05-22 16:02:54.426 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-05-22 16:03:07.414 [http-nio-8091-exec-1] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServletRegistration'
+2025-05-22 16:03:07.414 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServletRegistration'
+2025-05-22 16:03:07.414 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected StandardServletMultipartResolver
+2025-05-22 16:03:07.414 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected AcceptHeaderLocaleResolver
+2025-05-22 16:03:07.414 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected FixedThemeResolver
+2025-05-22 16:03:07.414 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@53ce8e5e
+2025-05-22 16:03:07.414 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.support.SessionFlashMapManager@29cef925
+2025-05-22 16:03:07.414 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-05-22 16:03:07.414 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-05-22 16:03:07.415 [http-nio-8091-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:03:07.416 [http-nio-8091-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:03:07.417 [http-nio-8091-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:03:07.417 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/actuator/prometheus", parameters={}
+2025-05-22 16:03:07.419 [http-nio-8091-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/octet-stream" to []
+2025-05-22 16:03:07.423 [http-nio-8091-exec-1] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Found 'Content-Type:application/openmetrics-text;version=1.0.0;charset=utf-8' in response
+2025-05-22 16:03:07.425 [http-nio-8091-exec-1] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Writing [{35, 32, 84, 89, 80, 69, 32, 97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 95, 114, 101, 97, 1 (truncated)...]
+2025-05-22 16:03:07.425 [http-nio-8091-exec-1] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-05-22 16:03:22.406 [http-nio-8091-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:03:22.407 [http-nio-8091-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:03:22.408 [http-nio-8091-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:03:22.408 [http-nio-8091-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/actuator/prometheus", parameters={}
+2025-05-22 16:03:22.409 [http-nio-8091-exec-2] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/octet-stream" to []
+2025-05-22 16:03:22.415 [http-nio-8091-exec-2] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Found 'Content-Type:application/openmetrics-text;version=1.0.0;charset=utf-8' in response
+2025-05-22 16:03:22.417 [http-nio-8091-exec-2] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Writing [{35, 32, 84, 89, 80, 69, 32, 97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 95, 114, 101, 97, 1 (truncated)...]
+2025-05-22 16:03:22.418 [http-nio-8091-exec-2] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-05-22 16:03:37.403 [http-nio-8091-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:03:37.403 [http-nio-8091-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:03:37.403 [http-nio-8091-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:03:37.403 [http-nio-8091-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/actuator/prometheus", parameters={}
+2025-05-22 16:03:37.403 [http-nio-8091-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/octet-stream" to []
+2025-05-22 16:03:37.405 [http-nio-8091-exec-3] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Found 'Content-Type:application/openmetrics-text;version=1.0.0;charset=utf-8' in response
+2025-05-22 16:03:37.406 [http-nio-8091-exec-3] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Writing [{35, 32, 84, 89, 80, 69, 32, 97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 95, 114, 101, 97, 1 (truncated)...]
+2025-05-22 16:03:37.406 [http-nio-8091-exec-3] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-05-22 16:03:52.401 [http-nio-8091-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:03:52.401 [http-nio-8091-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:03:52.401 [http-nio-8091-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:03:52.401 [http-nio-8091-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - GET "/actuator/prometheus", parameters={}
+2025-05-22 16:03:52.402 [http-nio-8091-exec-4] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/octet-stream" to []
+2025-05-22 16:03:52.403 [http-nio-8091-exec-4] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Found 'Content-Type:application/openmetrics-text;version=1.0.0;charset=utf-8' in response
+2025-05-22 16:03:52.404 [http-nio-8091-exec-4] DEBUG o.s.w.s.m.m.annotation.HttpEntityMethodProcessor - Writing [{35, 32, 84, 89, 80, 69, 32, 97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 95, 114, 101, 97, 1 (truncated)...]
+2025-05-22 16:03:52.404 [http-nio-8091-exec-4] DEBUG org.springframework.web.servlet.DispatcherServlet - Completed 200 OK
+2025-05-22 16:03:53.365 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 4 class path changes (0 additions, 0 deletions, 4 modifications)
+2025-05-22 16:03:53.367 [Thread-20] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:03:53.371 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:03:53.372 [Thread-20] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:03:53.373 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:03:53.374 [Thread-20] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2025-05-22 16:03:53.375 [Thread-20] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Destroying Spring FrameworkServlet 'dispatcherServletRegistration'
+2025-05-22 16:03:53.491 [Thread-20] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:03:53.492 [Thread-20] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Shutdown initiated...
+2025-05-22 16:03:53.496 [Thread-20] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Shutdown completed.
+2025-05-22 16:03:53.568 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - Starting BitGroundSpringApplication using Java 17.0.15 with PID 17837 (/Users/lee/naver1210/copy/spring-bitground/build/classes/java/main started by lee in /Users/lee/naver1210/copy/spring-bitground)
+2025-05-22 16:03:53.568 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-22 16:03:53.691 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:03:53.691 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-22 16:03:53.695 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.security.token.RefreshTokenRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2025-05-22 16:03:53.697 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 5 ms. Found 1 JPA repository interface.
+2025-05-22 16:03:53.698 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:03:53.698 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-05-22 16:03:53.700 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-05-22 16:03:53.701 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 2 ms. Found 1 Redis repository interface.
+2025-05-22 16:03:53.787 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8090 (http)
+2025-05-22 16:03:53.788 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:03:53.788 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:03:53.794 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:03:53.794 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 226 ms
+2025-05-22 16:03:53.879 [restartedMain] INFO  org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-22 16:03:53.880 [restartedMain] INFO  o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-22 16:03:53.884 [restartedMain] INFO  o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-22 16:03:53.884 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Starting...
+2025-05-22 16:03:53.957 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-6 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4b29cfcf
+2025-05-22 16:03:53.957 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Start completed.
+2025-05-22 16:03:53.963 [restartedMain] INFO  org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-6)']
+	Database driver: undefined/unknown
+	Database version: 8.0.40
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-22 16:03:53.990 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000038: Composite-id class does not override equals(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:03:53.990 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000039: Composite-id class does not override hashCode(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:03:54.050 [restartedMain] INFO  o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-22 16:03:54.296 [restartedMain] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:03:54.421 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-05-22 16:03:54.434 [restartedMain] INFO  bit.bitgroundspring.naver.NcpObjectStorageService - NcpObjectStorageService 생성
+2025-05-22 16:03:54.556 [restartedMain] DEBUG o.s.s.c.a.a.c.AuthenticationConfiguration$DefaultPasswordEncoderAuthenticationManagerBuilder - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-05-22 16:03:54.746 [restartedMain] DEBUG o.s.security.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter, JwtAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-05-22 16:03:54.937 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8090 (http) with context path '/'
+2025-05-22 16:03:54.961 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8091 (http)
+2025-05-22 16:03:54.961 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:03:54.961 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:03:54.968 [restartedMain] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:03:54.968 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 30 ms
+2025-05-22 16:03:54.971 [restartedMain] INFO  o.s.b.actuate.endpoint.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2025-05-22 16:03:54.984 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8091 (http) with context path '/'
+2025-05-22 16:03:54.991 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - Started BitGroundSpringApplication in 1.434 seconds (process running for 1361.202)
+2025-05-22 16:03:54.992 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-05-22 16:04:00.374 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 4 class path changes (0 additions, 0 deletions, 4 modifications)
+2025-05-22 16:04:00.376 [Thread-24] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:04:00.379 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:04:00.379 [Thread-24] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:04:00.381 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:04:00.382 [Thread-24] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2025-05-22 16:04:00.495 [Thread-24] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:04:00.496 [Thread-24] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Shutdown initiated...
+2025-05-22 16:04:00.497 [Thread-24] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Shutdown completed.
+2025-05-22 16:04:00.579 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - Starting BitGroundSpringApplication using Java 17.0.15 with PID 17837 (/Users/lee/naver1210/copy/spring-bitground/build/classes/java/main started by lee in /Users/lee/naver1210/copy/spring-bitground)
+2025-05-22 16:04:00.580 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-22 16:04:00.710 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:04:00.711 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-22 16:04:00.715 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.security.token.RefreshTokenRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2025-05-22 16:04:00.717 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 5 ms. Found 1 JPA repository interface.
+2025-05-22 16:04:00.718 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:04:00.718 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-05-22 16:04:00.720 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-05-22 16:04:00.721 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 2 ms. Found 1 Redis repository interface.
+2025-05-22 16:04:00.813 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8090 (http)
+2025-05-22 16:04:00.813 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:04:00.813 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:04:00.820 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:04:00.820 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 240 ms
+2025-05-22 16:04:00.904 [restartedMain] INFO  org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-22 16:04:00.905 [restartedMain] INFO  o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-22 16:04:00.909 [restartedMain] INFO  o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-22 16:04:00.910 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Starting...
+2025-05-22 16:04:00.967 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-7 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3f8c18b8
+2025-05-22 16:04:00.968 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Start completed.
+2025-05-22 16:04:00.973 [restartedMain] INFO  org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-7)']
+	Database driver: undefined/unknown
+	Database version: 8.0.40
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-22 16:04:01.005 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000038: Composite-id class does not override equals(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:04:01.005 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000039: Composite-id class does not override hashCode(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:04:01.061 [restartedMain] INFO  o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-22 16:04:01.316 [restartedMain] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:04:01.436 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-05-22 16:04:01.450 [restartedMain] INFO  bit.bitgroundspring.naver.NcpObjectStorageService - NcpObjectStorageService 생성
+2025-05-22 16:04:01.555 [restartedMain] DEBUG o.s.s.c.a.a.c.AuthenticationConfiguration$DefaultPasswordEncoderAuthenticationManagerBuilder - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-05-22 16:04:01.758 [restartedMain] DEBUG o.s.security.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter, JwtAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-05-22 16:04:01.950 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8090 (http) with context path '/'
+2025-05-22 16:04:01.975 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8091 (http)
+2025-05-22 16:04:01.975 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:04:01.975 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:04:01.982 [restartedMain] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:04:01.982 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 31 ms
+2025-05-22 16:04:01.986 [restartedMain] INFO  o.s.b.actuate.endpoint.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2025-05-22 16:04:01.999 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8091 (http) with context path '/'
+2025-05-22 16:04:02.006 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - Started BitGroundSpringApplication in 1.44 seconds (process running for 1368.216)
+2025-05-22 16:04:02.007 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-05-22 16:04:07.415 [http-nio-8091-exec-1] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServletRegistration'
+2025-05-22 16:04:07.416 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServletRegistration'
+2025-05-22 16:04:07.416 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-05-22 16:04:07.416 [http-nio-8091-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:04:07.417 [http-nio-8091-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:04:07.418 [http-nio-8091-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:04:22.404 [http-nio-8091-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:04:22.405 [http-nio-8091-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:04:22.405 [http-nio-8091-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:04:37.404 [http-nio-8091-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:04:37.405 [http-nio-8091-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:04:37.405 [http-nio-8091-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:04:52.401 [http-nio-8091-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:04:52.403 [http-nio-8091-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:04:52.404 [http-nio-8091-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:05:07.400 [http-nio-8091-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:05:07.401 [http-nio-8091-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:05:07.403 [http-nio-8091-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:05:22.404 [http-nio-8091-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:05:22.405 [http-nio-8091-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:05:22.406 [http-nio-8091-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:05:37.400 [http-nio-8091-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:05:37.403 [http-nio-8091-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:05:37.404 [http-nio-8091-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:05:52.405 [http-nio-8091-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:05:52.406 [http-nio-8091-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:05:52.407 [http-nio-8091-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:06:07.404 [http-nio-8091-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:06:07.405 [http-nio-8091-exec-9] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:06:07.406 [http-nio-8091-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:06:22.404 [http-nio-8091-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:06:22.405 [http-nio-8091-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:06:22.406 [http-nio-8091-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:06:37.404 [http-nio-8091-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:06:37.405 [http-nio-8091-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:06:37.405 [http-nio-8091-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:06:52.400 [http-nio-8091-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:06:52.402 [http-nio-8091-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:06:52.403 [http-nio-8091-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:07:07.404 [http-nio-8091-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:07:07.405 [http-nio-8091-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:07:07.406 [http-nio-8091-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:07:22.407 [http-nio-8091-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:07:22.408 [http-nio-8091-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:07:22.409 [http-nio-8091-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:07:37.401 [http-nio-8091-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:07:37.401 [http-nio-8091-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:07:37.402 [http-nio-8091-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:07:52.404 [http-nio-8091-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:07:52.405 [http-nio-8091-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:07:52.405 [http-nio-8091-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:08:07.413 [http-nio-8091-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:08:07.414 [http-nio-8091-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:08:07.414 [http-nio-8091-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:08:22.401 [http-nio-8091-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:08:22.401 [http-nio-8091-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:08:22.402 [http-nio-8091-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:08:37.404 [http-nio-8091-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:08:37.405 [http-nio-8091-exec-9] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:08:37.405 [http-nio-8091-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:08:52.401 [http-nio-8091-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:08:52.401 [http-nio-8091-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:08:52.402 [http-nio-8091-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:09:07.400 [http-nio-8091-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:09:07.401 [http-nio-8091-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:09:07.401 [http-nio-8091-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:09:22.402 [http-nio-8091-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:09:22.403 [http-nio-8091-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:09:22.404 [http-nio-8091-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:09:37.403 [http-nio-8091-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:09:37.404 [http-nio-8091-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:09:37.404 [http-nio-8091-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:09:52.404 [http-nio-8091-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:09:52.405 [http-nio-8091-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:09:52.405 [http-nio-8091-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:10:07.401 [http-nio-8091-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:10:07.402 [http-nio-8091-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:10:07.403 [http-nio-8091-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:10:22.405 [http-nio-8091-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:10:22.406 [http-nio-8091-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:10:22.407 [http-nio-8091-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:10:37.403 [http-nio-8091-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:10:37.404 [http-nio-8091-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:10:37.404 [http-nio-8091-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:10:52.411 [http-nio-8091-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:10:52.411 [http-nio-8091-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:10:52.412 [http-nio-8091-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:11:07.410 [http-nio-8091-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:11:07.411 [http-nio-8091-exec-9] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:11:07.411 [http-nio-8091-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:11:22.405 [http-nio-8091-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:11:22.406 [http-nio-8091-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:11:22.406 [http-nio-8091-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:11:37.401 [http-nio-8091-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:11:37.403 [http-nio-8091-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:11:37.403 [http-nio-8091-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:11:52.403 [http-nio-8091-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:11:52.403 [http-nio-8091-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:11:52.404 [http-nio-8091-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:12:07.401 [http-nio-8091-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:12:07.402 [http-nio-8091-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:12:07.402 [http-nio-8091-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:12:22.400 [http-nio-8091-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:12:22.401 [http-nio-8091-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:12:22.401 [http-nio-8091-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:12:37.400 [http-nio-8091-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:12:37.401 [http-nio-8091-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:12:37.401 [http-nio-8091-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:12:52.402 [http-nio-8091-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:12:52.403 [http-nio-8091-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:12:52.403 [http-nio-8091-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:13:07.399 [http-nio-8091-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /actuator/prometheus
+2025-05-22 16:13:07.400 [http-nio-8091-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-05-22 16:13:07.401 [http-nio-8091-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /actuator/prometheus
+2025-05-22 16:13:07.647 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 4 class path changes (0 additions, 0 deletions, 4 modifications)
+2025-05-22 16:13:07.649 [Thread-28] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:13:07.652 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:13:07.652 [Thread-28] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:13:07.654 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:13:07.655 [Thread-28] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2025-05-22 16:13:07.656 [Thread-28] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Destroying Spring FrameworkServlet 'dispatcherServletRegistration'
+2025-05-22 16:13:07.768 [Thread-28] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:13:07.769 [Thread-28] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Shutdown initiated...
+2025-05-22 16:13:07.770 [Thread-28] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Shutdown completed.
+2025-05-22 16:13:07.845 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - Starting BitGroundSpringApplication using Java 17.0.15 with PID 17837 (/Users/lee/naver1210/copy/spring-bitground/build/classes/java/main started by lee in /Users/lee/naver1210/copy/spring-bitground)
+2025-05-22 16:13:07.845 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-22 16:13:07.975 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:13:07.975 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-22 16:13:07.981 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.security.token.RefreshTokenRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2025-05-22 16:13:07.982 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 5 ms. Found 1 JPA repository interface.
+2025-05-22 16:13:07.983 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:13:07.983 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-05-22 16:13:07.985 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-05-22 16:13:07.986 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 2 ms. Found 1 Redis repository interface.
+2025-05-22 16:13:08.082 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8090 (http)
+2025-05-22 16:13:08.083 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:13:08.083 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:13:08.089 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:13:08.089 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 243 ms
+2025-05-22 16:13:08.179 [restartedMain] INFO  org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-22 16:13:08.181 [restartedMain] INFO  o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-22 16:13:08.185 [restartedMain] INFO  o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-22 16:13:08.185 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Starting...
+2025-05-22 16:13:08.247 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-8 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5d15e4c5
+2025-05-22 16:13:08.247 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Start completed.
+2025-05-22 16:13:08.253 [restartedMain] INFO  org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-8)']
+	Database driver: undefined/unknown
+	Database version: 8.0.40
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-22 16:13:08.282 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000038: Composite-id class does not override equals(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:13:08.282 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000039: Composite-id class does not override hashCode(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:13:08.340 [restartedMain] INFO  o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-22 16:13:08.577 [restartedMain] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:13:08.704 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-05-22 16:13:08.717 [restartedMain] INFO  bit.bitgroundspring.naver.NcpObjectStorageService - NcpObjectStorageService 생성
+2025-05-22 16:13:09.242 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8090 (http) with context path '/'
+2025-05-22 16:13:09.266 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8091 (http)
+2025-05-22 16:13:09.267 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:13:09.267 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:13:09.274 [restartedMain] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:13:09.274 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 31 ms
+2025-05-22 16:13:09.279 [restartedMain] INFO  o.s.b.actuate.endpoint.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2025-05-22 16:13:09.294 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8091 (http) with context path '/'
+2025-05-22 16:13:09.301 [restartedMain] INFO  bit.bitgroundspring.BitGroundSpringApplication - Started BitGroundSpringApplication in 1.469 seconds (process running for 1915.514)
+2025-05-22 16:13:09.302 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-05-22 16:13:14.065 [http-nio-8090-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-22 16:13:14.066 [http-nio-8090-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-05-22 16:13:14.068 [http-nio-8090-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-05-22 16:13:14.456 [http-nio-8090-exec-2] INFO  b.b.s.oauth2.OidcAuthenticationSuccessHandler - [login] login success. - userId: 3
+2025-05-22 16:13:22.403 [http-nio-8091-exec-1] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServletRegistration'
+2025-05-22 16:13:22.404 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServletRegistration'
+2025-05-22 16:13:22.404 [http-nio-8091-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-05-22 16:13:54.278 [http-nio-8090-exec-8] INFO  b.bitgroundspring.security.oauth2.AuthController - [login] token refresh. - userId: 3
+2025-05-22 16:13:54.286 [http-nio-8090-exec-9] INFO  b.bitgroundspring.security.oauth2.AuthController - [login] logout success. - userId: 3
+2025-05-22 16:19:18.815 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 4 class path changes (0 additions, 0 deletions, 4 modifications)
+2025-05-22 16:19:18.817 [Thread-32] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:19:18.819 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:19:18.820 [Thread-32] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:19:18.821 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:19:18.823 [Thread-32] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2025-05-22 16:19:18.823 [Thread-32] INFO  o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Destroying Spring FrameworkServlet 'dispatcherServletRegistration'
+2025-05-22 16:19:18.938 [Thread-32] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:19:18.939 [Thread-32] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Shutdown initiated...
+2025-05-22 16:19:18.940 [Thread-32] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Shutdown completed.
+2025-05-22 16:19:19 [restartedMain] INFO  b.b.BitGroundSpringApplication - Starting BitGroundSpringApplication using Java 17.0.15 with PID 17837 (/Users/lee/naver1210/copy/spring-bitground/build/classes/java/main started by lee in /Users/lee/naver1210/copy/spring-bitground)
+2025-05-22 16:19:19 [restartedMain] INFO  b.b.BitGroundSpringApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.security.token.RefreshTokenRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 7 ms. Found 1 JPA repository interface.
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 2 ms. Found 1 Redis repository interface.
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8090 (http)
+2025-05-22 16:19:19 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:19:19 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:19:19 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 254 ms
+2025-05-22 16:19:19 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-22 16:19:19 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-22 16:19:19 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Starting...
+2025-05-22 16:19:19 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-9 - Added connection com.mysql.cj.jdbc.ConnectionImpl@400098e6
+2025-05-22 16:19:19 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Start completed.
+2025-05-22 16:19:19 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-9)']
+	Database driver: undefined/unknown
+	Database version: 8.0.40
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-22 16:19:19 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000038: Composite-id class does not override equals(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:19:19 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000039: Composite-id class does not override hashCode(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:19:19 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:19:19 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-05-22 16:19:19 [restartedMain] INFO  b.b.naver.NcpObjectStorageService - NcpObjectStorageService 생성
+2025-05-22 16:19:20 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8090 (http) with context path '/'
+2025-05-22 16:19:20 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8091 (http)
+2025-05-22 16:19:20 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:19:20 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:19:20 [restartedMain] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:19:20 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 31 ms
+2025-05-22 16:19:20 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2025-05-22 16:19:20 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8091 (http) with context path '/'
+2025-05-22 16:19:20 [restartedMain] INFO  b.b.BitGroundSpringApplication - Started BitGroundSpringApplication in 1.473 seconds (process running for 2286.688)
+2025-05-22 16:19:20 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-05-22 16:19:22 [http-nio-8091-exec-1] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServletRegistration'
+2025-05-22 16:19:22 [http-nio-8091-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServletRegistration'
+2025-05-22 16:19:22 [http-nio-8091-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-05-22 16:20:54 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 4 class path changes (0 additions, 0 deletions, 4 modifications)
+2025-05-22 16:20:54 [Thread-36] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:20:54 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:20:54 [Thread-36] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:20:54 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:20:54 [Thread-36] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2025-05-22 16:20:54 [Thread-36] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Destroying Spring FrameworkServlet 'dispatcherServletRegistration'
+2025-05-22 16:20:54 [Thread-36] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:20:54 [Thread-36] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Shutdown initiated...
+2025-05-22 16:20:54 [Thread-36] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Shutdown completed.
+2025-05-22 16:20:55 [restartedMain] INFO  b.b.BitGroundSpringApplication - Starting BitGroundSpringApplication using Java 17.0.15 with PID 17837 (/Users/lee/naver1210/copy/spring-bitground/build/classes/java/main started by lee in /Users/lee/naver1210/copy/spring-bitground)
+2025-05-22 16:20:55 [restartedMain] INFO  b.b.BitGroundSpringApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.security.token.RefreshTokenRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 5 ms. Found 1 JPA repository interface.
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 2 ms. Found 1 Redis repository interface.
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8090 (http)
+2025-05-22 16:20:55 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:20:55 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:20:55 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 222 ms
+2025-05-22 16:20:55 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-22 16:20:55 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-22 16:20:55 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Starting...
+2025-05-22 16:20:55 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-10 - Added connection com.mysql.cj.jdbc.ConnectionImpl@51310df0
+2025-05-22 16:20:55 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Start completed.
+2025-05-22 16:20:55 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-10)']
+	Database driver: undefined/unknown
+	Database version: 8.0.40
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-22 16:20:55 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000038: Composite-id class does not override equals(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:20:55 [restartedMain] WARN  org.hibernate.mapping.RootClass - HHH000039: Composite-id class does not override hashCode(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22 16:20:55 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:20:55 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-05-22 16:20:55 [restartedMain] INFO  b.b.naver.NcpObjectStorageService - NcpObjectStorageService 생성
+2025-05-22 16:20:56 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8090 (http) with context path '/'
+2025-05-22 16:20:56 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8091 (http)
+2025-05-22 16:20:56 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-22 16:20:56 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22 16:20:56 [restartedMain] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-22 16:20:56 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 30 ms
+2025-05-22 16:20:56 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2025-05-22 16:20:56 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8091 (http) with context path '/'
+2025-05-22 16:20:56 [restartedMain] INFO  b.b.BitGroundSpringApplication - Started BitGroundSpringApplication in 1.397 seconds (process running for 2382.657)
+2025-05-22 16:20:56 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-05-22 16:21:07 [http-nio-8091-exec-1] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServletRegistration'
+2025-05-22 16:21:07 [http-nio-8091-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServletRegistration'
+2025-05-22 16:21:07 [http-nio-8091-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-05-22 16:27:31 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:27:31 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:27:31 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22 16:27:31 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-22 16:27:31 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22 16:27:31 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Shutdown initiated...
+2025-05-22 16:27:31 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Shutdown completed.
+2025-05-22T16:27:32.481+09:00  INFO 19033 --- [bitground] [restartedMain] b.b.BitGroundSpringApplication           : Starting BitGroundSpringApplication using Java 17.0.15 with PID 19033 (/Users/lee/naver1210/copy/spring-bitground/build/classes/java/main started by lee in /Users/lee/naver1210/copy/spring-bitground)
+2025-05-22T16:27:32.482+09:00  INFO 19033 --- [bitground] [restartedMain] b.b.BitGroundSpringApplication           : No active profile set, falling back to 1 default profile: "default"
+2025-05-22T16:27:32.499+09:00  INFO 19033 --- [bitground] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-05-22T16:27:32.500+09:00  INFO 19033 --- [bitground] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-05-22T16:27:33.013+09:00  INFO 19033 --- [bitground] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22T16:27:33.014+09:00  INFO 19033 --- [bitground] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-22T16:27:33.091+09:00  INFO 19033 --- [bitground] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JPA - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.security.token.RefreshTokenRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2025-05-22T16:27:33.099+09:00  INFO 19033 --- [bitground] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 77 ms. Found 1 JPA repository interface.
+2025-05-22T16:27:33.107+09:00  INFO 19033 --- [bitground] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-22T16:27:33.108+09:00  INFO 19033 --- [bitground] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-05-22T16:27:33.115+09:00  INFO 19033 --- [bitground] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface bit.bitgroundspring.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-05-22T16:27:33.118+09:00  INFO 19033 --- [bitground] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 1 Redis repository interface.
+2025-05-22T16:27:33.524+09:00  INFO 19033 --- [bitground] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8090 (http)
+2025-05-22T16:27:33.531+09:00  INFO 19033 --- [bitground] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-22T16:27:33.532+09:00  INFO 19033 --- [bitground] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22T16:27:33.551+09:00  INFO 19033 --- [bitground] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-05-22T16:27:33.552+09:00  INFO 19033 --- [bitground] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1052 ms
+2025-05-22T16:27:33.814+09:00  INFO 19033 --- [bitground] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-22T16:27:33.834+09:00  INFO 19033 --- [bitground] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2025-05-22T16:27:33.848+09:00  INFO 19033 --- [bitground] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-22T16:27:33.984+09:00  INFO 19033 --- [bitground] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-22T16:27:33.997+09:00  INFO 19033 --- [bitground] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-05-22T16:27:34.124+09:00  INFO 19033 --- [bitground] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4bcaebcb
+2025-05-22T16:27:34.125+09:00  INFO 19033 --- [bitground] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-05-22T16:27:34.175+09:00  INFO 19033 --- [bitground] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.40
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-22T16:27:34.361+09:00  WARN 19033 --- [bitground] [restartedMain] org.hibernate.mapping.RootClass          : HHH000038: Composite-id class does not override equals(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22T16:27:34.361+09:00  WARN 19033 --- [bitground] [restartedMain] org.hibernate.mapping.RootClass          : HHH000039: Composite-id class does not override hashCode(): bit.bitgroundspring.entity.UserSeasonHistory
+2025-05-22T16:27:34.744+09:00  INFO 19033 --- [bitground] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-22T16:27:35.014+09:00  INFO 19033 --- [bitground] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22T16:27:35.317+09:00  INFO 19033 --- [bitground] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-22T16:27:35.333+09:00  INFO 19033 --- [bitground] [restartedMain] b.b.naver.NcpObjectStorageService        : NcpObjectStorageService 생성
+2025-05-22T16:27:36.515+09:00  INFO 19033 --- [bitground] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8090 (http) with context path '/'
+2025-05-22T16:27:36.563+09:00  INFO 19033 --- [bitground] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8091 (http)
+2025-05-22T16:27:36.563+09:00  INFO 19033 --- [bitground] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-22T16:27:36.563+09:00  INFO 19033 --- [bitground] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-22T16:27:36.571+09:00  INFO 19033 --- [bitground] [restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2025-05-22T16:27:36.571+09:00  INFO 19033 --- [bitground] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 54 ms
+2025-05-22T16:27:36.577+09:00  INFO 19033 --- [bitground] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 3 endpoints beneath base path '/actuator'
+2025-05-22T16:27:36.600+09:00  INFO 19033 --- [bitground] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8091 (http) with context path '/'
+2025-05-22T16:27:36.612+09:00  INFO 19033 --- [bitground] [restartedMain] b.b.BitGroundSpringApplication           : Started BitGroundSpringApplication in 4.331 seconds (process running for 4.682)
+2025-05-22T16:27:37.043+09:00  INFO 19033 --- [bitground] [RMI TCP Connection(2)-192.168.0.35] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-22T16:27:37.043+09:00  INFO 19033 --- [bitground] [RMI TCP Connection(2)-192.168.0.35] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-05-22T16:27:37.044+09:00  INFO 19033 --- [bitground] [RMI TCP Connection(2)-192.168.0.35] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-05-22T16:27:37.427+09:00  INFO 19033 --- [bitground] [http-nio-8091-exec-1] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring DispatcherServlet 'dispatcherServletRegistration'
+2025-05-22T16:27:37.427+09:00  INFO 19033 --- [bitground] [http-nio-8091-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServletRegistration'
+2025-05-22T16:27:37.427+09:00  INFO 19033 --- [bitground] [http-nio-8091-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2025-05-22T16:36:50.123+09:00  INFO 19033 --- [bitground] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 4 class path changes (0 additions, 0 deletions, 4 modifications)
+2025-05-22T16:36:50.130+09:00  INFO 19033 --- [bitground] [Thread-4] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22T16:36:50.134+09:00  INFO 19033 --- [bitground] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-22T16:36:50.134+09:00  INFO 19033 --- [bitground] [Thread-4] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22T16:36:50.136+09:00  INFO 19033 --- [bitground] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-22T16:36:50.138+09:00  INFO 19033 --- [bitground] [Thread-4] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2025-05-22T16:36:50.139+09:00  INFO 19033 --- [bitground] [Thread-4] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Destroying Spring FrameworkServlet 'dispatcherServletRegistration'
+2025-05-22T16:36:50.269+09:00  INFO 19033 --- [bitground] [Thread-4] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22T16:36:50.271+09:00  INFO 19033 --- [bitground] [Thread-4] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-05-22T16:36:50.276+09:00  INFO 19033 --- [bitground] [Thread-4] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
