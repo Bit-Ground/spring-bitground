@@ -41,7 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         // 인증이 필요없는 경로들
         return path.equals("/") ||
-                path.startsWith("/api/public/");
+                path.startsWith("/api/public/") ||
+                path.startsWith("/actuator/prometheus/");
     }
     
     // 쿠키에서 JWT 토큰 추출
