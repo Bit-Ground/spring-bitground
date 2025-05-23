@@ -45,6 +45,6 @@ ENTRYPOINT ["sh","-c", "\
   java \
     -javaagent:${PINPOINT_AGENT_HOME}/pinpoint-bootstrap-2.3.3-NCP-RC3.jar \
     -Dpinpoint.applicationName=bitground-spring \
-    -Dpinpoint.agentId=bitground-spring-instance1 \
+    -Dpinpoint.agentId=bitground-spring \
     -jar app.jar \
 "]
