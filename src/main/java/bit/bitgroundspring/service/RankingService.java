@@ -58,12 +58,12 @@ public class RankingService {
         for (UserAsset asset : assets) {
             String market = asset.getId().getMarket();
 
-            if (!market.startsWith("KRW-")) continue;
+            if (!market.startsWith("KRW-")) continue; //원화만 계산
 
-            float quantity = asset.getQuantity();
-            float price = priceMap.getOrDefault(market, 0f);
+            float quantity = asset.getQuantity(); //보유수량
+            float price = priceMap.getOrDefault(market, 0f); //시세
 
-            totalValue += quantity * price;
+            totalValue += quantity * price; //자산*시세
         }
 
         return totalValue;
