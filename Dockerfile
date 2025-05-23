@@ -28,7 +28,7 @@ COPY pinpoint-agent /app/pinpoint-agent
 ARG JAR_FILE=build/libs/*.jar
 COPY --from=builder /app/${JAR_FILE} app.jar
 
-# 헬스체크 추가
+# (선택) 헬스체크 추가
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD wget -qO- http://localhost:8090/actuator/health || exit 1
 
@@ -37,6 +37,7 @@ ENTRYPOINT ["java", \
             "-javaagent:/app/pinpoint-agent/pinpoint-bootstrap-3.0.1.jar", \
             "-Dpinpoint.agentId=bitground", \
             "-Dpinpoint.applicationName=bitground-spring", \
+            "-Dpinpoint.config=/app/pinpoint-agent/pinpoint-root.config", \
             "-jar", \
             "app.jar"]
 
