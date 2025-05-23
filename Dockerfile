@@ -37,8 +37,7 @@ ENTRYPOINT ["java", \
             "-javaagent:/app/pinpoint-agent/pinpoint-bootstrap.jar", \
             "-Dpinpoint.agentId=bitground", \
             "-Dpinpoint.applicationName=bitground-spring", \
-            "-Dpinpoint.collector.ip=10.0.10.8", \
-            "-Dpinpoint.profiler.transport.grpc.collector.ip=10.0.10.8", \
+            "-Dpinpoint.config=/path/to/your/pinpoint-root.config", \
             "-jar", \
             "app.jar"]
 
