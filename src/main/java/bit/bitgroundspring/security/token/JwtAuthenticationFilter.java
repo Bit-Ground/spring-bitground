@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 인증이 필요없는 경로들
         return path.equals("/") ||
                 path.startsWith("/api/public/") ||
-                path.startsWith("/actuator/prometheus/");
+                path.startsWith("/actuator/");
     }
     
     // 쿠키에서 JWT 토큰 추출
