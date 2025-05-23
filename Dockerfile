@@ -22,12 +22,6 @@ RUN chmod +x gradlew \
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-ENV PINPOINT_AGENT_HOME=/usr/local/pinpoint-agent
-# 로컬에서 다운로드한 Pinpoint Agent 디렉터리를 이미지로 복사
-# Dockerfile과 같은 디렉터리에 'pinpoint-agent' 폴더가 있다고 가정합니다.
-# 이 폴더 안에 'pinpoint-bootstrap-YOUR_PINPOINT_VERSION.jar' 파일이 있어야 합니다.
-COPY pinpoint-agent /usr/local/pinpoint-agent
-
 # builder 단계에서 만들어진 JAR 복사
 ARG JAR_FILE=build/libs/*.jar
 COPY --from=builder /app/${JAR_FILE} app.jar
@@ -37,14 +31,4 @@ HEALTHCHECK --interval=30s --timeout=3s \
   CMD wget -qO- http://localhost:8090/actuator/health || exit 1
 
 EXPOSE 8090
-
-# 애플리케이션 실행 명령어
-# -javaagent JVM 인자를 사용하여 Pinpoint Agent 연결
-# -Dpinpoint.applicationname과 -Dpinpoint.agentid는 반드시 설정해야 합니다.
-ENTRYPOINT ["sh","-c", "\
-  java \
-    -javaagent:${PINPOINT_AGENT_HOME}/pinpoint-bootstrap-2.3.3-NCP-RC3.jar \
-    -Dpinpoint.applicationName=bitground-spring \
-    -Dpinpoint.agentId=bitground-spring \
-    -jar app.jar \
-"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
