@@ -4,9 +4,9 @@ import bit.bitgroundspring.util.CookieUtil;
 import bit.bitgroundspring.security.token.JwtTokenProvider;
 import bit.bitgroundspring.security.token.RefreshToken;
 import bit.bitgroundspring.security.token.RefreshTokenService;
-import bit.bitgroundspring.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 import java.util.Optional;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
     
-    private final UserService userService;
+    private final AuthService authService;
     private final RefreshTokenService refreshTokenService;
     private final JwtTokenProvider jwtTokenProvider;
     private final CookieUtil cookieUtil;
@@ -73,6 +73,10 @@ public class AuthController {
             cookieUtil.addCookie(response, "jwt_token", newJwtToken, jwtExpiredTime);
             cookieUtil.addCookie(response, "refresh_token", newRefreshToken, refreshExpiredTime);
             
+            // 토큰에서 userId 추출 후 로그 기록
+            int userId = refreshTokenEntity.getUserId();
+            log.info("[login] token refresh. - userId: {}", userId);
+            
             Map<String, Object> successResponse = Map.of(
                     "success", true,
                     "message", "리프레시 토큰 갱신 성공"
@@ -97,8 +101,16 @@ public class AuthController {
             cookieUtil.deleteCookie(response, "jwt_token");
             cookieUtil.deleteCookie(response, "refresh_token");
             
+            // 로그 기록
+            Optional<RefreshToken> refreshTokenObj = refreshTokenService.getRefreshToken(refreshToken);
+            if (refreshTokenObj.isPresent()) {
+                int userId = refreshTokenObj.get().getUserId();
+                log.info("[login] logout success. - userId: {}", userId);
+            }
+            
             // refresh_token redis에서 삭제
             refreshTokenService.deleteRefreshToken(refreshToken);
+            
             Map<String, Object> successResponse = Map.of(
                     "success", true,
                     "message", "로그아웃 성공"
