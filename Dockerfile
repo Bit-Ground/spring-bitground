@@ -39,6 +39,10 @@ ENTRYPOINT ["java", \
             "-Dpinpoint.applicationName=bitground-spring", \
             "-Dpinpoint.collector.ip=10.0.10.8", \
             "-Dpinpoint.profiler.transport.grpc.collector.ip=10.0.10.8", \
+            "-Dpinpoint.profiler.transport.grpc.collector.port=9991", \
+            "-Dpinpoint.profiler.transport.grpc.stat.collector.port=9992", \
+            "-Dpinpoint.profiler.transport.grpc.span.collector.port=9993", \
+            "-Dpinpoint.profiler.transport.module=GRPC", \
             "-jar", \
             "app.jar"]
 
