@@ -39,3 +39,6 @@ out/
 ### naver ###
 *.yml
 *.yaml
+
+### pinpoint ###
+/pinpoint-agent/pinpoint.license
