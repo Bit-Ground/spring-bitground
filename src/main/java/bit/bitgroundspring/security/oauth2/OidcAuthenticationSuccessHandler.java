@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -22,6 +23,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OidcAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
@@ -74,6 +76,9 @@ public class OidcAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         // 정상 로그인 처리
         String targetUrl = UriComponentsBuilder.fromUriString(reactHost + "/auth/callback")
                 .build().toUriString();
+        
+        // 로그 출력
+        log.info("[login] login success. - userId: {}", userId);
         
         // 리다이렉트 실행
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
