@@ -34,10 +34,9 @@ HEALTHCHECK --interval=30s --timeout=3s \
 
 EXPOSE 8090
 ENTRYPOINT ["java", \
-            "-javaagent:/app/pinpoint-agent/pinpoint-bootstrap.jar", \
+            "-javaagent:/app/pinpoint-agent/pinpoint-bootstrap-3.0.1.jar", \
             "-Dpinpoint.agentId=bitground", \
             "-Dpinpoint.applicationName=bitground-spring", \
-            "-Dpinpoint.config=/app/pinpoint-agent/pinpoint-root.config", \
             "-jar", \
             "app.jar"]
 
