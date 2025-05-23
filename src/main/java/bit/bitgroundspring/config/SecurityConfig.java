@@ -49,7 +49,7 @@ public class SecurityConfig {
                         }))
                 // HTTP 요청에 대한 인가 규칙 설정
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/auth/refresh", "/oauth2/**", "/actuator/prometheus", "/error", "/favicon.ico", "/test").permitAll() // OAuth2 로그인 과정 및 일부 정적 리소스 허용
+                        .requestMatchers("/api/auth/refresh", "/oauth2/**", "/actuator/*", "/error", "/test").permitAll() // OAuth2 로그인 과정 및 일부 정적 리소스 허용
                         .requestMatchers("/api/public/**").permitAll() // 공개 API 경로
                         .requestMatchers("/api/user/**").hasRole("USER") // USER 역할이 있는 사용자만 접근 가능 (역할 기반 접근 제어 예시)
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
