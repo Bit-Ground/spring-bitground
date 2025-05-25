@@ -28,10 +28,6 @@ COPY pinpoint-agent /app/pinpoint-agent
 ARG JAR_FILE=build/libs/*.jar
 COPY --from=builder /app/${JAR_FILE} app.jar
 
-# (선택) 헬스체크 추가
-HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget -qO- http://localhost:8090/actuator/health || exit 1
-
 EXPOSE 8090
 ENTRYPOINT ["java", \
             "-javaagent:/app/pinpoint-agent/pinpoint-bootstrap.jar", \
