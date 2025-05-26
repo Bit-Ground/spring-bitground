@@ -17,7 +17,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
-    private User userId; // 작성한 유저 (외래키)
+    private User user; // 작성한 유저 (외래키)
 
     @Column(name = "title", nullable = false, length = 255, columnDefinition = "VARCHAR(255) DEFAULT ''")
     private String title; // 게시글 제목
@@ -49,12 +49,15 @@ public class Post {
     @Column(name = "isDeleted", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean isDeleted; // 삭제 여부 (논리적 삭제 처리)
 
+    @Column(name = "category")
+    private String category; // 글 작성 시 카테고리 선택 컬럼
+
     // 기본 생성자
     public Post() {}
 
     // 생성자 (필요시 추가)
     public Post(User userId, String title, String content, String filePath, String fileName) {
-        this.userId = userId;
+        this.user = userId;
         this.title = title;
         this.content = content;
         this.filePath = filePath;
