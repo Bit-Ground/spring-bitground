@@ -32,7 +32,16 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("해당 사용자 없음"));
 
         user.setName(name);
-        if (imageUrl != null) {
+        if (imageUrl != null && !imageUrl.equals(user.getProfileImage())) {
+            // 이전 이미지 삭제
+            String oldImage = user.getProfileImage();
+            if (oldImage != null && !oldImage.isEmpty()) {
+                // 파일명 추출 (예: https://kr.object.ncloudstorage.com/bucket/profile/abc.png → abc.png)
+                String oldFileName = oldImage.substring(oldImage.lastIndexOf("/") + 1);
+                objectStorageService.deleteFile(bucketName, "profile", oldFileName);
+            }
+
+            // 새 이미지 저장
             user.setProfileImage(imageUrl);
         }
 
