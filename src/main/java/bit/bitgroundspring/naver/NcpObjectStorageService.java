@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,12 +18,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class NcpObjectStorageService implements ObjectStorageService {
     AmazonS3 s3;
     
     public NcpObjectStorageService(ObjectStorageConfig objectStorageConfig) {
-        System.out.println("NcpObjectStorageService 생성");
+        log.info("NcpObjectStorageService 생성");
         s3 = AmazonS3ClientBuilder.standard()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(
                         objectStorageConfig.getEndPoint(), objectStorageConfig.getRegionName()))
@@ -33,7 +35,7 @@ public class NcpObjectStorageService implements ObjectStorageService {
     
     @Override
     public String uploadFile(String bucketName, String directoryPath, MultipartFile file) {
-        System.out.println("uploadFile=" + file.getOriginalFilename());
+        log.info("uploadFile={}", file.getOriginalFilename());
         
         if (file.isEmpty()) {
             return null;
@@ -79,7 +81,7 @@ public class NcpObjectStorageService implements ObjectStorageService {
         //해당 버킷에 파일이 존재할 경우 삭제
         if (s3.doesObjectExist(bucketName, path)) {
             s3.deleteObject(bucketName, path);
-            System.out.println(path + ": 삭제완료");
+            log.info("{}: 삭제완료", path);
         }
     }
     
