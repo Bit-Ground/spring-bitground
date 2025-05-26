@@ -13,11 +13,6 @@ public class AuthService {
     
     private final JwtTokenProvider jwtTokenProvider;
     
-    // 토큰 유효성 검증
-    public boolean validateToken(String token) {
-        return jwtTokenProvider.validateToken(token);
-    }
-    
     // 토큰에서 사용자 정보 추출
     public UserDto getUserInfoFromToken(String token) {
         Claims claims = jwtTokenProvider.getClaimsFromToken(token);
@@ -27,6 +22,12 @@ public class AuthService {
                 .providerId(claims.getSubject())
                 .role(claims.get("role", UserRole.class))
                 .build();
+    }
+    
+    // 토큰에서 사용자 ID 추출
+    public int getUserIdFromToken(String token) {
+        Claims claims = jwtTokenProvider.getClaimsFromToken(token);
+        return claims.get("userId", Integer.class);
     }
 }
 
