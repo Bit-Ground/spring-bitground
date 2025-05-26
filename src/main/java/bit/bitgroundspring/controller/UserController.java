@@ -79,6 +79,7 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> updateCurrentUser(
             @CookieValue(name = "jwt_token", required = false) String jwtToken,
             @RequestParam("name") String name,
+            @RequestParam("email") String email,
             @RequestParam(value = "image", required = false) MultipartFile image
     ) {
         // 1. 인증 정보 확인
@@ -104,7 +105,7 @@ public class UserController {
         }
 
         // 4. 사용자 정보 업데이트
-        User updated = userService.updateUser(user.getId(), name, imageUrl);
+        User updated = userService.updateUser(user.getId(), name, email, imageUrl);
 
         // 5. 응답 반환
         return ResponseEntity.ok(Map.of(
@@ -121,5 +122,23 @@ public class UserController {
         ));
     }
 
-    //사용자 탈퇴
+    //사용자 탈퇴(is Deleted->1)
+    @DeleteMapping("/me")
+    public ResponseEntity<Map<String, Object>> deleteCurrentUser(
+            @CookieValue(name = "jwt_token", required = false) String jwtToken
+    ){
+        UserDto userDto = authService.getUserInfoFromToken(jwtToken);
+        Optional<User> userOpt = userService.getUserBySocialId(userDto.getProvider(), userDto.getProviderId());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of(
+                    "success", false,
+                    "message", "사용자 없음"
+            ));
+        }
+        userService.softDeleteUser(userOpt.get().getId());
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "회원 탈퇴 처리 완료"
+        ));
+    }
 }

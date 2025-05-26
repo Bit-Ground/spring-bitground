@@ -1,9 +1,9 @@
 package bit.bitgroundspring.service;
 
-import bit.bitgroundspring.dto.UserUpdate;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
 import bit.bitgroundspring.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,15 +23,19 @@ public class UserService {
     
     // 소셜 로그인 ID로 사용자 조회
     public Optional<User> getUserBySocialId(String provider, String providerId) {
-        return userRepository.findByProviderAndProviderId(provider, providerId);
+        return userRepository.findByProviderAndProviderId(provider, providerId)
+                .filter(user -> !user.isDeleted());
     }
 
     // 유저 업데이트
-    public User updateUser(Integer userId, String name, String imageUrl) {
+    @Transactional
+    public User updateUser(Integer userId, String name, String email, String imageUrl) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("해당 사용자 없음"));
 
         user.setName(name);
+        user.setEmail(email);
+
         if (imageUrl != null && !imageUrl.equals(user.getProfileImage())) {
             // 이전 이미지 삭제
             String oldImage = user.getProfileImage();
@@ -60,5 +64,13 @@ public class UserService {
         } catch (Exception e) {
             throw new RuntimeException("파일 업로드 실패", e);
         }
+    }
+
+    //isDeleted -> 1
+    public void softDeleteUser(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당 사용자 없음"));
+        user.setDeleted(true);
+        userRepository.save(user);
     }
 }
