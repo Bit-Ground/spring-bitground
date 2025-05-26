@@ -33,6 +33,9 @@ public class User {
     @Column
     private String profileImage;
 
+    @Column(nullable = false)
+    private boolean isDeleted = false;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 

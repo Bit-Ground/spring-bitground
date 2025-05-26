@@ -3,11 +3,15 @@ package bit.bitgroundspring.controller;
 import bit.bitgroundspring.dto.UserDto;
 import bit.bitgroundspring.dto.UserUpdate;
 import bit.bitgroundspring.entity.User;
+import bit.bitgroundspring.naver.NcpObjectStorageService;
 import bit.bitgroundspring.security.oauth2.AuthService;
 import bit.bitgroundspring.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 import java.util.Optional;
@@ -57,11 +61,27 @@ public class UserController {
         return ResponseEntity.ok(userInfo);
     }
 
+    //사용자 프로필 이미지 수정
+    @Autowired
+    private NcpObjectStorageService objectStorageService;
+
+    @Value("${ncp.bucket}")
+    private String bucketName;
+
+    @PostMapping("/upload-profile")
+    public ResponseEntity<String> uploadProfileImage(@RequestParam MultipartFile image) {
+        String imageUrl = objectStorageService.uploadFile(bucketName, "profile", image);
+        return ResponseEntity.ok(imageUrl);
+    }
+
     //사용자 정보 수정
     @PutMapping("/me")
     public ResponseEntity<Map<String, Object>> updateCurrentUser(
             @CookieValue(name = "jwt_token", required = false) String jwtToken,
-            @RequestBody UserUpdate request) {
+            @RequestParam("name") String name,
+            @RequestParam("email") String email,
+            @RequestParam(value = "image", required = false) MultipartFile image
+    ) {
         // 1. 인증 정보 확인
         UserDto userDto = authService.getUserInfoFromToken(jwtToken);
         String provider = userDto.getProvider();
@@ -74,12 +94,20 @@ public class UserController {
                     "success", false,
                     "message", "수정 대상 사용자를 찾을 수 없습니다."
             ));
-    }
+        }
+
         User user = userOpt.get();
 
-        // 3. 수정 처리
-        User updated = userService.updateUser(user.getId(), request);
+        // 3. 이미지 업로드 처리
+        String imageUrl = null;
+        if (image != null && !image.isEmpty()) {
+            imageUrl = userService.uploadProfileImage(image);
+        }
 
+        // 4. 사용자 정보 업데이트
+        User updated = userService.updateUser(user.getId(), name, email, imageUrl);
+
+        // 5. 응답 반환
         return ResponseEntity.ok(Map.of(
                 "success", true,
                 "message", "사용자 정보 수정 성공",
@@ -92,7 +120,25 @@ public class UserController {
                         .role(updated.getRole())
                         .build()
         ));
-}
+    }
 
-    //사용자 탈퇴
+    //사용자 탈퇴(is Deleted->1)
+    @DeleteMapping("/me")
+    public ResponseEntity<Map<String, Object>> deleteCurrentUser(
+            @CookieValue(name = "jwt_token", required = false) String jwtToken
+    ){
+        UserDto userDto = authService.getUserInfoFromToken(jwtToken);
+        Optional<User> userOpt = userService.getUserBySocialId(userDto.getProvider(), userDto.getProviderId());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of(
+                    "success", false,
+                    "message", "사용자 없음"
+            ));
+        }
+        userService.softDeleteUser(userOpt.get().getId());
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "회원 탈퇴 처리 완료"
+        ));
+    }
 }
