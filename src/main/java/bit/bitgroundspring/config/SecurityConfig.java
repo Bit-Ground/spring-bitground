@@ -55,6 +55,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/public/**").permitAll() // 공개 API 경로
                         .requestMatchers("/api/user/**").hasRole("USER") // USER 역할 요구
                         .anyRequest().authenticated() // 그 외는 인증 필요
+                        .requestMatchers("/auth/refresh", "/oauth2/**", "/actuator/*", "/error", "/test").permitAll() // OAuth2 로그인 과정 및 일부 정적 리소스 허용
+                        .requestMatchers("/public/**").permitAll() // 공개 API 경로
+                        .requestMatchers("/api/user/**").hasRole("USER") // USER 역할이 있는 사용자만 접근 가능 (역할 기반 접근 제어 예시)
+                        .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )
                 // OAuth2/OIDC 로그인 설정
                 .oauth2Login(oauth2Login -> oauth2Login
