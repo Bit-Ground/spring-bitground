@@ -37,7 +37,7 @@ public class User {
     private String providerId;
     
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", nullable = false, columnDefinition = "enum ('ROLE_ADMIN', 'ROLE_USER') default 'ROLE_USER'")
     @Builder.Default
     private Role role = Role.ROLE_USER;
     
