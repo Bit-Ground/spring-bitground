@@ -128,8 +128,8 @@ public class CustomOidcUserService extends OidcUserService {
                     .providerId(providerId)
                     .email(email)
                     .name(name)
+                    .cash(10000000) // 초기 캐시 설정
                     .profileImage(profileImage)
-                    .role(Role.ROLE_USER)
                     .build();
             
             // 사용자 정보 저장
