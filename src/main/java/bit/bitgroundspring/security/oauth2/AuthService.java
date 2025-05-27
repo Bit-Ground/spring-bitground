@@ -1,7 +1,7 @@
 package bit.bitgroundspring.security.oauth2;
 
 import bit.bitgroundspring.dto.UserDto;
-import bit.bitgroundspring.entity.UserRole;
+import bit.bitgroundspring.entity.Role;
 import bit.bitgroundspring.security.token.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class AuthService {
                 .id(claims.get("userId", Integer.class))
                 .provider(claims.get("provider", String.class))
                 .providerId(claims.getSubject())
-                .role(claims.get("role", UserRole.class))
+                .role(claims.get("role", Role.class))
                 .build();
     }
     
