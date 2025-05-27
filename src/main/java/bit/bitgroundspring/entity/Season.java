@@ -2,36 +2,43 @@ package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import bit.bitgroundspring.entity.SeasonStatus;
 
 @Entity
 @Table(name = "seasons")
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Season {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @Column(name = "id")
+    private Integer id;
+    
+    @Column(name = "name", length = 255)
     private String name;
-
-    private LocalDateTime startAt;
-
-    private LocalDateTime endAt;
-
+    
+    @Column(name = "start_at")
+    private LocalDate startAt;
+    
+    @Column(name = "end_at")
+    private LocalDate endAt;
+    
+    @Column(name = "status", nullable = false, columnDefinition = "enum('PENDING', 'COMPLETED') default 'PENDING'")
     @Builder.Default
-    @Enumerated(EnumType.STRING)
-    private SeasonStatus status = SeasonStatus.INPROGRESS;
-
-    private Boolean rewardCalculated;
-
-    @PrePersist
-    public void prePersist() {
-        this.startAt = LocalDateTime.now();
-    }
+    private Status status = Status.PENDING;
+    
+    @Column(name = "reward_calculated", columnDefinition = "tinyint(1) default 0")
+    @Builder.Default
+    private Boolean rewardCalculated = false;
+    
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6)")
+    private LocalDateTime createdAt;
 }
