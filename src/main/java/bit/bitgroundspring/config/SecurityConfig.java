@@ -49,7 +49,7 @@ public class SecurityConfig {
                         }))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/auth/refresh", "/auth/refresh", "/oauth2/**", "/error", "/favicon.ico", "/test",
-                                "/api/news/**", "/api/coin/**", "/api/public/**", "/public/**", "auth/logout",
+                                "/api/news/**", "/api/coin/**", "/api/public/**", "/public/**", "/auth/logout",
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/actuator/*").permitAll()
                         .requestMatchers("/api/user/**").hasRole("USER")
                         .anyRequest().authenticated()

@@ -34,7 +34,7 @@ public class RankingService {
         return rankings.stream()
                 .map(r -> {
                     RankingDto dto = new RankingDto();
-                    dto.setUserId(r.getUserId().getId());  // userId라는 이름의 User 객체에서 진짜 ID를 추출
+                    dto.setUserId(r.getUser().getId());  // userId라는 이름의 User 객체에서 진짜 ID를 추출
                     dto.setSeasonId(r.getSeason().getId().intValue()); //Long 타입을 int로 변환해서 DTO에 넣음
                     dto.setRanks(rankCounter[0]++); // 1부터 순위 증가
                     dto.setTotalValue(r.getTotalValue()); // 총 자산 설정
@@ -56,12 +56,12 @@ public class RankingService {
         float totalValue = 0f;
 
         for (UserAsset asset : assets) {
-            String market = asset.getId().getMarket();
+            String symbol = asset.getCoin().getSymbol();
 
-            if (!market.startsWith("KRW-")) continue; //원화만 계산
+            if (!symbol.startsWith("KRW-")) continue; //원화만 계산
 
-            float quantity = asset.getQuantity(); //보유수량
-            float price = priceMap.getOrDefault(market, 0f); //시세
+            float quantity = asset.getAmount(); // 보유수량
+            float price = priceMap.getOrDefault(symbol, 0f); //시세
 
             totalValue += quantity * price; //자산*시세
         }

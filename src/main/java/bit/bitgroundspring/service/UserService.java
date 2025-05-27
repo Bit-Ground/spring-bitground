@@ -24,7 +24,7 @@ public class UserService {
     // 소셜 로그인 ID로 사용자 조회
     public Optional<User> getUserBySocialId(String provider, String providerId) {
         return userRepository.findByProviderAndProviderId(provider, providerId)
-                .filter(user -> !user.isDeleted());
+                .filter(user -> !user.getIsDeleted());
     }
 
     // 유저 업데이트
@@ -70,7 +70,7 @@ public class UserService {
     public void softDeleteUser(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("해당 사용자 없음"));
-        user.setDeleted(true);
+        user.setIsDeleted(true);
         userRepository.save(user);
     }
 }
