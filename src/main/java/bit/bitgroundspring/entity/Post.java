@@ -1,7 +1,10 @@
 package bit.bitgroundspring.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
 
@@ -9,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "posts")
+@AllArgsConstructor
 public class Post {
 
     @Id
@@ -37,7 +41,7 @@ public class Post {
     @Column(name = "reports", columnDefinition = "INT DEFAULT 0")
     private int reports; // 게시글 신고수
 
-    @Column(name = "createdAt", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "createdAt", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false)
     private LocalDateTime createdAt; // 작성일 (기본값: 현재 시간)
 
     @Column(name = "updatedAt")

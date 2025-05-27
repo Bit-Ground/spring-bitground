@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import bit.bitgroundspring.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -33,4 +35,19 @@ public class BoardService {
         // 3. 저장
         return boardRepository.save(post);
     }
+
+    public List<Post> getAllPosts(BoardDto dto) {
+
+        Post post = new Post();
+        post.getId();
+        post.getTitle();
+        post.getUser().getName();
+        post.getCreatedAt();
+        post.getLikes();
+
+        return boardRepository.findAll();
+    }
 }
+
+
+
