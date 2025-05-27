@@ -1,6 +1,6 @@
 package bit.bitgroundspring.security.token;
 
-import bit.bitgroundspring.entity.UserRole;
+import bit.bitgroundspring.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +26,7 @@ public class RefreshToken implements Serializable {
     
     private String providerId; // OAuth2 제공자의 subject id
     
-    private UserRole role; // 사용자 권한 (ROLE_USER, ROLE_ADMIN)
+    private Role role; // 사용자 권한 (ROLE_USER, ROLE_ADMIN)
     
     
 }

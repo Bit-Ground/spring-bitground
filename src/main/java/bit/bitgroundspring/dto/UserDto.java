@@ -1,8 +1,6 @@
 package bit.bitgroundspring.dto;
 
-import bit.bitgroundspring.entity.UserRole;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import bit.bitgroundspring.entity.Role;
 import lombok.*;
 
 @Getter
@@ -23,6 +21,6 @@ public class UserDto {
     
     private String profileImage;
     
-    private UserRole role;
+    private Role role;
     
 }
