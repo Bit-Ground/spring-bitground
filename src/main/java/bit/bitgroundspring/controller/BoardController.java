@@ -1,10 +1,12 @@
 package bit.bitgroundspring.controller;
 
+import bit.bitgroundspring.dto.BoardDto;
 import bit.bitgroundspring.entity.Post;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
 import bit.bitgroundspring.repository.BoardRepository;
 import bit.bitgroundspring.repository.UserRepository;
+import bit.bitgroundspring.service.BoardService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,6 +26,7 @@ public class BoardController {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final NcpObjectStorageService objectStorageService;
+    private final BoardService boardService;
 
     @Value("${ncp.bucket}")
     private String bucketName;
@@ -66,7 +70,11 @@ public class BoardController {
             return ResponseEntity.status(500).body("글 등록 실패");
         }
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getPostList() {
+        List<BoardDto> posts = boardService.getAllPosts();
+        return ResponseEntity.ok(posts);
+    }
 }
 
-//@GetMapping("/list")
-//public

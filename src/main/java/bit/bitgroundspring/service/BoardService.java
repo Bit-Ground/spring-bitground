@@ -36,16 +36,8 @@ public class BoardService {
         return boardRepository.save(post);
     }
 
-    public List<Post> getAllPosts(BoardDto dto) {
-
-        Post post = new Post();
-        post.getId();
-        post.getTitle();
-        post.getUser().getName();
-        post.getCreatedAt();
-        post.getLikes();
-
-        return boardRepository.findAll();
+    public List<BoardDto> getAllPosts() {
+        return boardRepository.findAllBoardDtos();
     }
 }
 
