@@ -1,55 +1,68 @@
 package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "comments")
 @Getter
 @Setter
-@Table(name = "comments")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class Comment {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
-
-    // ✅ 게시글(Post) 참조 (ManyToOne)
+    
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_post"))
+    @JoinColumn(name = "post_id", nullable = false,
+            foreignKey = @ForeignKey(name = "comments_posts_id_fk",
+                    foreignKeyDefinition = "FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE"))
     private Post post;
-
-    // ✅ 작성자(User) 참조 (ManyToOne, 삭제 시 SET NULL)
+    
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", foreignKey = @ForeignKey(name = "fk_comment_user"))
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    private User userId;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @JoinColumn(name = "user_id", nullable = false,
+            foreignKey = @ForeignKey(name = "comments_users_id_fk",
+                    foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"))
+    private User user;
+    
+    @Column(name = "content", length = 255, nullable = false)
     private String content;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
+    
+    @Column(name = "likes", nullable = false, columnDefinition = "int default 0")
+    @Builder.Default
     private Integer likes = 0;
-
-    // ✅ 대댓글 (자기 자신을 참조하는 self-join)
+    
+    @Column(name = "dislikes", nullable = false, columnDefinition = "int default 0")
+    @Builder.Default
+    private Integer dislikes = 0;
+    
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "tinyint(1) default 0")
+    @Builder.Default
+    private Boolean isDeleted = false;
+    
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parentId")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "parent_id",
+            foreignKey = @ForeignKey(name = "comments_comments_id_fk",
+                    foreignKeyDefinition = "FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE"))
     private Comment parent;
-
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> replies;
-
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = this.createdAt == null ? LocalDateTime.now() : this.createdAt;
-    }
+    
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    private List<Comment> children;
+    
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6)")
+    private LocalDateTime createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6)")
+    private LocalDateTime updatedAt;
 }
