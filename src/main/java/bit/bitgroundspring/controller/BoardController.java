@@ -42,39 +42,5 @@ public class BoardController {
             return ResponseEntity.status(500).body("이미지 업로드 실패");
         }
     }
-
-    // ✅ 게시글 등록 (FormData 기반)
-    @PostMapping("/form")
-    public ResponseEntity<?> createPost(
-            @RequestParam("title") String title,
-            @RequestParam("content") String content,
-            @RequestParam("category") String category,
-            @RequestParam("userId") Integer userId,
-            @RequestParam(value = "file", required = false) MultipartFile file
-    ) {
-        try {
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-            Post post = new Post();
-            post.setUser(user);
-            post.setTitle(title);
-            post.setContent(content);
-            post.setCategory(category);
-
-            if (file != null && !file.isEmpty()) {
-                String directory = "posts"; // 게시글 업로드 경로
-                String fileUrl = objectStorageService.uploadFile(bucketName, directory, file);
-                post.setFilePath(fileUrl);
-                post.setFileName(file.getOriginalFilename());
-            }
-
-            boardRepository.save(post);
-            return ResponseEntity.ok("글 등록 성공");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("글 등록 실패");
-        }
-    }
+    
 }

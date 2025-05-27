@@ -1,7 +1,7 @@
 package bit.bitgroundspring.security.oauth2;
 
+import bit.bitgroundspring.entity.Role;
 import bit.bitgroundspring.entity.User;
-import bit.bitgroundspring.entity.UserRole;
 import bit.bitgroundspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -129,7 +129,7 @@ public class CustomOidcUserService extends OidcUserService {
                     .email(email)
                     .name(name)
                     .profileImage(profileImage)
-                    .role(UserRole.ROLE_USER)
+                    .role(Role.ROLE_USER)
                     .build();
             
             // 사용자 정보 저장
