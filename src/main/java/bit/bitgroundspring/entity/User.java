@@ -2,55 +2,61 @@ package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
+    @Column(name = "id")
     private Integer id;
-
-    @Column(nullable = false)
-    private String provider; // oauth2 제공자 (google, naver, kakao)
-
-    @Column(nullable = false)
-    private String providerId; // oauth2 제공자의 subject id
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column
+    
+    @Column(name = "email", length = 255)
     private String email;
-
-    @Column
+    
+    @Column(name = "name", length = 255, nullable = false)
+    private String name;
+    
+    @Column(name = "profile_image", length = 255)
     private String profileImage;
-
-    @Column(nullable = false)
-    private boolean isDeleted = false;
-
+    
+    @Column(name = "provider", length = 255, nullable = false)
+    private String provider;
+    
+    @Column(name = "provider_id", length = 255)
+    private String providerId;
+    
     @Enumerated(EnumType.STRING)
-    private UserRole role;
-
+    @Column(name = "role", nullable = false)
+    @Builder.Default
+    private Role role = Role.ROLE_USER;
+    
+    @Column(name = "cash", nullable = false, columnDefinition = "int")
+    private Integer cash;
+    
+    @Column(name = "tier", nullable = false, columnDefinition = "tinyint default 0")
+    @Builder.Default
+    private Integer tier = 0;
+    
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "tinyint(1) default 0")
+    @Builder.Default
+    private Boolean isDeleted = false;
+    
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6)")
     private LocalDateTime createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6)")
     private LocalDateTime updatedAt;
-
-    @PrePersist
-    public void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
 }
