@@ -1,70 +1,62 @@
 package bit.bitgroundspring.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "posts")
 @Getter
 @Setter
-@Table(name = "posts")
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class Post {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // 게시글 ID (자동 증가)
-
+    @Column(name = "id")
+    private Integer id;
+    
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
-    private User user; // 작성한 유저 (외래키)
-
-    @Column(name = "title", nullable = false, length = 255, columnDefinition = "VARCHAR(255) DEFAULT ''")
-    private String title; // 게시글 제목
-
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
-    private String content; // 게시글 내용
-
-    @Column(name = "filePath", columnDefinition = "VARCHAR(255) DEFAULT NULL")
-    private String filePath; // 첨부파일 경로
-
-    @Column(name = "fileName", columnDefinition = "VARCHAR(255) DEFAULT NULL")
-    private String fileName; // 첨부파일 원본 파일명
-
-    @Column(name = "likes", columnDefinition = "INT DEFAULT 0")
-    private int likes; // 게시글 추천수
-
-    @Column(name = "reports", columnDefinition = "INT DEFAULT 0")
-    private int reports; // 게시글 신고수
-
-    @Column(name = "createdAt", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false)
-    private LocalDateTime createdAt; // 작성일 (기본값: 현재 시간)
-
-    @Column(name = "updatedAt")
-    private LocalDateTime updatedAt; // 수정일 (수정 시 자동 업데이트)
-
-    @Column(name = "deletedAt")
-    private LocalDateTime deletedAt; // 삭제일 (삭제 시 기록)
-
-    @Column(name = "isDeleted", columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private boolean isDeleted; // 삭제 여부 (논리적 삭제 처리)
-
-    @Column(name = "category")
-    private String category; // 글 작성 시 카테고리 선택 컬럼
-
-    // 기본 생성자
-    public Post() {}
-
-    // 생성자 (필요시 추가)
-    public Post(User userId, String title, String content, String filePath, String fileName) {
-        this.user = userId;
-        this.title = title;
-        this.content = content;
-        this.filePath = filePath;
-        this.fileName = fileName;
-    }
+    @JoinColumn(name = "user_id", nullable = false,
+            foreignKey = @ForeignKey(name = "posts_users_id_fk",
+                    foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"))
+    private User user;
+    
+    @Column(name = "tier", nullable = false, columnDefinition = "tinyint")
+    private Integer tier;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
+    private Category category;
+    
+    @Column(name = "title", length = 255, nullable = false)
+    private String title;
+    
+    @Column(name = "content", nullable = false, columnDefinition = "mediumtext")
+    private String content;
+    
+    @Column(name = "likes", nullable = false, columnDefinition = "int default 0")
+    @Builder.Default
+    private Integer likes = 0;
+    
+    @Column(name = "dislikes", nullable = false, columnDefinition = "int default 0")
+    @Builder.Default
+    private Integer dislikes = 0;
+    
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "tinyint(1) default 0")
+    @Builder.Default
+    private Boolean isDeleted = false;
+    
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6)")
+    private LocalDateTime createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6)")
+    private LocalDateTime updatedAt;
 }

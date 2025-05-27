@@ -1,24 +1,52 @@
 package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "coins")
 @Getter
 @Setter
-@Table(name = "coins")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class Coin {
-
+    
     @Id
-    @Column(name = "market", nullable = false)
-    private String market;  // 코인의 고유한 시장 정보 (예: "KRW-BTC", "USDT-ETH")
-
-    // 생성자
-    public Coin() {}
-
-    public Coin(String market, String name, String symbol) {
-        this.market = market;
-
-    }
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+    
+    @Column(name = "symbol", length = 255, nullable = false)
+    private String symbol;
+    
+    @Column(name = "trade_volume")
+    private Float tradeVolume;
+    
+    @Column(name = "change_rate")
+    private Float changeRate;
+    
+    @Column(name = "is_warning", nullable = false, columnDefinition = "tinyint(1) default 0")
+    @Builder.Default
+    private Boolean isWarning = false;
+    
+    @Column(name = "is_caution", nullable = false, columnDefinition = "tinyint(1) default 0")
+    @Builder.Default
+    private Boolean isCaution = false;
+    
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "tinyint(1) default 0")
+    @Builder.Default
+    private Boolean isDeleted = false;
+    
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6)")
+    private LocalDateTime createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6)")
+    private LocalDateTime updatedAt;
 }
