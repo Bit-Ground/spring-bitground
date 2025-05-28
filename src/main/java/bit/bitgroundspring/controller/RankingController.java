@@ -22,4 +22,29 @@ public class RankingController {
     public List<RankingDto> getLiveRankings(@PathVariable int seasonId) {
         return rankingService.getLiveRankingsBySeason(seasonId);
     }
+
+    /**
+     * 🔴 실시간 랭킹 (현재 시즌)
+     */
+//    @GetMapping("/live")
+//    public List<RankingDto> getLiveRankings() {
+//        Season current = seasonRepository.findFirstByEndAtIsNull();
+//        return rankingService.getRankingsBySeason(current);
+//    }
+//
+//    /**
+//     * 🟢 종료된 시즌 랭킹
+//     */
+//    @GetMapping("/season/{seasonId}")
+//    public List<RankingDto> getPastRanking(@PathVariable int seasonId) {
+//        Season season = seasonRepository.findById((long) seasonId)
+//                .orElseThrow(() -> new RuntimeException("시즌 없음"));
+//
+//        if (season.getEndAt() == null) {
+//            throw new IllegalStateException("아직 종료되지 않은 시즌입니다.");
+//        }
+//
+//        return rankingService.getRankingsBySeason(season);
+//    }
+
 }

@@ -20,6 +20,7 @@ public class RankingService {
     private final RankingRepository rankingRepository;
     private final UserAssetRepository userAssetRepository;
 
+
     /**
      * 실시간 랭킹 조회 - 자산 내림차순 정렬 후 순위 계산
      *
@@ -68,5 +69,29 @@ public class RankingService {
 
         return totalValue;
     }
+
+    /**
+     * 시즌 ID 기준으로 랭킹 조회 (실시간 & 전시즌 공통 사용)
+     */
+//    public List<RankingDto> getRankingsBySeason(Season season) {
+//        List<UserRanking> rankings = userRankingRepository
+//                .findBySeasonOrderByTotalValueDesc(season);
+//
+//        int[] rankCounter = {1};
+//
+//        return rankings.stream()
+//                .map(r -> RankingDto.builder()
+//                        .userId(r.getUser().getId())
+//                        .seasonId(season.getId())
+//                        .profileImage(r.getUser().getProfileImage()) //프로필 사진 추가
+//                        .ranks(rankCounter[0]++)
+//                        .totalValue(r.getTotalValue())
+//                        .tier(r.getTier())
+//                        .build())
+//                .collect(Collectors.toList());
+//    }
+
+
+
 
 }
