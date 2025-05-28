@@ -55,7 +55,7 @@ public class SeasonService {
     public void startNewSeason() {
         Season season = Season.builder()
                 .name("Season " + (seasonRepository.count() + 1)) // 시즌 번호 자동
-                .startAt(LocalDateTime.now())                    // 현재 시작 시각
+                .startAt(LocalDate.from(LocalDateTime.now()))                    // 현재 시작 시각
                 .endAt(null)                                      // 종료 안 됨
                 .rewardCalculated(false)                          // 정산 안 됨
                 .build();
@@ -71,7 +71,7 @@ public class SeasonService {
      */
     @Transactional
     public void endSeason(Season season) {
-        season.setEndAt(LocalDateTime.now());  // 종료 시각 설정
+        season.setEndAt(LocalDate.from(LocalDateTime.now()));  // 종료 시각 설정
         season.setRewardCalculated(true);      // 정산 완료 표시
         seasonRepository.save(season);         // DB에 저장
         System.out.println("[시즌 종료] " + season.getName());
