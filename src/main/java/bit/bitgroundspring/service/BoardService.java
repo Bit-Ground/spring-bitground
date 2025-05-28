@@ -35,6 +35,7 @@ public class BoardService {
                 .category(Category.valueOf(dto.getCategory())) // ✅ 문자열 → enum
                 .title(dto.getTitle())
                 .content(dto.getContent())
+                .views(dto.getViews())
                 .likes(0)
                 .dislikes(0)
                 .isDeleted(false)
@@ -54,19 +55,19 @@ public class BoardService {
                     (Integer) row[0], // p.id
                     (Integer) row[1], // userId
                     (String) row[2],  // u.name
-                    (String) row[3],  // p.title
-                    (String) row[4],  // p.content
-                    ((Number) row[5]).intValue(), // p.tier
-                    ((Number) row[6]).intValue(), // p.likes
-                    ((Number) row[7]).intValue(), // p.dislikes
-                    ((Boolean) row[8]), // p.is_deleted
-                    ((Timestamp) row[9]).toLocalDateTime(), // created_at
-                    ((Timestamp) row[10]).toLocalDateTime(), // updated_at
-                    (String) row[11]  // category (Enum.name() 형태로 저장된 경우)
+                    (String) row[3],  // title
+                    (String) row[4],  // content
+                    ((Number) row[5]).intValue(), // tier
+                    ((Number) row[6]).intValue(), // likes
+                    ((Number) row[7]).intValue(), // dislikes
+                    Boolean.TRUE.equals(row[8]), // isDeleted
+                    ((Timestamp) row[9]).toLocalDateTime(), // createdAt
+                    ((Timestamp) row[10]).toLocalDateTime(), // updatedAt
+                    (String) row[11],  // category
+                    ((Number) row[12]).intValue() // views
             );
             result.add(dto);
         }
-
         return result;
     }
 }

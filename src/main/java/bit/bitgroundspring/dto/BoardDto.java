@@ -22,4 +22,5 @@ public class BoardDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String category;     // Enum.name() 형식으로 전달
+    private int views;
 }

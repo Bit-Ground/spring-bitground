@@ -102,7 +102,8 @@ public class BoardController {
                 post.getIsDeleted(),
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
-                post.getCategory().name()
+                post.getCategory().name(),
+                post.getViews()
         );
 
         return ResponseEntity.ok(dto);
