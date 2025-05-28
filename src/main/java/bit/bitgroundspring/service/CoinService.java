@@ -3,26 +3,23 @@ package bit.bitgroundspring.service;
 import bit.bitgroundspring.entity.Coin;
 import bit.bitgroundspring.repository.CoinRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.boot.context.event.ApplicationReadyEvent; // 정확한 임포트 경로
-import org.springframework.context.event.EventListener;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional; // @Transactional 임포트 유지
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional // 트랜잭션 관리 활성화
 public class CoinService {
 
     private final CoinRepository coinRepository;
     private final WebClient upbitWebClient;
     private final ObjectMapper objectMapper;
-
-    // POPULAR_COINS 리스트는 이제 필요 없습니다. 모든 KRW 마켓을 동적으로 가져올 것입니다.
 
     public CoinService(CoinRepository coinRepository, WebClient.Builder webClientBuilder) {
         this.coinRepository = coinRepository;
@@ -30,39 +27,25 @@ public class CoinService {
         this.objectMapper = new ObjectMapper();
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void initialDataLoad() {
-        System.out.println("Initial Upbit data load on application start at " + LocalDateTime.now());
-        collectUpbitMarketData();
-        System.out.println("Finished initial data load.");
-    }
-
-    public void collectUpbitMarketData() {
-        System.out.println("Starting Upbit data collection for all KRW markets...");
+    public void collectAndSaveAllKrwCoins() {
+        // System.out.println("Starting Upbit data collection for all KRW markets..."); // 시작 로그는 선택 사항, 스케줄러에서 이미 출력
         try {
-            // 1. 모든 마켓 정보 가져오기 (한글명, 유의/주의 여부 포함)
-            // isDetails=true를 통해 market_event 정보도 함께 가져옴
             List<Map<String, Object>> allMarkets = upbitWebClient.get()
                     .uri("/v1/market/all?isDetails=true")
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
                     .block();
 
-            // KRW 마켓만 필터링하고 심볼 리스트를 생성
             List<String> krwMarketSymbols = allMarkets.stream()
                     .filter(m -> m.get("market") instanceof String && ((String) m.get("market")).startsWith("KRW-"))
                     .map(m -> (String) m.get("market"))
                     .collect(Collectors.toList());
 
-            // 한글명 및 유의/주의 상세 정보를 심볼을 키로 하는 맵으로 변환하여 빠른 조회를 가능하게 함
             Map<String, Map<String, Object>> krwMarketDetailsMap = allMarkets.stream()
-                    .filter(m -> krwMarketSymbols.contains((String) m.get("market"))) // KRW 마켓만 필터링
+                    .filter(m -> krwMarketSymbols.contains((String) m.get("market")))
                     .collect(Collectors.toMap(m -> (String) m.get("market"), m -> m));
 
-            // 2. 모든 KRW 마켓 코인들의 실시간 시세 정보 가져오기
-            // Upbit API는 한 번에 너무 많은 심볼을 받을 수 없으므로, 심볼 리스트를 분할하여 요청합니다.
-            // 여기서는 100개씩 끊어서 요청하는 예시를 보여줍니다. (Upbit API 제한에 따라 조정 필요)
-            final int BATCH_SIZE = 100; // 한 번에 요청할 최대 심볼 개수
+            final int BATCH_SIZE = 100;
             for (int i = 0; i < krwMarketSymbols.size(); i += BATCH_SIZE) {
                 List<String> batchSymbols = krwMarketSymbols.subList(i, Math.min(i + BATCH_SIZE, krwMarketSymbols.size()));
                 String marketsParam = String.join(",", batchSymbols);
@@ -71,9 +54,8 @@ public class CoinService {
                         .uri("/v1/ticker?markets={markets}", marketsParam)
                         .retrieve()
                         .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
-                        .block(); // 블로킹 호출
+                        .block();
 
-                // 가져온 시세 데이터와 마켓 상세 정보를 결합하여 DB에 저장/업데이트
                 for (Map<String, Object> ticker : tickers) {
                     String symbol = (String) ticker.get("market");
                     Optional<Coin> existingCoin = coinRepository.findBySymbol(symbol);
@@ -81,16 +63,31 @@ public class CoinService {
 
                     coin.setSymbol(symbol);
 
-                    // currentPrice는 엔티티에서 제거되었으므로, 해당 필드를 설정하는 코드는 제거됩니다.
-
                     if (ticker.get("signed_change_rate") != null) {
                         coin.setChangeRate(Float.parseFloat(ticker.get("signed_change_rate").toString()) * 100);
                     }
-                    if (ticker.get("acc_trade_volume_24h") != null) {
-                        coin.setTradeVolume(Float.parseFloat(ticker.get("acc_trade_volume_24h").toString()));
-                    }
 
-                    // market_all에서 가져온 상세 정보 (한글명, 유의/주의 여부) 설정
+                    // --- 디버그 로깅 코드 제거됨 ---
+                    if (ticker.get("acc_trade_price_24h") != null) {
+                        Object rawTradePrice = ticker.get("acc_trade_price_24h");
+                        try {
+                            if (rawTradePrice instanceof Number) {
+                                coin.setTradePrice24h(((Number) rawTradePrice).longValue());
+                            } else {
+                                double doubleValue = Double.parseDouble(rawTradePrice.toString());
+                                coin.setTradePrice24h((long) doubleValue);
+                            }
+                        } catch (NumberFormatException | ClassCastException e) {
+                            // 오류 로깅은 Logback/SLF4J를 사용하는 것이 좋습니다.
+                            // System.err.println("Error parsing acc_trade_price_24h for " + symbol + ": " + rawTradePrice + " -> " + e.getMessage());
+                            coin.setTradePrice24h(0L);
+                        }
+                    } else {
+                        coin.setTradePrice24h(0L);
+                    }
+                    // --- 디버그 로깅 코드 제거됨 끝 ---
+
+
                     Map<String, Object> details = krwMarketDetailsMap.get(symbol);
                     if (details != null) {
                         coin.setKoreanName((String) details.getOrDefault("korean_name", symbol));
@@ -115,11 +112,11 @@ public class CoinService {
                 }
             }
 
-            System.out.println("Upbit data collection for all KRW markets completed successfully. Total coins collected: " + krwMarketSymbols.size());
+            // System.out.println("Upbit data collection for all KRW markets completed successfully. Total coins collected: " + krwMarketSymbols.size()); // 완료 로그도 선택 사항
 
         } catch (Exception e) {
-            System.err.println("Error collecting Upbit market data: " + e.getMessage());
-            e.printStackTrace();
+            // 중요한 오류이므로, System.err.println 대신 SLF4J/Logback을 사용하여 로깅하는 것이 좋습니다.
+            // e.printStackTrace();
         }
     }
 }
