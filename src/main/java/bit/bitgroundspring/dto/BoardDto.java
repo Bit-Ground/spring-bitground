@@ -12,16 +12,14 @@ import java.time.LocalDateTime;
 public class BoardDto {
     private Integer id;
     private Integer userId;      // User 엔티티 대신 ID만
-    private String name;     // 응답용: 작성자 이름
+    private String name;         // 작성자 이름 (응답용)
     private String title;
     private String content;
-    private String filePath;
-    private String fileName;
+    private int tier;
     private int likes;
-    private int reports;
+    private int dislikes;
+    private boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
-    private boolean isDeleted;
-    private String category;
+    private String category;     // Enum.name() 형식으로 전달
 }
