@@ -15,9 +15,9 @@ public class RankingScheduler {
     private final RankingService rankingService;
     private final SeasonService seasonService;
 
-    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정 실행
     public void scheduleSeason() {
-        seasonService.handleFixedSeasonSchedule(); // 시즌 시작/종료 자동 처리
+        seasonService.handleFixedSeasonSchedule(); // 시즌 자동 시작/종료
     }
 
 }

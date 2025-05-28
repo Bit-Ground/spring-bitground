@@ -13,17 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RankingDto {
-   private int userId; //유저 ID
-   private int seasonId; //시즌ID
-   private int ranks; //랭킹
-   private float totalValue; //총자산
-   private String profileImage;   // 유저 프로필
-   private String tier;           // 이전시즌 등급
 
-//    private Integer userId;       // 유저 ID
-//    private Integer seasonId;     // 시즌 ID
-//    private Integer ranks;        // 순위
-//    private Integer totalValue;   // 총 자산
-//    private Integer tier;         // 티어 (0~4)
-    //private String profileImage;
+    private String name;          // 유저 name
+    private Integer userId;       // 유저 ID
+    private Integer seasonId;     // 시즌 ID
+    private Integer ranks;        // 순위
+    private Integer totalValue;   // 총 자산
+    private Integer tier;         // 티어 (0~4)
+    private String profileImage; //프로필 이미지
+
 }
