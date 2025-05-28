@@ -1,5 +1,6 @@
 package bit.bitgroundspring.controller;
 
+import bit.bitgroundspring.dto.CoinSymbolDto;
 import bit.bitgroundspring.entity.Coin;
 import bit.bitgroundspring.repository.CoinRepository;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,11 @@ public class CoinController {
     @GetMapping("/coins")
     public List<Coin> getAllCoins() {
         return coinRepository.findAll(); // DB에서 모든 코인 데이터를 가져와 반환
+    }
+
+    @GetMapping("/coin-symbols")
+    public List<CoinSymbolDto> getCoinSymbols() {
+        return coinRepository.findAllSymbols();
     }
 
     // 거래량 많은 종목 상위 5개 조회 엔드포인트
