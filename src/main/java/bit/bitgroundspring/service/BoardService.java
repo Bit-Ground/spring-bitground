@@ -60,11 +60,11 @@ public class BoardService {
                     ((Number) row[5]).intValue(), // tier
                     ((Number) row[6]).intValue(), // likes
                     ((Number) row[7]).intValue(), // dislikes
-                    Boolean.TRUE.equals(row[8]), // isDeleted
-                    ((Timestamp) row[9]).toLocalDateTime(), // createdAt
-                    ((Timestamp) row[10]).toLocalDateTime(), // updatedAt
-                    (String) row[11],  // category
-                    ((Number) row[12]).intValue() // views
+                    Boolean.TRUE.equals(row[8]), // ✅ isDeleted
+                    ((Timestamp) row[9]).toLocalDateTime(), // ✅ createdAt
+                    ((Timestamp) row[10]).toLocalDateTime(), // ✅ updatedAt
+                    (String) row[11],  // ✅ category
+                    ((Number) row[12]).intValue()// ✅ views
             );
             result.add(dto);
         }

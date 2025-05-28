@@ -90,6 +90,8 @@ public class BoardController {
         Post post = boardRepository.findWithUserById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 없습니다."));
 
+        boolean hasImage = post.getContent() != null && post.getContent().contains("<img");
+
         BoardDto dto = new BoardDto(
                 post.getId(),
                 post.getUser().getId(),
