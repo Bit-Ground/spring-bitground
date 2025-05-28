@@ -1,11 +1,12 @@
 package bit.bitgroundspring.repository;
 
-import bit.bitgroundspring.dto.BoardDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import bit.bitgroundspring.entity.Post;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Post, Integer> {
 
@@ -15,6 +16,8 @@ public interface BoardRepository extends JpaRepository<Post, Integer> {
             "FROM posts p " +
             "JOIN users u ON p.user_id = u.id " +
             "ORDER BY p.id DESC", nativeQuery = true)
-    List<BoardDto> findAllBoardDtos();
+    List<Object[]> findAllBoardDtosRaw();
 
+    @Query("SELECT p FROM Post p JOIN FETCH p.user WHERE p.id = :id")
+    Optional<Post> findWithUserById(@Param("id") Integer id);
 }

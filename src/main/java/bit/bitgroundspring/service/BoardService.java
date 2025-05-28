@@ -4,12 +4,15 @@ import bit.bitgroundspring.dto.BoardDto;
 import bit.bitgroundspring.entity.Category;
 import bit.bitgroundspring.entity.Post;
 import bit.bitgroundspring.entity.User;
+import bit.bitgroundspring.repository.RankingRepository;
 import bit.bitgroundspring.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import bit.bitgroundspring.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,6 +21,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final RankingRepository rankingRepository;
 
     public Post savePost(BoardDto dto) {
         // 1. 사용자 ID로 User 객체 조회
@@ -40,8 +44,30 @@ public class BoardService {
         return boardRepository.save(post);
     }
 
-    public List<BoardDto> getAllPosts() {
-        return boardRepository.findAllBoardDtos();
+    public List<BoardDto> getAllBoardDtos() {
+        List<Object[]> rows = boardRepository.findAllBoardDtosRaw();
+
+        List<BoardDto> result = new ArrayList<>();
+
+        for (Object[] row : rows) {
+            BoardDto dto = new BoardDto(
+                    (Integer) row[0], // p.id
+                    (Integer) row[1], // userId
+                    (String) row[2],  // u.name
+                    (String) row[3],  // p.title
+                    (String) row[4],  // p.content
+                    ((Number) row[5]).intValue(), // p.tier
+                    ((Number) row[6]).intValue(), // p.likes
+                    ((Number) row[7]).intValue(), // p.dislikes
+                    ((Boolean) row[8]), // p.is_deleted
+                    ((Timestamp) row[9]).toLocalDateTime(), // created_at
+                    ((Timestamp) row[10]).toLocalDateTime(), // updated_at
+                    (String) row[11]  // category (Enum.name() 형태로 저장된 경우)
+            );
+            result.add(dto);
+        }
+
+        return result;
     }
 }
 
