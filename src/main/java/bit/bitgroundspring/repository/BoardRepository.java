@@ -9,9 +9,12 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Post, Integer> {
 
-    @Query("SELECT new bit.bitgroundspring.dto.BoardDto(" +
-            "p.id, u.id, u.name, p.title, p.content, p.filePath, p.fileName, " +
-            "p.likes, p.reports, p.createdAt, p.updatedAt, p.deletedAt, p.isDeleted, p.category) " +
-            "FROM Post p JOIN p.user u ORDER BY p.id DESC")
+    @Query(value = "SELECT " +
+            "p.id, u.id AS userId, u.name, p.title, p.content, p.tier, " +
+            "p.likes, p.dislikes, p.is_deleted, p.created_at, p.updated_at, p.category " +
+            "FROM posts p " +
+            "JOIN users u ON p.user_id = u.id " +
+            "ORDER BY p.id DESC", nativeQuery = true)
     List<BoardDto> findAllBoardDtos();
+
 }
