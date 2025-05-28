@@ -30,9 +30,11 @@ public class Season {
     @Column(name = "end_at")
     private LocalDate endAt;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, columnDefinition = "enum('PENDING', 'COMPLETED') default 'PENDING'")
     @Builder.Default
     private Status status = Status.PENDING;
+    
     
     @Column(name = "reward_calculated", columnDefinition = "tinyint(1) default 0")
     @Builder.Default
