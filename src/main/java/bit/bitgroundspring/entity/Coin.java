@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,7 +24,10 @@ public class Coin {
     
     @Column(name = "symbol", length = 255, nullable = false)
     private String symbol;
-    
+
+    @Column(name = "korean_name", length = 255, nullable = false)
+    private String koreanName; // DB 칼럼명은 'korean_name', Java 필드명은 'koreanName'
+
     @Column(name = "trade_volume")
     private Float tradeVolume;
     
