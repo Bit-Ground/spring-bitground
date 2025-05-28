@@ -23,7 +23,7 @@ public class Coin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "symbol", length = 255, nullable = false, unique = true)
     private String symbol;
@@ -39,12 +39,15 @@ public class Coin {
     private Float changeRate;
 
     @Column(name = "is_caution", nullable = false, columnDefinition = "tinyint(1) default 0")
+    @Builder.Default
     private Boolean isCaution = false;
 
     @Column(name = "is_warning", nullable = false, columnDefinition = "tinyint(1) default 0")
+    @Builder.Default
     private Boolean isWarning = false;
 
     @Column(name = "is_deleted", nullable = false, columnDefinition = "tinyint(1) default 0")
+    @Builder.Default
     private Boolean isDeleted = false;
 
     @CreationTimestamp
