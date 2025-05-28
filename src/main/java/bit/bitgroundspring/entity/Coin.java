@@ -22,10 +22,10 @@ public class Coin {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "symbol", length = 255, nullable = false, unique = true)
+    @Column(name = "symbol", nullable = false, unique = true)
     private String symbol;
 
-    @Column(name = "korean_name", length = 255, nullable = false)
+    @Column(name = "korean_name", nullable = false)
     private String koreanName;
 
     @Column(name = "trade_price_24h", nullable = false)

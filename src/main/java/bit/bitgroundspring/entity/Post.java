@@ -36,7 +36,7 @@ public class Post {
     @Builder.Default
     private Integer views = 0;
     
-    @Column(name = "title", length = 255, nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
     
     @Column(name = "content", nullable = false, columnDefinition = "mediumtext")

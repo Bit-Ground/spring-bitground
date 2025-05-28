@@ -25,7 +25,7 @@ public class InquiryImage {
                     foreignKeyDefinition = "FOREIGN KEY (inquiry_id) REFERENCES inquiries(id) ON DELETE CASCADE"))
     private Inquiry inquiry;
     
-    @Column(name = "image", length = 255, nullable = false)
+    @Column(name = "image", nullable = false)
     private String image;
     
     @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")

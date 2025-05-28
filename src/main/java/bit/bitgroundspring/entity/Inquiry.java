@@ -25,7 +25,7 @@ public class Inquiry {
                     foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"))
     private User user;
     
-    @Column(name = "title", length = 255, nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
     
     @Column(name = "content", length = 2000, nullable = false)

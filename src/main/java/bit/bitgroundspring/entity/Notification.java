@@ -25,7 +25,7 @@ public class Notification {
                     foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"))
     private User user;
     
-    @Column(name = "fcm_token", length = 255, nullable = false)
+    @Column(name = "fcm_token", nullable = false)
     private String fcmToken;
     
     @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")

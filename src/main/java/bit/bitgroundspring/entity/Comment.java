@@ -32,7 +32,7 @@ public class Comment {
                     foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"))
     private User user;
     
-    @Column(name = "content", length = 255, nullable = false)
+    @Column(name = "content", nullable = false)
     private String content;
     
     @Column(name = "likes", nullable = false, columnDefinition = "int default 0")
