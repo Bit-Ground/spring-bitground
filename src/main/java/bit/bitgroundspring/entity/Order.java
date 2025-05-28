@@ -2,8 +2,6 @@ package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -33,6 +31,12 @@ public class Order {
                     foreignKeyDefinition = "FOREIGN KEY (symbol_id) REFERENCES coins(id) ON DELETE CASCADE"))
     private Coin coin;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "season_id", nullable = false,
+            foreignKey = @ForeignKey(name = "orders_seasons_id_fk",
+                    foreignKeyDefinition = "FOREIGN KEY (season_id) REFERENCES seasons(id) ON DELETE CASCADE"))
+    private Season season;
+    
     @Enumerated(EnumType.STRING)
     @Column(name = "order_type", nullable = false)
     private OrderType orderType;
@@ -51,11 +55,9 @@ public class Order {
     @Column(name = "amount", nullable = false)
     private Float amount;
     
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6)")
+    @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)")
     private LocalDateTime updatedAt;
     
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6)")
+    @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
     private LocalDateTime createdAt;
 }

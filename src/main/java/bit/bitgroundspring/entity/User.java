@@ -2,8 +2,6 @@ package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -21,19 +19,19 @@ public class User {
     @Column(name = "id")
     private Integer id;
     
-    @Column(name = "email", length = 255)
+    @Column(name = "email")
     private String email;
     
-    @Column(name = "name", length = 255, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
     
-    @Column(name = "profile_image", length = 255)
+    @Column(name = "profile_image")
     private String profileImage;
     
-    @Column(name = "provider", length = 255, nullable = false)
+    @Column(name = "provider", nullable = false)
     private String provider;
     
-    @Column(name = "provider_id", length = 255)
+    @Column(name = "provider_id")
     private String providerId;
     
     @Enumerated(EnumType.STRING)
@@ -52,11 +50,9 @@ public class User {
     @Builder.Default
     private Boolean isDeleted = false;
     
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6)")
+    @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
     private LocalDateTime createdAt;
     
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6)")
+    @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)")
     private LocalDateTime updatedAt;
 }
