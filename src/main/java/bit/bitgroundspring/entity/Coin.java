@@ -23,7 +23,7 @@ public class Coin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private int id;
 
     @Column(name = "symbol", length = 255, nullable = false, unique = true)
     private String symbol;
