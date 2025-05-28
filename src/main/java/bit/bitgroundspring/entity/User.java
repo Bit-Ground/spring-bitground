@@ -19,19 +19,19 @@ public class User {
     @Column(name = "id")
     private Integer id;
     
-    @Column(name = "email", length = 255)
+    @Column(name = "email")
     private String email;
     
-    @Column(name = "name", length = 255, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
     
-    @Column(name = "profile_image", length = 255)
+    @Column(name = "profile_image")
     private String profileImage;
     
-    @Column(name = "provider", length = 255, nullable = false)
+    @Column(name = "provider", nullable = false)
     private String provider;
     
-    @Column(name = "provider_id", length = 255)
+    @Column(name = "provider_id")
     private String providerId;
     
     @Enumerated(EnumType.STRING)

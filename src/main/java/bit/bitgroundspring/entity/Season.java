@@ -20,7 +20,7 @@ public class Season {
     @Column(name = "id")
     private Integer id;
     
-    @Column(name = "name", length = 255)
+    @Column(name = "name")
     private String name;
     
     @Column(name = "start_at")
