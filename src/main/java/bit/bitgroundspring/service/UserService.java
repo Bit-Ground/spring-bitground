@@ -71,6 +71,10 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("해당 사용자 없음"));
         user.setIsDeleted(true);
+        user.setTier(0);
+        user.setEmail(null);
+        user.setProfileImage(null);
+        user.setProviderId(null);
         userRepository.save(user);
     }
 }
