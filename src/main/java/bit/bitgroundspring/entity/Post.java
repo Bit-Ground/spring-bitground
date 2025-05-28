@@ -34,6 +34,10 @@ public class Post {
     @Column(name = "category", nullable = false)
     private Category category;
     
+    @Column(name = "views", nullable = false, columnDefinition = "int default 0")
+    @Builder.Default
+    private Integer views = 0;
+    
     @Column(name = "title", length = 255, nullable = false)
     private String title;
     
