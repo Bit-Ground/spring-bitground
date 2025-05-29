@@ -54,8 +54,6 @@ public class BoardController {
     // ✅ 게시글 등록 (FormData 기반)
     @PostMapping("/form")
     public ResponseEntity<?> createPost(@RequestBody Post post) {
-        System.out.println(post.getUser().getId());
-        System.out.println(post.getUser().getTier());
         try {
             if (post.getUser() == null || post.getUser().getId() == null) {
                 return ResponseEntity.badRequest().body("userId 누락");
@@ -109,6 +107,22 @@ public class BoardController {
         );
 
         return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/{id}/like")
+    public ResponseEntity<?> likePost(@PathVariable Integer id) {
+        Post post = boardRepository.findById(id).orElseThrow();
+        post.setLikes(post.getLikes() + 1);
+        boardRepository.save(post);
+        return ResponseEntity.ok().body(post.getLikes());
+    }
+
+    @PostMapping("/{id}/dislike")
+    public ResponseEntity<?> dislikePost(@PathVariable Integer id) {
+        Post post = boardRepository.findById(id).orElseThrow();
+        post.setDislikes(post.getDislikes() + 1);
+        boardRepository.save(post);
+        return ResponseEntity.ok().body(post.getDislikes());
     }
 }
 
