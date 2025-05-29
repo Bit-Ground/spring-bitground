@@ -85,19 +85,16 @@ public class BoardController {
 
     // 게시글 상세보기
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPostDetail(@PathVariable Integer id,HttpSession session) {
+    public ResponseEntity<?> getPostDetail(
+            @PathVariable Integer id,
+            @RequestParam(value = "forceViewCount", required = false) Boolean forceViewCount) {
         Post post = boardRepository.findWithUserById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 없습니다."));
-
-        // ✅ 세션 키 생성
-        String sessionKey = "viewed_post_" + id;
-
-        // ✅ 세션에 해당 글 조회 기록이 없을 경우에만 조회수 증가
-        if (session.getAttribute(sessionKey) == null) {
+        if (Boolean.TRUE.equals(forceViewCount)) {
             post.setViews(post.getViews() + 1);
-            boardRepository.save(post); // 저장!
-            session.setAttribute(sessionKey, true);
+            boardRepository.save(post); // 무조건 조회수 증가
         }
+
 
         boolean hasImage = post.getContent() != null && post.getContent().contains("<img");
 
