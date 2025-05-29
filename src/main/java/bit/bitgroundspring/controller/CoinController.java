@@ -1,14 +1,20 @@
 package bit.bitgroundspring.controller;
 
 import bit.bitgroundspring.dto.CoinSymbolDto;
+import bit.bitgroundspring.entity.AiInsight;
 import bit.bitgroundspring.entity.Coin;
 import bit.bitgroundspring.repository.CoinRepository;
+import bit.bitgroundspring.service.GeminiService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController // REST API 컨트롤러임을 명시
@@ -16,10 +22,12 @@ import java.util.stream.Collectors;
 public class CoinController {
 
     private final CoinRepository coinRepository; // Coin 데이터 접근을 위한 Repository
+    private final GeminiService geminiService;
 
     // 생성자 주입
-    public CoinController(CoinRepository coinRepository) {
+    public CoinController(CoinRepository coinRepository, GeminiService geminiService) {
         this.coinRepository = coinRepository;
+        this.geminiService = geminiService;
     }
 
     // 모든 코인 정보 조회 엔드포인트
@@ -85,4 +93,26 @@ public class CoinController {
                 .filter(Coin::getIsCaution) // isCaution 필드가 true인 코인만 필터링
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/coins/{symbol}/insight") // 엔드포인트 경로를 /insight로 변경
+    public ResponseEntity<AiInsight> getCoinInsight(@PathVariable String symbol) { // 메서드 이름도 getCoinInsight로 변경
+        Optional<Coin> optionalCoin = coinRepository.findBySymbol(symbol);
+
+        if (optionalCoin.isPresent()) {
+            Coin coin = optionalCoin.get();
+
+            AiInsight aiInsight = geminiService.generateAndSaveAnalysis(coin);
+
+            if (aiInsight != null) {
+                return ResponseEntity.ok(aiInsight);
+            } else {
+                System.err.println("Failed to generate or retrieve AI insight for " + symbol);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
+        } else {
+            System.err.println("Coin not found for symbol: " + symbol);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
 }
