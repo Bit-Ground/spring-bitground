@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Post, Integer> {
 
+    //게시글 목록 출력
     @Query(value = "SELECT " +
             "p.id, u.id AS userId, u.name, p.title, p.content, p.tier, " +
             "p.likes, p.dislikes, p.is_deleted, p.created_at, p.updated_at, p.category, p.views " +
@@ -18,6 +19,7 @@ public interface BoardRepository extends JpaRepository<Post, Integer> {
             "ORDER BY p.id DESC", nativeQuery = true)
     List<Object[]> findAllBoardDtosRaw();
 
+    //게시글 상세보기
     @Query("SELECT p FROM Post p JOIN FETCH p.user WHERE p.id = :id")
     Optional<Post> findWithUserById(@Param("id") Integer id);
 }
