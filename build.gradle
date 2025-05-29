@@ -44,6 +44,7 @@ dependencies {
 
     // Spring WebFlux (WebClient 사용을 위해 필수)
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    runtimeOnly 'io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64' // macOS 개발 환경에서의 DNS 문제 해결
 
     // naver storage
     implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws', version: '2.4.4'
