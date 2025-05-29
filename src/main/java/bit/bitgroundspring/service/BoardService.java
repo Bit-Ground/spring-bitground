@@ -23,6 +23,7 @@ public class BoardService {
     private final UserRepository userRepository;
     private final RankingRepository rankingRepository;
 
+    //게시글 저장
     public Post savePost(BoardDto dto) {
         // 1. 사용자 ID로 User 객체 조회
         User user = userRepository.findById(dto.getUserId())
@@ -45,6 +46,7 @@ public class BoardService {
         return boardRepository.save(post);
     }
 
+    //게시글 목록 출력
     public List<BoardDto> getAllBoardDtos() {
         List<Object[]> rows = boardRepository.findAllBoardDtosRaw();
 
@@ -70,6 +72,7 @@ public class BoardService {
         }
         return result;
     }
+
 }
 
 

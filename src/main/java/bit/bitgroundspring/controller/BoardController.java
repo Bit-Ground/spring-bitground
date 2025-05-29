@@ -8,6 +8,7 @@ import bit.bitgroundspring.repository.BoardRepository;
 import bit.bitgroundspring.repository.RankingRepository;
 import bit.bitgroundspring.repository.UserRepository;
 import bit.bitgroundspring.service.BoardService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -84,9 +85,19 @@ public class BoardController {
 
     // 게시글 상세보기
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPostDetail(@PathVariable Integer id) {
+    public ResponseEntity<?> getPostDetail(@PathVariable Integer id,HttpSession session) {
         Post post = boardRepository.findWithUserById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 없습니다."));
+
+        // ✅ 세션 키 생성
+        String sessionKey = "viewed_post_" + id;
+
+        // ✅ 세션에 해당 글 조회 기록이 없을 경우에만 조회수 증가
+        if (session.getAttribute(sessionKey) == null) {
+            post.setViews(post.getViews() + 1);
+            boardRepository.save(post); // 저장!
+            session.setAttribute(sessionKey, true);
+        }
 
         boolean hasImage = post.getContent() != null && post.getContent().contains("<img");
 
@@ -109,6 +120,7 @@ public class BoardController {
         return ResponseEntity.ok(dto);
     }
 
+    //좋아요 버튼 기능
     @PostMapping("/{id}/like")
     public ResponseEntity<?> likePost(@PathVariable Integer id) {
         Post post = boardRepository.findById(id).orElseThrow();
@@ -117,6 +129,7 @@ public class BoardController {
         return ResponseEntity.ok().body(post.getLikes());
     }
 
+    //싫어요 버튼 기능
     @PostMapping("/{id}/dislike")
     public ResponseEntity<?> dislikePost(@PathVariable Integer id) {
         Post post = boardRepository.findById(id).orElseThrow();
@@ -124,5 +137,7 @@ public class BoardController {
         boardRepository.save(post);
         return ResponseEntity.ok().body(post.getDislikes());
     }
+
+
 }
 
