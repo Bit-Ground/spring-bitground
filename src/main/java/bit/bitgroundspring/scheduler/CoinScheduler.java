@@ -25,9 +25,9 @@ public class CoinScheduler {
     }
 
     // 테스트용 스케줄러는 제거합니다.
-     @Scheduled(fixedDelay = 10000, initialDelay = 10000)
+     /*@Scheduled(fixedDelay = 10000, initialDelay = 10000)
      public void runOnceOnStartupForTest() {
           System.out.println("TEST: Coin data collection on startup initiated at " + LocalDateTime.now());
           coinService.collectAndSaveAllKrwCoins();
-     }
+     }*/
 }
