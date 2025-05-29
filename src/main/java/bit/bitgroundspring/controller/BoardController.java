@@ -5,10 +5,8 @@ import bit.bitgroundspring.entity.Post;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
 import bit.bitgroundspring.repository.BoardRepository;
-import bit.bitgroundspring.repository.RankingRepository;
 import bit.bitgroundspring.repository.UserRepository;
 import bit.bitgroundspring.service.BoardService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -30,7 +28,6 @@ public class BoardController {
     private final UserRepository userRepository;
     private final NcpObjectStorageService objectStorageService;
     private final BoardService boardService;
-    private final RankingRepository rankingRepository;
 
     @Value("${ncp.bucket}")
     private String bucketName;
