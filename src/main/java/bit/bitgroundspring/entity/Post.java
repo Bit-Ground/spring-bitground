@@ -2,6 +2,8 @@ package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -55,8 +57,10 @@ public class Post {
     private Boolean isDeleted = false;
     
     @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
+    @CreationTimestamp
     private LocalDateTime createdAt;
     
     @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 }
