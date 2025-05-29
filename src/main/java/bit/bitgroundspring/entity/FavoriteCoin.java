@@ -6,7 +6,13 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "favorite_coins")
+@Table(
+        name = "favorite_coins",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uq_favorite_user_symbol",
+                columnNames = { "user_id", "symbol_id" }
+        )
+)
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,6 +37,6 @@ public class FavoriteCoin {
                     foreignKeyDefinition = "FOREIGN KEY (symbol_id) REFERENCES coins(id) ON DELETE CASCADE"))
     private Coin coin;
     
-    @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
+    @Column(name = "created_at", nullable = false, insertable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
     private LocalDateTime createdAt;
 }
