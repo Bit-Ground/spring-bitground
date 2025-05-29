@@ -24,10 +24,10 @@ public class CoinScheduler {
         System.out.println("Coin data collection scheduled task completed."); // 완료 로그 추가 (선택 사항)
     }
 
-//    // 테스트용 스케줄러는 제거합니다.
-//     @Scheduled(fixedDelay = 10000, initialDelay = 10000)
-//     public void runOnceOnStartupForTest() {
-//          System.out.println("TEST: Coin data collection on startup initiated at " + LocalDateTime.now());
-//          coinService.collectAndSaveAllKrwCoins();
-//     }
+    // 테스트용 스케줄러는 제거합니다.
+     /*@Scheduled(fixedDelay = 10000, initialDelay = 10000)
+     public void runOnceOnStartupForTest() {
+          System.out.println("TEST: Coin data collection on startup initiated at " + LocalDateTime.now());
+          coinService.collectAndSaveAllKrwCoins();
+     }*/
 }
