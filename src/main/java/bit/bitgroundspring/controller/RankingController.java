@@ -2,12 +2,9 @@ package bit.bitgroundspring.controller;
 
 import bit.bitgroundspring.dto.RankingDto;
 import bit.bitgroundspring.service.RankingService;
+import bit.bitgroundspring.service.SeasonService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,34 +14,35 @@ import java.util.List;
 public class RankingController {
 
     private final RankingService rankingService;
+    private final SeasonService seasonService;
 
+    /**
+     * ✅ 실시간 랭킹 조회
+     * - 주로 내부 전용 호출
+     * - 시즌 ID 기준으로 실시간 랭킹 바로 반환
+     */
     @GetMapping("/{seasonId}")
     public List<RankingDto> getLiveRankings(@PathVariable int seasonId) {
         return rankingService.getLiveRankingsBySeason(seasonId);
     }
 
     /**
-     * 🔴 실시간 랭킹 (현재 시즌)
+     * ✅ 시즌 랭킹 조회 (실시간 또는 전시즌 자동 분기)
+     * - 현재 시즌 ID와 비교해서
+     *   - 현재 시즌이면 실시간 랭킹 반환
+     *   - 과거 시즌이면 완료된 시즌 중 해당 시즌의 랭킹만 필터링하여 반환
      */
-//    @GetMapping("/live")
-//    public List<RankingDto> getLiveRankings() {
-//        Season current = seasonRepository.findFirstByEndAtIsNull();
-//        return rankingService.getRankingsBySeason(current);
-//    }
-//
-//    /**
-//     * 🟢 종료된 시즌 랭킹
-//     */
-//    @GetMapping("/season/{seasonId}")
-//    public List<RankingDto> getPastRanking(@PathVariable int seasonId) {
-//        Season season = seasonRepository.findById((long) seasonId)
-//                .orElseThrow(() -> new RuntimeException("시즌 없음"));
-//
-//        if (season.getEndAt() == null) {
-//            throw new IllegalStateException("아직 종료되지 않은 시즌입니다.");
-//        }
-//
-//        return rankingService.getRankingsBySeason(season);
-//    }
+    @GetMapping("/season/{seasonId}")
+    public List<RankingDto> getRankingsBySeason(@PathVariable int seasonId) {
+        int currentSeasonId = seasonService.getCurrentSeasonId();
 
+        // 전 시즌 랭킹 조회
+        if (currentSeasonId == 0 || seasonId != currentSeasonId) {
+            return rankingService.getCompletedSeasonRankings().stream()
+                    .filter(r -> r.getSeasonId() == seasonId)// 해당 시즌만 추출
+                    .toList();
+        }
+        // 현재 시즌이면 실시간 랭킹 조회
+        return rankingService.getLiveRankingsBySeason(seasonId);
+    }
 }
