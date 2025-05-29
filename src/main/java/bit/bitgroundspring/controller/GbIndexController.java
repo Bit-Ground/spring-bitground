@@ -17,7 +17,7 @@ public class GbIndexController {
     }
 
     @GetMapping
-    public Map<String, Map<String, Double>> getGbIndex() {
-        return gbIndexService.calculateGbIndices();
+    public Map<String, Double> getGbIndex() {
+        return gbIndexService.calculateGbIndices();  // Map<String, Double>로 수정
     }
 }
