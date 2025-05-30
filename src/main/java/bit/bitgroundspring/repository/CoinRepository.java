@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,4 +19,6 @@ public interface CoinRepository extends JpaRepository<Coin, Integer> {
     @Query("SELECT new bit.bitgroundspring.dto.CoinSymbolDto(c.symbol, c.koreanName) "
             + "FROM Coin c WHERE c.isDeleted = false")
     List<CoinSymbolDto> findAllSymbols();
+
+    List<Coin> findAllBySymbolIn(Collection<String> symbols);
 }
