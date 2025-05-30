@@ -26,6 +26,6 @@ public class GbIndexScheduler {
         }
 
 //        System.out.println("GB 지수 저장 실행: " + now);
-        gbIndexService.saveGbIndexToDbAt(now.withMinute(0).withSecond(0).withNano(0));  // 정각 고정
+//        gbIndexService.saveGbIndexToDbAt(now.withMinute(0).withSecond(0).withNano(0));  // 정각 고정
     }
 }
