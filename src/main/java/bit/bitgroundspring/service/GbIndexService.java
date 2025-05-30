@@ -10,30 +10,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class GbIndexService {
     private final GbIndexHistoryRepository historyRepository;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public GbIndexService(GbIndexHistoryRepository historyRepository) {
         this.historyRepository = historyRepository;
     }
 
-    // 소수점 2자리 반올림 함수
-    private double roundToTwoDecimalPlaces(double value) {
+    private double round(double value) {
         return Math.round(value * 100.0) / 100.0;
     }
 
     @Transactional
     public void saveGbIndexToDbAt(LocalDateTime timestamp) {
-        Map<String, Double> current = calculateGbIndices();
+        Map<String, Double> indices = calculateGbIndices();
 
         GbIndexHistory history = GbIndexHistory.builder()
-                .timestamp(timestamp) // 무조건 정각 기준으로 저장
-                .gbmi(current.get("GBMI"))
-                .gbai(current.get("GBAI"))
+                .timestamp(timestamp)
+                .gbmi(indices.get("GBMI"))
+                .gbai(indices.get("GBAI"))
                 .build();
 
         historyRepository.save(history);
@@ -41,42 +40,41 @@ public class GbIndexService {
 
     @Transactional
     public Map<String, Double> calculateGbIndices() {
-        String[] marketList = {
-                "KRW-BTC", "KRW-ETH",
-                "KRW-XRP", "KRW-ADA", "KRW-DOGE", "KRW-SAND",
-                "KRW-MANA", "KRW-ATOM", "KRW-AXS", "KRW-STX"
-        };
-        String marketQuery = String.join(",", marketList);
-        String url = "https://api.upbit.com/v1/ticker?markets=" + marketQuery;
-
-        RestTemplate restTemplate = new RestTemplate();
+        String url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=krw&order=market_cap_desc&per_page=12&page=1";
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         JSONArray jsonArray = new JSONArray(response.getBody());
 
-        Map<String, Double> nowPrices = new HashMap<>();
+        double gbmiNumerator = 0.0;
+        double gbmiDenominator = 0.0;
+        double gbaiNumerator = 0.0;
+        double gbaiDenominator = 0.0;
+
         for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject obj = jsonArray.getJSONObject(i);
-            nowPrices.put(obj.getString("market"), obj.getDouble("trade_price"));
+            JSONObject coin = jsonArray.getJSONObject(i);
+            String id = coin.getString("id");
+            String name = coin.getString("name");
+            double price = coin.getDouble("current_price");
+            double marketCap = coin.getDouble("market_cap");
+
+            // GBMI: 모든 12개 코인
+            gbmiNumerator += price * marketCap;
+            gbmiDenominator += marketCap;
+
+            // GBAI: 비트코인 제외
+            if (!id.equals("bitcoin")) {
+                gbaiNumerator += price * marketCap;
+                gbaiDenominator += marketCap;
+            }
         }
 
-        // Raw 계산
-        double gbmiRaw = 0.6 * nowPrices.get("KRW-BTC") + 0.4 * nowPrices.get("KRW-ETH");
-        double gbaiRaw = (
-                nowPrices.get("KRW-XRP") + nowPrices.get("KRW-ADA") + nowPrices.get("KRW-DOGE") +
-                        nowPrices.get("KRW-SAND") + nowPrices.get("KRW-MANA") + nowPrices.get("KRW-ATOM") +
-                        nowPrices.get("KRW-AXS") + nowPrices.get("KRW-STX")
-        ) / 8;
+        // 표준화 계수: 예시값. 조정 가능
+        double gbmiRaw = gbmiNumerator / gbmiDenominator;
+        double gbaiRaw = gbaiNumerator / gbaiDenominator;
 
-        // 표준화
-        double gbmi = roundToTwoDecimalPlaces((gbmiRaw / 91000000.0) * 20000.0);
-        double gbai = roundToTwoDecimalPlaces((gbaiRaw / 2160.0) * 8500.0);
-
-        // 반올림 적용
-        gbmi = roundToTwoDecimalPlaces(gbmi);
-        gbai = roundToTwoDecimalPlaces(gbai);
+        double gbmi = round(gbmiRaw / 20000.0);
+        double gbai = round(gbaiRaw / 1000.0);
 
         return Map.of("GBMI", gbmi, "GBAI", gbai);
     }
-
 }
 
