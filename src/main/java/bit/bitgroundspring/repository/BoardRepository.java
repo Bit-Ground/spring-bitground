@@ -2,7 +2,24 @@ package bit.bitgroundspring.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import bit.bitgroundspring.entity.Post;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Post, Integer> {
 
+    //게시글 목록 출력
+    @Query(value = "SELECT " +
+            "p.id, u.id AS userId, u.name, p.title, p.content, p.tier, " +
+            "p.likes, p.dislikes, p.is_deleted, p.created_at, p.updated_at, p.category, p.views " +
+            "FROM posts p " +
+            "JOIN users u ON p.user_id = u.id " +
+            "ORDER BY p.id DESC", nativeQuery = true)
+    List<Object[]> findAllBoardDtosRaw();
+
+    //게시글 상세보기
+    @Query("SELECT p FROM Post p JOIN FETCH p.user WHERE p.id = :id")
+    Optional<Post> findWithUserById(@Param("id") Integer id);
 }

@@ -19,7 +19,10 @@ public class AiInsight {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    
+
+    @Column(name = "symbol", length = 255, nullable = false)
+    private String symbol; // VARCHAR(255) NOT NULL, 어떤 코인에 대한 분석인지 식별
+
     @Column(name = "score", nullable = false, columnDefinition = "tinyint")
     private Integer score;
     
