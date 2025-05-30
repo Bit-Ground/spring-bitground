@@ -1,6 +1,6 @@
 package bit.bitgroundspring.service;
 
-import bit.bitgroundspring.entity.MarketIndex;
+import bit.bitgroundspring.entity.GbIndexHistory;
 import bit.bitgroundspring.repository.GbIndexHistoryRepository;
 import jakarta.transaction.Transactional;
 import org.json.JSONArray;
@@ -26,18 +26,18 @@ public class GbIndexService {
         return Math.round(value * 100.0) / 100.0;
     }
 
-//    @Transactional
-//    public void saveGbIndexToDbAt(LocalDateTime timestamp) {
-//        Map<String, Double> current = calculateGbIndices();
-//
-//        MarketIndex history = MarketIndex.builder()
-//                .timestamp(timestamp) // 무조건 정각 기준으로 저장
-//                .gbmi(current.get("GBMI"))
-//                .gbai(current.get("GBAI"))
-//                .build();
-//
-//        historyRepository.save(history);
-//    }
+    @Transactional
+    public void saveGbIndexToDbAt(LocalDateTime timestamp) {
+        Map<String, Double> current = calculateGbIndices();
+
+        GbIndexHistory history = GbIndexHistory.builder()
+                .timestamp(timestamp) // 무조건 정각 기준으로 저장
+                .gbmi(current.get("GBMI"))
+                .gbai(current.get("GBAI"))
+                .build();
+
+        historyRepository.save(history);
+    }
 
     @Transactional
     public Map<String, Double> calculateGbIndices() {
