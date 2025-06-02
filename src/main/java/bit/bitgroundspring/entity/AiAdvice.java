@@ -6,7 +6,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "ai_advices")
+@Table(
+        name = "ai_advices",
+        uniqueConstraints = {@UniqueConstraint(
+                name = "uq_ai_advices_user_season",
+                columnNames = {"user_id", "season_id"})
+})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
