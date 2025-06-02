@@ -7,7 +7,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "ai_insights")
+@Table(name = "ai_insights", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"date", "symbol"})
+})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
