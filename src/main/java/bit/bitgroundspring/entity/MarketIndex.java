@@ -7,8 +7,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "market_indices", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"date", "hour"})
+@Table(
+        name = "market_indices",
+        uniqueConstraints = {@UniqueConstraint(
+                name = "uq_market_indices_date_hour",
+                columnNames = {"date", "hour"})
 })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

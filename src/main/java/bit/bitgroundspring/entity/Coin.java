@@ -10,7 +10,12 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "coins")
+@Table(
+        name = "coins",
+        uniqueConstraints = {@UniqueConstraint(
+                name = "uq_coins_symbol",
+                columnNames = {"symbol"})
+        })
 @Getter
 @Setter
 @NoArgsConstructor // @NoArgsConstructor(access = AccessLevel.PROTECTED) 대신 (Coin::new 오류 해결)
@@ -21,27 +26,27 @@ public class Coin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-
+    
     @Column(name = "symbol", nullable = false, unique = true)
     private String symbol;
-
+    
     @Column(name = "korean_name", nullable = false)
     private String koreanName;
-
+    
     @Column(name = "trade_price_24h", nullable = false)
     private Long tradePrice24h;
-
+    
     @Column(name = "change_rate")
     private Float changeRate;
-
+    
     @Column(name = "is_caution", nullable = false, columnDefinition = "tinyint(1) default 0")
     @Builder.Default
     private Boolean isCaution = false;
-
+    
     @Column(name = "is_warning", nullable = false, columnDefinition = "tinyint(1) default 0")
     @Builder.Default
     private Boolean isWarning = false;
-
+    
     @Column(name = "is_deleted", nullable = false, columnDefinition = "tinyint(1) default 0")
     @Builder.Default
     private Boolean isDeleted = false;
