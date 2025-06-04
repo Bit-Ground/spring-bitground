@@ -2,12 +2,13 @@ package bit.bitgroundspring.service;
 
 import bit.bitgroundspring.dto.UserAssetDto;
 import bit.bitgroundspring.dto.projection.UserAssetProjection;
-import bit.bitgroundspring.dto.response.UserAssetsResponse;
+import bit.bitgroundspring.dto.response.UserAssetResponse;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.repository.UserAssetRepository;
 import bit.bitgroundspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,7 +28,8 @@ public class UserAssetService {
      * @param userId 유저 ID
      * @return 보유 자산 정보 리스트
      */
-    public UserAssetsResponse getUserAssets(Integer userId) {
+    @Transactional(readOnly = true)
+    public UserAssetResponse getUserAssets(Integer userId) {
         // 사용자 현금 조회
         int cash = userRepository.findById(userId)
                 .map(User::getCash)
@@ -39,12 +41,13 @@ public class UserAssetService {
         
         // DTO 변환
         List<UserAssetDto> userAssets = projections.stream()
-                .map(proj -> new UserAssetDto(
-                        proj.getSymbol(),
-                        proj.getAmount(),
-                        proj.getAvgPrice()))
+                .map(proj -> UserAssetDto.builder()
+                        .symbol(proj.getSymbol())
+                        .amount(proj.getAmount())
+                        .avgPrice(proj.getAvgPrice())
+                        .build())
                 .toList();
         
-        return new UserAssetsResponse(cash, userAssets);
+        return new UserAssetResponse(cash, userAssets);
     }
 }

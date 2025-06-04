@@ -1,6 +1,6 @@
 package bit.bitgroundspring.dto.response;
 
-import bit.bitgroundspring.dto.UserAssetDto;
+import bit.bitgroundspring.dto.SeasonDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +10,8 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserAssetsResponse {
-    private Integer cash;
-    private List<UserAssetDto> userAssets;
+@NoArgsConstructor
+public class SeasonResponse {
+    List<SeasonDto> seasons;
 }
