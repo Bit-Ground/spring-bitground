@@ -1,6 +1,6 @@
 package bit.bitgroundspring.controller;
 
-import bit.bitgroundspring.dto.response.UserAssetsResponse;
+import bit.bitgroundspring.dto.response.UserAssetResponse;
 import bit.bitgroundspring.security.oauth2.AuthService;
 import bit.bitgroundspring.service.UserAssetService;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +33,12 @@ public class UserAssetController {
      * 보유 자산들 조회
      */
     @GetMapping
-    public ResponseEntity<UserAssetsResponse> getUserAssets(
+    public ResponseEntity<UserAssetResponse> getUserAssets(
             @CookieValue (value = "jwt_token", required = false) String jwtToken) {
         // JWT 토큰에서 사용자 ID 추출
         Integer userId = authService.getUserIdFromToken(jwtToken);
         
-        UserAssetsResponse response = assetService.getUserAssets(userId);
+        UserAssetResponse response = assetService.getUserAssets(userId);
         return ResponseEntity.ok(response);
     }
 }
