@@ -1,6 +1,6 @@
 package bit.bitgroundspring.dto.response;
 
-import bit.bitgroundspring.dto.UserAssetDto;
+import bit.bitgroundspring.dto.projection.UserAssetProjection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,5 +14,5 @@ import java.util.List;
 @AllArgsConstructor
 public class UserAssetResponse {
     private Integer cash;
-    private List<UserAssetDto> userAssets;
+    private List<UserAssetProjection> userAssets;
 }
