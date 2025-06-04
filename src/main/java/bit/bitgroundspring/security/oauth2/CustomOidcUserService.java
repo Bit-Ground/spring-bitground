@@ -1,8 +1,8 @@
 package bit.bitgroundspring.security.oauth2;
 
-import bit.bitgroundspring.entity.Role;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.repository.UserRepository;
+import bit.bitgroundspring.util.InitialCashUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +28,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CustomOidcUserService extends OidcUserService {
     private final UserRepository userRepository;
+    private final InitialCashUtil initialCashUtil;
     
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
@@ -128,7 +129,7 @@ public class CustomOidcUserService extends OidcUserService {
                     .providerId(providerId)
                     .email(email)
                     .name(name)
-                    .cash(10000000) // 초기 캐시 설정
+                    .cash(initialCashUtil.getInitialCash()) // 초기 캐시 설정
                     .profileImage(profileImage)
                     .build();
             
