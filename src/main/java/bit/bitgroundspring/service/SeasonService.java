@@ -1,30 +1,36 @@
 package bit.bitgroundspring.service;
 
-import bit.bitgroundspring.entity.Season;
+import bit.bitgroundspring.dto.SeasonDto;
+import bit.bitgroundspring.dto.projection.SeasonProjection;
+import bit.bitgroundspring.dto.response.SeasonResponse;
 import bit.bitgroundspring.repository.SeasonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
 public class SeasonService {
 
     private final SeasonRepository seasonRepository;
-
+    
     /**
-     * ✅ 현재 진행 중인 시즌의 ID를 반환
-     * - 종료되지 않은 시즌 (endAt == null)을 조회
-     * - 없을 경우 0을 반환
-     *
-     * @return 현재 시즌 ID 또는 0 (없을 경우)
+     * 시즌 목록을 내림차순으로 조회 (최신 시즌부터 최대 48개)
      */
-    public int getCurrentSeasonId() {
-        Season season = seasonRepository.findFirstByEndAtIsNull();
-        return (season != null) ? season.getId().intValue() : 0;  // null 방지!
+    public SeasonResponse getLatestSeasons() {
+        List<SeasonProjection> seasons = seasonRepository.findTop48ByOrderByIdDesc();
+        
+        return new SeasonResponse(seasons.stream()
+                .map(proj -> SeasonDto.builder()
+                        .id(proj.getId())
+                        .name(proj.getName())
+                        .startAt(proj.getStartAt())
+                        .endAt(proj.getEndAt())
+                        .status(proj.getStatus())
+                        .build())
+                .toList());
     }
     
 
