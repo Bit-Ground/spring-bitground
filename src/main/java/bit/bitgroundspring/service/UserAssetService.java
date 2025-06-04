@@ -1,6 +1,5 @@
 package bit.bitgroundspring.service;
 
-import bit.bitgroundspring.dto.UserAssetDto;
 import bit.bitgroundspring.dto.projection.UserAssetProjection;
 import bit.bitgroundspring.dto.response.UserAssetResponse;
 import bit.bitgroundspring.entity.User;
@@ -36,17 +35,8 @@ public class UserAssetService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
         // 사용자 자산 조회 (projection 사용)
-        List<UserAssetProjection> projections = userAssetRepository
+        List<UserAssetProjection> userAssets = userAssetRepository
                 .findUserAssetProjectionsByUserId(userId);
-        
-        // DTO 변환
-        List<UserAssetDto> userAssets = projections.stream()
-                .map(proj -> UserAssetDto.builder()
-                        .symbol(proj.getSymbol())
-                        .amount(proj.getAmount())
-                        .avgPrice(proj.getAvgPrice())
-                        .build())
-                .toList();
         
         return new UserAssetResponse(cash, userAssets);
     }
