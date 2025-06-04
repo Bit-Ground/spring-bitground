@@ -17,6 +17,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "FROM Order o JOIN o.coin c " +
             "WHERE o.season.id = :seasonId AND o.user.id = :userId")
     List<OrderProjection> findBySeasonIdAndUserId(
-            @Param("seasonId") Long seasonId,
+            @Param("seasonId") Integer seasonId,
             @Param("userId") Integer userId);
 }
