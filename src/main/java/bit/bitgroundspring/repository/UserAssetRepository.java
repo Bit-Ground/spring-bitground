@@ -1,5 +1,6 @@
 package bit.bitgroundspring.repository;
 
+import bit.bitgroundspring.dto.projection.UserAssetProjection;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.entity.UserAsset;
 import io.lettuce.core.dynamic.annotation.Param;
@@ -19,4 +20,16 @@ public interface UserAssetRepository extends JpaRepository<UserAsset, Integer> {
         and ua.amount > 0
     """)
     List<String> findOwnedSymbolsByUserId(@Param("userId") Integer userId);
+    
+    
+    /**
+     * 유저의 보유 자산 정보 조회
+     * @param userId 유저 ID
+     * @return 보유 자산 정보 리스트
+     */
+    @Query("SELECT c.symbol as symbol, ua.amount as amount, ua.avgPrice as avgPrice " +
+            "FROM UserAsset ua " +
+            "JOIN ua.coin c " +
+            "WHERE ua.user.id = :userId")
+    List<UserAssetProjection> findUserAssetProjectionsByUserId(@Param("userId") Integer userId);
 }
