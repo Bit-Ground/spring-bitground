@@ -21,9 +21,10 @@ public class RankingController {
      * - 주로 내부 전용 호출
      * - 시즌 ID 기준으로 실시간 랭킹 바로 반환
      */
-    @GetMapping("/{seasonId}")
-    public List<RankingDto> getLiveRankings(@PathVariable int seasonId) {
-        return rankingService.getLiveRankingsBySeason(seasonId);
+    @GetMapping("/live")
+    public List<RankingDto> getLiveRankings() {
+//        return rankingService.getLiveRankingsBySeason(seasonId);
+        return rankingService.getLiveRankingsBySeason(seasonService.getCurrentSeasonId());
     }
 
     /**
