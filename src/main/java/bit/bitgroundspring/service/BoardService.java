@@ -4,7 +4,6 @@ import bit.bitgroundspring.dto.BoardDto;
 import bit.bitgroundspring.entity.Category;
 import bit.bitgroundspring.entity.Post;
 import bit.bitgroundspring.entity.User;
-import bit.bitgroundspring.repository.RankingRepository;
 import bit.bitgroundspring.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +22,6 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-    private final RankingRepository rankingRepository;
 
     //게시글 저장
     public Post savePost(BoardDto dto) {
