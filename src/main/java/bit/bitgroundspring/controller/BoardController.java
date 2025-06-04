@@ -1,6 +1,7 @@
 package bit.bitgroundspring.controller;
 
 import bit.bitgroundspring.dto.BoardDto;
+import bit.bitgroundspring.dto.PageResponseDto;
 import bit.bitgroundspring.entity.Post;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
@@ -9,6 +10,10 @@ import bit.bitgroundspring.repository.UserRepository;
 import bit.bitgroundspring.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -75,9 +80,17 @@ public class BoardController {
 
     // 게시글 목록 출력
     @GetMapping("/list")
-    public ResponseEntity<?> getPostList() {
-        List<BoardDto> posts = boardService.getAllBoardDtos();
-        return ResponseEntity.ok(posts);
+    public ResponseEntity<?> getPostList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String category)
+    {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("created_at").descending());
+        // ✅ 페이징 결과를 PageImpl 그대로 반환 시 Jackson 경고 발생 가능성 있음
+        // → PageResponseDto로 감싸서 JSON 구조를 안정적으로 유지
+        Page<BoardDto> posts = boardService.getBoardDtos(category, pageable);
+        PageResponseDto<BoardDto> response = new PageResponseDto<>(posts);
+        return ResponseEntity.ok(response);
     }
 
     // 게시글 상세보기
