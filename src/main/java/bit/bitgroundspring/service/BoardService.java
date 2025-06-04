@@ -6,6 +6,8 @@ import bit.bitgroundspring.entity.Post;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.repository.RankingRepository;
 import bit.bitgroundspring.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import bit.bitgroundspring.repository.BoardRepository;
@@ -47,30 +49,49 @@ public class BoardService {
     }
 
     //게시글 목록 출력
-    public List<BoardDto> getAllBoardDtos() {
-        List<Object[]> rows = boardRepository.findAllBoardDtosRaw();
+//    public List<BoardDto> getAllBoardDtos() {
+//        List<Object[]> rows = boardRepository.findAllBoardDtosRaw();
+//
+//        List<BoardDto> result = new ArrayList<>();
+//
+//        for (Object[] row : rows) {
+//            BoardDto dto = new BoardDto(
+//                    (Integer) row[0], // p.id
+//                    (Integer) row[1], // userId
+//                    (String) row[2],  // u.name
+//                    (String) row[3],  // title
+//                    (String) row[4],  // content
+//                    ((Number) row[5]).intValue(), // tier
+//                    ((Number) row[6]).intValue(), // likes
+//                    ((Number) row[7]).intValue(), // dislikes
+//                    Boolean.TRUE.equals(row[8]), // ✅ isDeleted
+//                    ((Timestamp) row[9]).toLocalDateTime(), // ✅ createdAt
+//                    ((Timestamp) row[10]).toLocalDateTime(), // ✅ updatedAt
+//                    (String) row[11],  // ✅ category
+//                    ((Number) row[12]).intValue()// ✅ views
+//            );
+//            result.add(dto);
+//        }
+//        return result;
+//    }
+    public Page<BoardDto> getBoardDtos(String category, Pageable pageable) {
+        Page<Object[]> rowsPage = boardRepository.findAllBoardDtosRaw(category, pageable);
 
-        List<BoardDto> result = new ArrayList<>();
-
-        for (Object[] row : rows) {
-            BoardDto dto = new BoardDto(
-                    (Integer) row[0], // p.id
-                    (Integer) row[1], // userId
-                    (String) row[2],  // u.name
-                    (String) row[3],  // title
-                    (String) row[4],  // content
-                    ((Number) row[5]).intValue(), // tier
-                    ((Number) row[6]).intValue(), // likes
-                    ((Number) row[7]).intValue(), // dislikes
-                    Boolean.TRUE.equals(row[8]), // ✅ isDeleted
-                    ((Timestamp) row[9]).toLocalDateTime(), // ✅ createdAt
-                    ((Timestamp) row[10]).toLocalDateTime(), // ✅ updatedAt
-                    (String) row[11],  // ✅ category
-                    ((Number) row[12]).intValue()// ✅ views
-            );
-            result.add(dto);
-        }
-        return result;
+        return rowsPage.map(row -> new BoardDto(
+                (Integer) row[0], // p.id
+                (Integer) row[1], // userId
+                (String) row[2],  // u.name
+                (String) row[3],  // title
+                (String) row[4],  // content
+                ((Number) row[5]).intValue(), // tier
+                ((Number) row[6]).intValue(), // likes
+                ((Number) row[7]).intValue(), // dislikes
+                Boolean.TRUE.equals(row[8]),  // is_deleted
+                ((Timestamp) row[9]).toLocalDateTime(), // created_at
+                ((Timestamp) row[10]).toLocalDateTime(), // updated_at
+                (String) row[11],  // category
+                ((Number) row[12]).intValue() // views
+        ));
     }
 
 }
