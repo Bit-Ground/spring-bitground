@@ -30,7 +30,7 @@ public class Order {
             foreignKey = @ForeignKey(name = "orders_coins_id_fk",
                     foreignKeyDefinition = "FOREIGN KEY (symbol_id) REFERENCES coins(id) ON DELETE CASCADE"))
     private Coin coin;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "season_id", nullable = false,
             foreignKey = @ForeignKey(name = "orders_seasons_id_fk",

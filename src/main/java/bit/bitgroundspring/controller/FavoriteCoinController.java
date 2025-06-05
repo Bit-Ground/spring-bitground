@@ -20,14 +20,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FavoriteCoinController {
 
+    private final AuthService authService;
     private final FavoriteCoinService favService;
 
-    // 토큰 → UserDto → User 변환은 이 리졸버가 담당
     @PostMapping
     public ResponseEntity<Void> addFav(
-            @RequestParam Integer userId,
+            @CookieValue("jwt_token") String jwtToken,
             @RequestParam String symbol
     ) {
+        Integer userId = authService.getUserIdFromToken(jwtToken);
         favService.addFavorite(userId, symbol);
         URI location = URI.create("/api/favorites/" + symbol);
         return ResponseEntity.created(location).build();
@@ -35,17 +36,19 @@ public class FavoriteCoinController {
 
     @DeleteMapping("/{symbol}")
     public ResponseEntity<Void> removeFav(
-            @RequestParam Integer userId,
+            @CookieValue("jwt_token") String jwtToken,
             @PathVariable String symbol
     ) {
+        Integer userId = authService.getUserIdFromToken(jwtToken);
         favService.removeFavorite(userId, symbol);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
     public ResponseEntity<List<String>> listFav(
-            @RequestParam Integer userId
+            @CookieValue("jwt_token") String jwtToken
     ) {
+        Integer userId = authService.getUserIdFromToken(jwtToken);
         List<String> symbols = favService.listFavorites(userId);
         return ResponseEntity.ok(symbols);
     }
