@@ -85,9 +85,24 @@ public class BoardController {
     public ResponseEntity<?> getPostList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String category)
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "latest") String sort)
     {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("created_at").descending());
+        Sort sorting;
+        switch (sort) {
+            case "oldest":
+                sorting = Sort.by("created_at").ascending();
+                break;
+            case "popular":
+                sorting = Sort.by("likes").descending();
+                break;
+            case "views":
+                sorting = Sort.by("views").descending();
+                break;
+            default:
+                sorting = Sort.by("created_at").descending();
+        }
+        Pageable pageable = PageRequest.of(page, size, sorting);
         // ✅ 페이징 결과를 PageImpl 그대로 반환 시 Jackson 경고 발생 가능성 있음
         // → PageResponseDto로 감싸서 JSON 구조를 안정적으로 유지
         Page<BoardDto> posts = boardService.getBoardDtos(category, pageable);
