@@ -8,13 +8,10 @@ import bit.bitgroundspring.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import bit.bitgroundspring.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -88,7 +85,8 @@ public class BoardService {
                 ((Timestamp) row[9]).toLocalDateTime(), // created_at
                 ((Timestamp) row[10]).toLocalDateTime(), // updated_at
                 (String) row[11],  // category
-                ((Number) row[12]).intValue() // views
+                ((Number) row[12]).intValue(), // views
+                ((Number) row[13]).longValue()
         ));
     }
 

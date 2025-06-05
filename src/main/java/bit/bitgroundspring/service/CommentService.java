@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -91,6 +89,10 @@ public class CommentService {
         comment.setDislikes(comment.getDislikes() + 1);
     }
 
+    public long countByPostId(Integer postId) {
+        return commentRepository.countByPostId(postId);
+    }
+
     private CommentResponseDto toDto(Comment comment) {
         return CommentResponseDto.builder()
                 .id(comment.getId())
@@ -99,7 +101,9 @@ public class CommentService {
                 .content(comment.getContent())
                 .userName(comment.getUser().getName())
                 .isDeleted(comment.getIsDeleted())
-                .createdAt(comment.getCreatedAt())// 추가
+                .createdAt(comment.getCreatedAt())
+                .likes(comment.getLikes())
+                .dislikes(comment.getDislikes())
                 .children(comment.getChildren().stream()
                         .map(this::toDto)
                         .collect(Collectors.toList()))

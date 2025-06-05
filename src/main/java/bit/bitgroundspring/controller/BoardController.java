@@ -6,6 +6,7 @@ import bit.bitgroundspring.entity.Post;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
 import bit.bitgroundspring.repository.BoardRepository;
+import bit.bitgroundspring.repository.CommentRepository;
 import bit.bitgroundspring.repository.UserRepository;
 import bit.bitgroundspring.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -33,6 +33,8 @@ public class BoardController {
     private final UserRepository userRepository;
     private final NcpObjectStorageService objectStorageService;
     private final BoardService boardService;
+    private final CommentRepository commentRepository;
+
 
     @Value("${ncp.bucket}")
     private String bucketName;
@@ -108,6 +110,8 @@ public class BoardController {
 
         boolean hasImage = post.getContent() != null && post.getContent().contains("<img");
 
+        Long commentCount = commentRepository.countByPostId(post.getId());
+
         BoardDto dto = new BoardDto(
                 post.getId(),
                 post.getUser().getId(),
@@ -121,7 +125,8 @@ public class BoardController {
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
                 post.getCategory().name(),
-                post.getViews()
+                post.getViews(),
+                commentCount
         );
 
         return ResponseEntity.ok(dto);

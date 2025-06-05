@@ -15,6 +15,8 @@ public class CommentResponseDto {
     private String content;
     private String userName;
     private Boolean isDeleted;
+    private Integer likes;
+    private Integer dislikes;
     private LocalDateTime createdAt;
     private List<CommentResponseDto> children;
 }

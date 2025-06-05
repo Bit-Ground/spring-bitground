@@ -7,7 +7,6 @@ import bit.bitgroundspring.entity.Post;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Post, Integer> {
@@ -15,12 +14,14 @@ public interface BoardRepository extends JpaRepository<Post, Integer> {
     //게시글 목록 출력
     @Query(value = "SELECT " +
             "p.id, u.id AS userId, u.name, p.title, p.content, p.tier, " +
-            "p.likes, p.dislikes, p.is_deleted, p.created_at, p.updated_at, p.category, p.views " +
+            "p.likes, p.dislikes, p.is_deleted, p.created_at, p.updated_at, p.category, p.views, " +
+            "(SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) AS comment_count " +
             "FROM posts p " +
             "JOIN users u ON p.user_id = u.id " +
+            "WHERE (:category IS NULL OR p.category = :category) " +
             "ORDER BY p.id DESC",
             countQuery = "SELECT COUNT(*) FROM posts p JOIN users u ON p.user_id = u.id " +
-                         "WHERE (:category IS NULL OR p.category = :category)",
+                    "WHERE (:category IS NULL OR p.category = :category)",
             nativeQuery = true)
     Page<Object[]> findAllBoardDtosRaw(@Param("category") String category, Pageable pageable);
 
