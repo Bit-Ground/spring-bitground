@@ -15,6 +15,7 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
 
+
     // 댓글 등록
     @PostMapping
     public ResponseEntity<?> createComment(@RequestBody CommentRequestDto dto) {
@@ -38,5 +39,21 @@ public class CommentController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{commentId}/like")
+    public ResponseEntity<Void> likeComment(@PathVariable Integer commentId) {
+        commentService.likeComment(commentId);
+        return ResponseEntity.ok().build();
+    }
 
+    @PostMapping("/{commentId}/dislike")
+    public ResponseEntity<Void> dislikeComment(@PathVariable Integer commentId) {
+        commentService.dislikeComment(commentId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/post/{postId}/count")
+    public ResponseEntity<Long> getCommentCount(@PathVariable Integer postId) {
+        long count = commentService.countByPostId(postId);
+        return ResponseEntity.ok(count);
+    }
 }

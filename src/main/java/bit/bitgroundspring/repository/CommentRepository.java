@@ -12,4 +12,6 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
     @EntityGraph(attributePaths = {"children", "children.user", "user"})
     List<Comment> findByPostIdAndParentIsNullOrderByCreatedAtAsc(Integer postId);
+
+    Long countByPostId(Integer postId);
 }
