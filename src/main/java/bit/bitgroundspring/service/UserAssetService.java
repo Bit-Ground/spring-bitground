@@ -30,7 +30,7 @@ public class UserAssetService {
     @Transactional(readOnly = true)
     public UserAssetResponse getUserAssets(Integer userId) {
         // 사용자 현금 조회
-        float cash = userRepository.findById(userId)
+        int cash = userRepository.findById(userId)
                 .map(User::getCash)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         

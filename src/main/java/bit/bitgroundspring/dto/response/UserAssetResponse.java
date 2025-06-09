@@ -13,6 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserAssetResponse {
-    private Float cash;
+    private Integer cash;
     private List<UserAssetProjection> userAssets;
 }

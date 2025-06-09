@@ -42,7 +42,7 @@ public class User {
     private Role role = Role.ROLE_USER;
     
     @Column(name = "cash", nullable = false, columnDefinition = "int")
-    private Float cash;
+    private Integer cash;
     
     @Column(name = "tier", nullable = false, columnDefinition = "tinyint default 0")
     @Builder.Default
@@ -64,7 +64,7 @@ public class User {
     @JoinColumn(name="current_season_id")
     private Season currentSeason;
 
-    public float getCash() { return cash; }
-    public void setCash(float cash) { this.cash = cash; }
+    public int getCash() { return cash; }
+    public void setCash(Integer cash) { this.cash = cash; }
     public Season getCurrentSeason() { return currentSeason; }
 }
