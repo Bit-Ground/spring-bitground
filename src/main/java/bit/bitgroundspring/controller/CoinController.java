@@ -1,4 +1,5 @@
 // src/main/java/bit/bitgroundspring/controller/CoinController.java
+
 package bit.bitgroundspring.controller;
 
 import bit.bitgroundspring.dto.CoinSymbolDto;
@@ -42,7 +43,7 @@ public class CoinController {
     @GetMapping("/coins/high-trade-price")
     public List<Coin> getTop5HighTradePriceCoins() {
         return coinRepository.findAll().stream()
-                .sorted(Comparator.comparing(Coin::getTradePrice24h, Comparator.reverseOrder()))
+                .sorted(Comparator.comparing(Coin::getTradePrice24h).reversed())
                 .limit(5)
                 .collect(Collectors.toList());
     }
@@ -52,7 +53,8 @@ public class CoinController {
     @GetMapping("/coins/price-increase")
     public List<Coin> getTop5PriceIncreaseCoins() {
         return coinRepository.findAll().stream()
-                .sorted(Comparator.comparing(Coin::getChangeRate, Comparator.reverseOrder()))
+                .filter(coin -> coin.getChangeRate() != null)
+                .sorted(Comparator.comparing(Coin::getChangeRate).reversed())
                 .limit(5)
                 .collect(Collectors.toList());
     }
@@ -62,42 +64,28 @@ public class CoinController {
     @GetMapping("/coins/price-decrease")
     public List<Coin> getTop5PriceDecreaseCoins() {
         return coinRepository.findAll().stream()
-                .sorted(Comparator.comparing(Coin::getChangeRate)) // 오름차순 (가장 낮은 changeRate가 가장 큰 하락폭)
+                .filter(coin -> coin.getChangeRate() != null)
+                .sorted(Comparator.comparing(Coin::getChangeRate))
                 .limit(5)
                 .collect(Collectors.toList());
     }
 
-    // 거래유의 종목 (isWarning = true) 코인 조회 엔드포인트 (Upbit의 'warning'에 해당)
+    // 거래유의 종목 조회 엔드포인트 (Upbit의 'warning'에 해당)
     // GET 요청: http://localhost:8090/api/coins/caution
     @GetMapping("/coins/caution")
     public List<Coin> getCautionCoins() {
         return coinRepository.findAll().stream()
-                .filter(Coin::getIsWarning) // isWarning 필드가 true인 코인만 필터링
+                .filter(Coin::getIsWarning)
                 .collect(Collectors.toList());
     }
 
-    // 투자주의 종목 (isCaution = true) 코인 조회 엔드포인트 (Upbit의 'caution'에 해당)
+    // 투자주의 종목 조회 엔드포인트 (Upbit의 'caution'에 해당)
     // GET 요청: http://localhost:8090/api/coins/alert
     @GetMapping("/coins/alert")
     public List<Coin> getAlertCoins() {
         return coinRepository.findAll().stream()
-                .filter(Coin::getIsCaution) // isCaution 필드가 true인 코인만 필터링
+                .filter(Coin::getIsCaution)
                 .collect(Collectors.toList());
-    }
-
-    // GET /api/ai-insights/overall-market
-    @GetMapping("/ai-insights/overall-market")
-    public ResponseEntity<AiInsight> getOverallMarketInsight() {
-        String marketOverallSymbol = "MARKET_OVERALL"; // GeminiService에 정의된 상수와 일치해야 함
-        AiInsight aiInsight = geminiService.getTodayInsight(marketOverallSymbol);
-
-        if (aiInsight != null) {
-            return ResponseEntity.ok(aiInsight);
-        } else {
-            System.err.println("Failed to retrieve overall market AI insight for today.");
-            // 데이터가 없을 경우 404 Not Found 또는 다른 적절한 상태 코드를 반환
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
     }
 
     // 모든 코인 심볼 조회 엔드포인트 (DTO 사용)
@@ -109,23 +97,50 @@ public class CoinController {
                 .collect(Collectors.toList());
     }
 
-
-    /**
-     * 특정 코인 또는 전체 시장에 대한 AI 분석 결과를 조회하는 엔드포인트.
-     * 이 엔드포인트는 AI API를 직접 호출하지 않고, 스케줄러에 의해 미리 저장된 데이터를 반환합니다.
-     *
-     * GET 요청: http://localhost:8090/api/coins/{symbol}/insight
-     * {symbol} 에는 "MARKET_OVERALL" 또는 "KRW-BTC", "KRW-ETH" 등의 코인 심볼이 올 수 있습니다.
-     */
+    // 특정 코인에 대한 AI 분석 결과 조회 엔드포인트
+    // GET 요청: http://localhost:8090/api/coins/{symbol}/insight
     @GetMapping("/coins/{symbol}/insight")
     public ResponseEntity<AiInsight> getCoinInsight(@PathVariable String symbol) {
-        AiInsight aiInsight = geminiService.getTodayInsight(symbol); // 스케줄러로 생성된 데이터 조회
+        // 'MARKET_OVERALL' 심볼은 코인 저장소에 없으므로 별도로 처리
+        if (symbol.equals(GeminiService.MARKET_OVERALL_SYMBOL)) {
+            AiInsight aiInsight = geminiService.getTodayInsight(symbol);
+            if (aiInsight != null) {
+                return ResponseEntity.ok(aiInsight);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        }
+
+        // 일반 코인 심볼 처리
+        Optional<Coin> optionalCoin = coinRepository.findBySymbol(symbol);
+
+        if (optionalCoin.isPresent()) {
+            Coin coin = optionalCoin.get();
+            // 해당 코인에 대한 AI 분석 결과를 가져오거나 생성하여 저장
+            AiInsight aiInsight = geminiService.generateAndSaveAnalysis(coin);
+            if (aiInsight != null) {
+                return ResponseEntity.ok(aiInsight);
+            } else {
+                System.err.println("Failed to generate or retrieve AI insight for " + symbol);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
+        } else {
+            System.err.println("Coin not found for symbol: " + symbol);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    // 전체 시장에 대한 AI 분석 결과 조회 엔드포인트 (새로 추가)
+    // 이 엔드포인트는 스케줄러가 'MARKET_OVERALL' 심볼로 저장한 데이터를 가져오는 데 사용됩니다.
+    // GET 요청: http://localhost:8090/api/ai-insights/overall-market
+    @GetMapping("/ai-insights/overall-market")
+    public ResponseEntity<AiInsight> getOverallMarketInsight() {
+        AiInsight aiInsight = geminiService.getTodayInsight(GeminiService.MARKET_OVERALL_SYMBOL);
 
         if (aiInsight != null) {
             return ResponseEntity.ok(aiInsight);
         } else {
-            System.err.println("No AI insight found for symbol: " + symbol + " for today.");
-            // 404 Not Found 또는 다른 적절한 상태 코드를 반환
+            System.err.println("Failed to retrieve overall market AI insight for today.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
