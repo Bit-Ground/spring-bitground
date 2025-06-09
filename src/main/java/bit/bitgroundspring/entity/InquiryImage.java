@@ -2,6 +2,7 @@ package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +29,7 @@ public class InquiryImage {
     @Column(name = "image", nullable = false)
     private String image;
     
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
     private LocalDateTime createdAt;
 }
