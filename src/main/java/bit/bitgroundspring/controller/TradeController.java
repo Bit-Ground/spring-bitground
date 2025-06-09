@@ -1,22 +1,24 @@
 package bit.bitgroundspring.controller;
 
+import bit.bitgroundspring.dto.OrderRequestDto;
 import bit.bitgroundspring.dto.TradeDto;
+import bit.bitgroundspring.dto.response.OrderResponseDto;
+import bit.bitgroundspring.security.oauth2.AuthService;
 import bit.bitgroundspring.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import bit.bitgroundspring.service.TradeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/trade")
+@RequiredArgsConstructor
 public class TradeController {
-    @Autowired
-    OrderService orderService;
+    private final OrderService orderService;
+    private final TradeService tradeService;
+    private final AuthService authService;
 
     //    @GetMapping("/history")
 //    public ResponseEntity<List<TradeDto>> getTradeHistory(
@@ -39,5 +41,15 @@ public class TradeController {
     ) {
         List<TradeDto> history = orderService.getRecentTrades(symbol);
         return ResponseEntity.ok(history);
+    }
+
+    @PostMapping
+    public ResponseEntity<OrderResponseDto> placeOrder(
+            @CookieValue (value = "jwt_token", required = false) String jwtToken,
+            @RequestBody OrderRequestDto req
+    ) {
+        Integer userId = authService.getUserIdFromToken(jwtToken);
+        OrderResponseDto resp = tradeService.placeOrder(userId, req);
+        return ResponseEntity.ok(resp);
     }
 }
