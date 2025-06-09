@@ -60,11 +60,6 @@ public class User {
     @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)")
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="current_season_id")
-    private Season currentSeason;
-
     public int getCash() { return cash; }
     public void setCash(Integer cash) { this.cash = cash; }
-    public Season getCurrentSeason() { return currentSeason; }
 }
