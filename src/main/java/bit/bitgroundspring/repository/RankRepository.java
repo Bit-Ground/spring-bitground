@@ -29,7 +29,8 @@ public interface RankRepository extends JpaRepository<UserRanking, Integer> {
             "u.profileImage as profileImage, " +
             "ur.ranks as ranks, " +
             "ur.tier as tier, " +
-            "ur.totalValue as totalValue " +
+            "ur.totalValue as totalValue, " +
+            "ur.updatedAt as updatedAt " +
             "FROM UserRanking ur " +
             "JOIN ur.user u " +
             "WHERE ur.season.status = 'PENDING' " +
