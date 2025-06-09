@@ -1,13 +1,17 @@
 package bit.bitgroundspring.repository;
 
 import bit.bitgroundspring.dto.projection.UserAssetProjection;
+import bit.bitgroundspring.entity.Coin;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.entity.UserAsset;
 import io.lettuce.core.dynamic.annotation.Param;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserAssetRepository extends JpaRepository<UserAsset, Integer> {
     //유저가 가지고있는 보유자산 목록
@@ -32,4 +36,11 @@ public interface UserAssetRepository extends JpaRepository<UserAsset, Integer> {
             "JOIN ua.coin c " +
             "WHERE ua.user.id = :userId")
     List<UserAssetProjection> findUserAssetProjectionsByUserId(@Param("userId") Integer userId);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT a FROM UserAsset a WHERE a.user = :user AND a.coin = :coin")
+    Optional<UserAsset> findByUserAndCoinWithLock(
+            @Param("user") User user,
+            @Param("coin") Coin coin
+    );
 }
