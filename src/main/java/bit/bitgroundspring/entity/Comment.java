@@ -2,6 +2,8 @@ package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,9 +58,11 @@ public class Comment {
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<Comment> children;
     
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
     private LocalDateTime createdAt;
     
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)")
     private LocalDateTime updatedAt;
 }

@@ -2,6 +2,7 @@ package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -37,6 +38,7 @@ public class FavoriteCoin {
                     foreignKeyDefinition = "FOREIGN KEY (symbol_id) REFERENCES coins(id) ON DELETE CASCADE"))
     private Coin coin;
     
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, insertable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
     private LocalDateTime createdAt;
 }
