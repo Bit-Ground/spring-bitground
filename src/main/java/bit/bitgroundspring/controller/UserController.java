@@ -1,13 +1,11 @@
 package bit.bitgroundspring.controller;
 
 import bit.bitgroundspring.dto.UserDto;
-import bit.bitgroundspring.dto.UserUpdate;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
 import bit.bitgroundspring.security.oauth2.AuthService;
 import bit.bitgroundspring.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +48,7 @@ public class UserController {
                 .profileImage(user.get().getProfileImage())
                 .provider(user.get().getProvider())
                 .role(user.get().getRole())
+                .cash(user.get().getCash())
                 .build();
 
         // 사용자 정보를 Map 형태로 변환합니다.
@@ -62,8 +61,7 @@ public class UserController {
     }
 
     //사용자 프로필 이미지 수정
-    @Autowired
-    private NcpObjectStorageService objectStorageService;
+    private final NcpObjectStorageService objectStorageService;
 
     @Value("${ncp.bucket}")
     private String bucketName;

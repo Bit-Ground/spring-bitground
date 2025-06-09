@@ -23,4 +23,6 @@ public class UserDto {
     
     private Role role;
     
+    private Integer cash; // 사용자의 현금 자산
+    
 }
