@@ -3,10 +3,12 @@ package bit.bitgroundspring.service;
 import bit.bitgroundspring.dto.OrderRequestDto;
 import bit.bitgroundspring.dto.response.OrderResponseDto;
 import bit.bitgroundspring.entity.*;
+import bit.bitgroundspring.event.OrderCreatedEvent;
 import bit.bitgroundspring.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ public class TradeService {
     private final UserAssetRepository assetRepository;
     private final OrderRepository orderRepository;
     private final SeasonRepository seasonRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     /** 슬리피지 허용 범위: 0.5% */
     private static final double SLIPPAGE_TOLERANCE = 0.005;
@@ -116,9 +119,11 @@ public class TradeService {
                 .updatedAt(now)
                 .createdAt(now)
                 .build();
-        orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
         assetRepository.save(asset);
         userRepository.save(user);
+        // websocket 이벤트 발행
+        eventPublisher.publishEvent(new OrderCreatedEvent(this, savedOrder));
 
         // 6) 결과 반환
         return new OrderResponseDto(

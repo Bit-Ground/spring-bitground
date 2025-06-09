@@ -81,7 +81,7 @@ public class OrderHistoryWebSocketHandler
 
     @Override
     public void onApplicationEvent(OrderCreatedEvent event) {
-        // OrderService.saveOrder(...) 같은 곳에서 주문이 저장된 뒤에 이벤트를 발행하면 이 메서드가 호출됩니다.
+        // 주문이 저장된 뒤에 이벤트를 발행하면 이 메서드 호출
         Order saved = event.getOrder();
 
         String symbol = saved.getCoin().getSymbol();
@@ -97,7 +97,7 @@ public class OrderHistoryWebSocketHandler
             return; // 해당 심볼을 구독 중인 세션이 없으면 끝
         }
 
-        // DTO 로 변환 (OrderDto → TradeDto)
+        // DTO 로 변환 (TradeDto)
         TradeDto dto = new TradeDto(
                 symbol,
                 koreanName,
