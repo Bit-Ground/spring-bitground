@@ -11,7 +11,7 @@ public class InitialCashUtil {
     @Value("${scheduler.setting}")
     private String schedulerSetting;
     
-    public int getInitialCash() {
+    public float getInitialCash() {
         LocalDateTime now = LocalDateTime.now();
         int day = now.getDayOfMonth();
         int hour = now.getHour();
