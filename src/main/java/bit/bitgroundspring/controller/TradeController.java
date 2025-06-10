@@ -20,21 +20,6 @@ public class TradeController {
     private final TradeService tradeService;
     private final AuthService authService;
 
-    //    @GetMapping("/history")
-//    public ResponseEntity<List<TradeDto>> getTradeHistory(
-//            @RequestParam("symbol") String symbol,
-//            @RequestParam(value = "since", required = false) String sinceStr
-//    ) {
-//        if (sinceStr == null) {
-//            // since 파라미터가 없으면 최신 100개 전체 조회
-//            List<TradeDto> history = orderService.getRecentTrades(symbol);
-//            return ResponseEntity.ok(history);
-//        }
-//        // since 파라미터가 있으면 그 시간 이후의 변경분만 조회
-//        LocalDateTime since = LocalDateTime.parse(sinceStr);
-//        List<TradeDto> newTrades = orderService.getNewTradesSince(symbol, since);
-//        return ResponseEntity.ok(newTrades);
-//    }
     @GetMapping("/history")
     public ResponseEntity<List<TradeDto>> getTradeHistory(
             @RequestParam("symbol") String symbol
