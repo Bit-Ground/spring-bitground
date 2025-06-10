@@ -89,7 +89,6 @@ public class TradeService {
         if (isBuy) {
             if (user.getCash() < cost) throw new IllegalArgumentException("잔액이 부족합니다.");
             user.setCash(user.getCash() - cost);
-            user.setCash(user.getCash() - cost);
             // 평균 단가 재계산
             float totalQty = asset.getAmount() + (float)req.getAmount();
             float totalCost = asset.getAmount() * asset.getAvgPrice() + (float)cost;
