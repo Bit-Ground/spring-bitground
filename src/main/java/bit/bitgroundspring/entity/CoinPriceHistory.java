@@ -4,17 +4,18 @@ package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp; // CreationTimestamp 임포트 추가
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;   // LocalDate 임포트
 import java.time.LocalDateTime;
 
 @Entity
 @Table(
         name = "coin_price_history",
         uniqueConstraints = {
-                @UniqueConstraint( // Go 모델의 uniqueIndex와 일치하도록 설정
-                        name = "uq_coin_price_history_coin_id_record_time",
-                        columnNames = {"coin_id", "record_time"}
+                @UniqueConstraint( // date, hour 기준으로 Unique Constraint 변경
+                        name = "uq_coin_price_history_coin_id_date_hour",
+                        columnNames = {"coin_id", "date", "hour"}
                 )
         }
 )
@@ -42,8 +43,11 @@ public class CoinPriceHistory {
     )
     private Coin coin; // `coins` 테이블의 ID (FK)
 
-    @Column(name = "record_time", nullable = false, columnDefinition = "datetime(6)")
-    private LocalDateTime recordTime; // 캔들 데이터 기준 시각 (UTC 기준)
+    @Column(name = "date", nullable = false)
+    private LocalDate date; // 캔들 데이터 기준 날짜
+
+    @Column(name = "hour", nullable = false, columnDefinition = "tinyint")
+    private Integer hour; // 캔들 데이터 기준 시간 (0-23)
 
     @Column(name = "open_price", nullable = false)
     private Float openPrice; // 해당 캔들의 시작 가격
