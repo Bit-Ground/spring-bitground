@@ -1,6 +1,7 @@
 package bit.bitgroundspring.service;
 
 import bit.bitgroundspring.dto.OrderDto;
+import bit.bitgroundspring.dto.TradeDetailDto;
 import bit.bitgroundspring.dto.TradeDto;
 import bit.bitgroundspring.dto.TradeSummaryDto;
 import bit.bitgroundspring.dto.projection.OrderProjection;
@@ -92,5 +93,32 @@ public class OrderService {
         }
 
         return summaries;
+    }
+    public List<TradeDetailDto> getTradeDetails(User user, Season season) {
+        List<Order> orders = orderRepository.findByUserAndSeason(user, season);
+
+        return orders.stream().map(order -> {
+            String date = String.format("%02d-%02d",
+                    order.getCreatedAt().getMonthValue(),
+                    order.getCreatedAt().getDayOfMonth());
+
+            String type = order.getOrderType().name().equals("BUY") ? "매수" : "매도";
+
+            String coin = order.getCoin().getSymbol().replace("KRW-", "");
+            String qty = order.getAmount() + " " + coin;
+            String koreanName = order.getCoin().getKoreanName();
+
+            double price = order.getTradePrice();
+            double total = price * order.getAmount();
+
+            return TradeDetailDto.builder()
+                    .date(date)
+                    .type(type)
+                    .qty(qty)
+                    .price(price)
+                    .total(total)
+                    .koreanName(koreanName)
+                    .build();
+        }).toList();
     }
 }
