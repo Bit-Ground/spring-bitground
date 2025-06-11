@@ -141,7 +141,8 @@ public class BoardController {
                 post.getUpdatedAt(),
                 post.getCategory().name(),
                 post.getViews(),
-                commentCount
+                commentCount,
+                hasImage
         );
 
         return ResponseEntity.ok(dto);
@@ -163,6 +164,17 @@ public class BoardController {
         post.setDislikes(post.getDislikes() + 1);
         boardRepository.save(post);
         return ResponseEntity.ok().body(post.getDislikes());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePost(@PathVariable Integer id) {
+        Post post = boardRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 없습니다."));
+
+        post.setIsDeleted(true);
+        boardRepository.save(post);
+
+        return ResponseEntity.ok("게시글이 삭제되었습니다.");
     }
 
 
