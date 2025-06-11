@@ -72,22 +72,30 @@ public class BoardService {
     public Page<BoardDto> getBoardDtos(String category, Pageable pageable) {
         Page<Object[]> rowsPage = boardRepository.findAllBoardDtosRaw(category, pageable);
 
-        return rowsPage.map(row -> new BoardDto(
-                (Integer) row[0], // p.id
-                (Integer) row[1], // userId
-                (String) row[2],  // u.name
-                (String) row[3],  // title
-                (String) row[4],  // content
-                ((Number) row[5]).intValue(), // tier
-                ((Number) row[6]).intValue(), // likes
-                ((Number) row[7]).intValue(), // dislikes
-                Boolean.TRUE.equals(row[8]),  // is_deleted
-                ((Timestamp) row[9]).toLocalDateTime(), // created_at
-                ((Timestamp) row[10]).toLocalDateTime(), // updated_at
-                (String) row[11],  // category
-                ((Number) row[12]).intValue(), // views
-                ((Number) row[13]).longValue()
-        ));
+        return rowsPage.map(row -> {
+            BoardDto dto = new BoardDto(
+                    (Integer) row[0], // p.id
+                    (Integer) row[1], // userId
+                    (String) row[2],  // u.name
+                    (String) row[3],  // title
+                    (String) row[4],  // content
+                    ((Number) row[5]).intValue(), // tier
+                    ((Number) row[6]).intValue(), // likes
+                    ((Number) row[7]).intValue(), // dislikes
+                    Boolean.TRUE.equals(row[8]),  // is_deleted
+                    ((Timestamp) row[9]).toLocalDateTime(), // created_at
+                    ((Timestamp) row[10]).toLocalDateTime(), // updated_at
+                    (String) row[11],  // category
+                    ((Number) row[12]).intValue(), // views
+                    ((Number) row[13]).longValue()  // commentCount
+            );
+
+            // ✅ <img 태그 포함 여부 확인해서 세팅
+            String content = (String) row[4];
+            dto.setHasImage(content != null && content.contains("<img"));
+
+            return dto;
+        });
     }
 
 }
