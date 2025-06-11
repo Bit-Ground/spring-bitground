@@ -1,5 +1,6 @@
 package bit.bitgroundspring.controller;
 
+import bit.bitgroundspring.dto.AnswerDto;
 import bit.bitgroundspring.dto.InquireRequestDto;
 import bit.bitgroundspring.dto.InquireResponseDto;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,5 +56,12 @@ public class InquireController {
 
         Page<InquireResponseDto> pagedInquiries = inquireService.getPagedInquiries(page, size);
         return ResponseEntity.ok(pagedInquiries);
+    }
+
+
+    @PutMapping("/{id}/answer")
+    public ResponseEntity<Void> updateAnswer(@PathVariable Integer id, @RequestBody AnswerDto dto, Principal principal) {
+        inquireService.updateAnswer(id, dto, principal.getName());
+        return ResponseEntity.ok().build();
     }
 }

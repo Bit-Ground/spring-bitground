@@ -47,4 +47,10 @@ public class Inquiry {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)")
     private LocalDateTime updatedAt;
+
+    @Column(name = "answer_writer")
+    private String answerWriter;
+
+    @Column(name = "answered_at")
+    private LocalDateTime answeredAt;
 }
