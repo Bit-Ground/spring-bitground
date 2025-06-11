@@ -1,11 +1,15 @@
 package bit.bitgroundspring.service;
 
 import bit.bitgroundspring.dto.InquireRequestDto;
+import bit.bitgroundspring.dto.InquireResponseDto;
 import bit.bitgroundspring.entity.Inquiry;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.repository.InquireRepository;
 import bit.bitgroundspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +29,11 @@ public class InquireService {
                 .isAnswered(false)
                 .build();
         inquireRepository.save(inquiry);
+    }
 
+    public Page<InquireResponseDto> getPagedInquiries(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return inquireRepository.findAllByOrderByCreatedAtDesc(pageRequest)
+                .map(InquireResponseDto::new);
     }
 }
