@@ -1,12 +1,15 @@
 package bit.bitgroundspring.repository;
 
 import bit.bitgroundspring.dto.projection.RankProjection;
+import bit.bitgroundspring.entity.Season;
+import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.entity.UserRanking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RankRepository extends JpaRepository<UserRanking, Integer> {
     
@@ -36,4 +39,6 @@ public interface RankRepository extends JpaRepository<UserRanking, Integer> {
             "WHERE ur.season.status = 'PENDING' " +
             "ORDER BY ur.ranks ASC")
     List<RankProjection> findCurrentSeasonRankings();
+
+    Optional<UserRanking> findByUserAndSeason(User user, Season season);
 }
