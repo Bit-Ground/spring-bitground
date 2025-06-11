@@ -1,9 +1,14 @@
 package bit.bitgroundspring.controller;
 
+import bit.bitgroundspring.dto.TradeDetailDto;
+import bit.bitgroundspring.dto.TradeSummaryDto;
 import bit.bitgroundspring.dto.UserDto;
+import bit.bitgroundspring.entity.Season;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
 import bit.bitgroundspring.security.oauth2.AuthService;
+import bit.bitgroundspring.service.OrderService;
+import bit.bitgroundspring.service.SeasonService;
 import bit.bitgroundspring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,6 +26,8 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     private final AuthService authService;
+    private final SeasonService seasonService;
+    private final OrderService orderService;
 
     //사용자 정보 조회
     @GetMapping("/me")
@@ -138,5 +146,47 @@ public class UserController {
                 "success", true,
                 "message", "회원 탈퇴 처리 완료"
         ));
+    }
+
+    @GetMapping("/trade-summary")
+    public ResponseEntity<List<TradeSummaryDto>> getTradeSummary(
+            @CookieValue(name = "jwt_token", required = false) String jwtToken,
+            @RequestParam("seasonId") Integer seasonId) {
+
+        // 1. 토큰에서 유저 식별 정보 추출
+        UserDto userDto = authService.getUserInfoFromToken(jwtToken);
+
+        // 2. provider + providerId로 실제 유저 찾기
+        Optional<User> userOpt = userService.getUserBySocialId(userDto.getProvider(), userDto.getProviderId());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(List.of());
+        }
+
+        // 3. 유저, 시즌 가져와서 요약 정보 조회
+        User user = userOpt.get();
+        Season season = seasonService.getSeasonById(seasonId);
+        List<TradeSummaryDto> summaryList = orderService.getTradeSummary(user, season);
+
+        return ResponseEntity.ok(summaryList);
+    }
+
+    @GetMapping("/trade-details")
+    public ResponseEntity<List<TradeDetailDto>> getTradeDetails(
+            @CookieValue(name = "jwt_token", required = false) String jwtToken,
+            @RequestParam("seasonId") Integer seasonId) {
+
+        // 1. 인증된 사용자 정보 가져오기
+        UserDto userDto = authService.getUserInfoFromToken(jwtToken);
+        Optional<User> userOpt = userService.getUserBySocialId(userDto.getProvider(), userDto.getProviderId());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(List.of());
+        }
+
+        // 2. 시즌과 사용자 기준으로 상세 내역 조회
+        User user = userOpt.get();
+        Season season = seasonService.getSeasonById(seasonId);
+        List<TradeDetailDto> details = orderService.getTradeDetails(user, season);
+
+        return ResponseEntity.ok(details);
     }
 }

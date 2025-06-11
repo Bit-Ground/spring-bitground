@@ -72,57 +72,64 @@ public class TradeService {
         }
 
         // 4) 비용 계산 및 잔액/수량 검증
-        int cost = (int) (req.getAmount() * execPrice);
+        boolean isBuy = req.getOrderType() == OrderType.BUY;
+        double qty = req.getAmount();
+
+        // 4) 비용 계산 및 잔액/수량 검증
         UserAsset asset = assetRepository.findByUserAndCoinWithLock(user, coin)
                 .orElseGet(() -> UserAsset.builder()
                         .user(user)
                         .coin(coin)
                         .amount(0f)
                         .avgPrice(0f)
-                        .build()
-                );
+                        .build());
 
-        // 매수
-        if (!isLimitOrder || isLimitOrder) {
-            // 매수/매도 공통 계산: 프론트에서 구분
-            if (req.getAmount() > 0) {
-                // 매수
-                if (user.getCash() < cost) {
-                    throw new IllegalArgumentException("잔액이 부족합니다.");
-                }
-                user.setCash(user.getCash() - cost);
-                // 평균 단가 재계산
-                float totalQty = asset.getAmount() + (float)req.getAmount();
-                float totalCost = asset.getAmount() * asset.getAvgPrice() + (float)cost;
-                asset.setAmount(totalQty);
-                asset.setAvgPrice(totalCost / totalQty);
+// 매수/매도 분기
+        if (isBuy) {
+            int cost = (int)(qty * execPrice);
+            if (user.getCash() < cost) throw new IllegalArgumentException("잔액이 부족합니다.");
+            user.setCash(user.getCash() - cost);
+
+            float newQty   = asset.getAmount() + (float)qty;
+            float newTotal = asset.getAmount()*asset.getAvgPrice() + cost;
+            asset.setAmount(newQty);
+            asset.setAvgPrice(newTotal / newQty);
+
+            assetRepository.save(asset);
+            userRepository.save(user);
+
+        } else {  // SELL
+            // EPS 허용 오차
+            final float EPS = 0.00000001f;
+            float currentAmt = asset.getAmount();
+            if (currentAmt + EPS < qty) throw new IllegalArgumentException("보유 수량이 부족합니다.");
+
+            int cost = (int)(qty * execPrice);
+            user.setCash(user.getCash() + cost);
+
+            float remaining = currentAmt - (float)qty;
+            if (remaining < EPS) {
+                assetRepository.delete(asset);
             } else {
-                // 매도
-                double sellQty = -req.getAmount();
-                if (asset.getAmount() < sellQty) {
-                    throw new IllegalArgumentException("보유 수량이 부족합니다.");
-                }
-                user.setCash(user.getCash() + cost);
-                asset.setAmount(asset.getAmount() - (float)sellQty);
+                asset.setAmount(remaining);
+                assetRepository.save(asset);
             }
+            userRepository.save(user);
         }
 
-        // 5) 주문 엔티티 저장
+// 5) 주문 저장 및 이벤트 발행(공통)
         Order order = Order.builder()
                 .user(user)
                 .coin(coin)
                 .season(season)
-                .orderType(req.getAmount() > 0 ? OrderType.BUY : OrderType.SELL)
+                .orderType(req.getOrderType())
                 .status(Status.COMPLETED)
                 .tradePrice((float)execPrice)
-                .amount((float)Math.abs(req.getAmount()))
-                .updatedAt(now)
+                .amount((float)Math.abs(qty))
                 .createdAt(now)
+                .updatedAt(now)
                 .build();
         Order savedOrder = orderRepository.save(order);
-        assetRepository.save(asset);
-        userRepository.save(user);
-        // websocket 이벤트 발행
         eventPublisher.publishEvent(new OrderCreatedEvent(this, savedOrder));
 
         // 6) 결과 반환

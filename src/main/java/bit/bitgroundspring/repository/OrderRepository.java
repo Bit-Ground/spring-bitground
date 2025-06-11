@@ -16,6 +16,10 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
+    /*마이페이지 사용*/
+    @Query("SELECT o FROM Order o JOIN FETCH o.coin WHERE o.user = :user AND o.season = :season")
+    List<Order> findByUserAndSeason(@Param("user") User user, @Param("season") Season season);
+
     @Query("SELECT c.symbol AS symbol, c.koreanName AS coinName, " +
             "o.amount AS amount, o.tradePrice AS tradePrice, " +
             "o.createdAt AS createdAt, o.updatedAt AS updatedAt, o.orderType AS orderType " +

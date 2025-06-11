@@ -23,5 +23,14 @@ public class SeasonController {
     public ResponseEntity<List<SeasonProjection>> getLatestSeasons() {
         return ResponseEntity.ok(seasonService.getLatestSeasons());
     }
+
+    /**
+     * 현재 진행 중인 시즌 ID만 반환
+     */
+    @GetMapping("/current-id")
+    public ResponseEntity<Integer> getCurrentSeasonId() {
+        Integer currentId = seasonService.getCurrentSeasonId();
+        return ResponseEntity.ok(currentId);
+    }
     
 }
