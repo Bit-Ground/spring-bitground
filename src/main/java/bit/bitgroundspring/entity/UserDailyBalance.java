@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -55,8 +56,8 @@ public class UserDailyBalance {
     )
     private Season season;
 
-    @Column(name = "snapshot_datetime", nullable = false, columnDefinition = "datetime(6)")
-    private LocalDateTime snapshotDatetime; // 스냅샷 기록 시각
+    @Column(name = "snapshot_date", nullable = false, columnDefinition = "date")
+    private LocalDate snapshotDate; // 스냅샷 기록 시각
 
     @Column(name = "total_value", nullable = false)
     private Float totalValue; // 해당 시점의 총 자산 가치

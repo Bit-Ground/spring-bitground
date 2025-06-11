@@ -4,6 +4,7 @@ package bit.bitgroundspring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp; // CreationTimestamp 임포트 추가
 
 import java.time.LocalDateTime;
 
@@ -58,4 +59,8 @@ public class CoinPriceHistory {
 
     @Column(name = "volume", nullable = false)
     private Float volume; // 해당 캔들의 거래량
+
+    @CreationTimestamp // 엔티티 생성 시 자동으로 현재 시각 기록
+    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
+    private LocalDateTime createdAt; // 생성 시각
 }
