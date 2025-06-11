@@ -70,4 +70,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             @Param("status") Status status,
             @Param("since") LocalDateTime since
     );
+
+    List<Order> findByUserAndSeasonAndStatus(User user, Season season, Status status);
 }
