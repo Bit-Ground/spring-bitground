@@ -2,6 +2,8 @@
 
 package bit.bitgroundspring.service;
 
+import bit.bitgroundspring.dto.AiAdviceDto;
+import bit.bitgroundspring.dto.InvestmentSummaryDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -330,6 +332,7 @@ public class GeminiService {
         return savedInsights;
     }
 
+
     /**
      * 스케줄러: 매일 자정에 모든 코인과 전체 시장에 대한 AI 분석을 일괄 생성하여 저장합니다.
      * 이 스케줄러는 `CoinScheduler`가 아닌 `GeminiService` 자체에 존재해야 합니다.
@@ -346,5 +349,127 @@ public class GeminiService {
         // 이를 호출하여 모든 분석을 수행합니다.
         generateAndSaveBatchAnalysis(allCoinSymbols);
         log.info("Batch AI analysis scheduled task completed.");
+    }
+
+
+    /**
+     * InvestmentSummaryDto를 기반으로 Gemini AI로부터 투자 조언을 생성합니다.
+     *
+     * @param summaryDto 사용자의 투자 요약 데이터
+     * @return Gemini AI로부터 받은 점수와 조언이 포함된 AiAdviceDto
+     */
+    public AiAdviceDto generateInvestmentAdvice(InvestmentSummaryDto summaryDto) {
+        if (geminiClient == null) {
+            log.error("Gemini Client가 초기화되지 않았습니다. AI 조언을 수행할 수 없습니다.");
+            return null; // 또는 CustomException throw
+        }
+
+        // --- Gemini 프롬프트 구성 ---
+        // InvestmentSummaryDto의 정보를 활용하여 AI가 이해하고 분석할 수 있는 구체적인 프롬프트를 만듭니다.
+        StringBuilder promptBuilder = new StringBuilder();
+        promptBuilder.append(String.format("당신은 전문적인 코인 모의 투자 분석가입니다. 다음은 사용자 '%s'의 지난 시즌(%s ~ %s) 투자 요약 데이터입니다. 이 데이터를 기반으로 투자 성과를 점수(1-100점)로 평가하고, 강점, 개선점, 그리고 다음 시즌을 위한 구체적이고 합리적인 투자 조언(500자 이내)을 한국어로 제공해 주세요. 조언은 친절하고 전문적인 어조로 작성해 주세요. JSON 형식으로만 응답하며, 'score'(점수)와 'advice'(조언 내용) 필드를 포함해야 합니다. (예: {\"score\": 85, \"advice\": \"내용\"})\n\n",
+                summaryDto.getUserName(), summaryDto.getSeasonStartAt(), summaryDto.getSeasonEndAt()));
+
+        promptBuilder.append(String.format("--- 시즌 성과 요약 ---\n"));
+        promptBuilder.append(String.format("초기 자본: %.0f KRW\n", summaryDto.getInitialCashBalance()));
+        promptBuilder.append(String.format("최종 자산: %.0f KRW\n", summaryDto.getFinalTotalValue()));
+        promptBuilder.append(String.format("총 손익: %.0f KRW (%.2f%%)\n", summaryDto.getTotalProfitLossAmount(), summaryDto.getTotalProfitLossPercentage()));
+        if (summaryDto.getFinalRank() != null) {
+            promptBuilder.append(String.format("최종 랭킹: %d위\n", summaryDto.getFinalRank()));
+        }
+
+        promptBuilder.append(String.format("\n--- 거래 활동 요약 ---\n"));
+        promptBuilder.append(String.format("총 거래 횟수: %d회 (매수 %d회, 매도 %d회)\n",
+                summaryDto.getTotalTradeCount(), summaryDto.getBuyOrderCount(), summaryDto.getSellOrderCount()));
+        promptBuilder.append(String.format("평균 거래 금액: %.0f KRW\n", summaryDto.getAvgTradeAmount()));
+        promptBuilder.append(String.format("총 실현 손익 (단순 합계): %.0f KRW\n", summaryDto.getTotalRealizedProfitLoss()));
+
+        if (summaryDto.getCoinRealizedProfitLoss() != null && !summaryDto.getCoinRealizedProfitLoss().isEmpty()) {
+            promptBuilder.append("코인별 실현 손익:\n");
+            // Fix: Changed summaryBuilder to promptBuilder
+            summaryDto.getCoinRealizedProfitLoss().forEach((symbol, pl) ->
+                    promptBuilder.append(String.format("  - %s: %.0f KRW\n", symbol, pl)));
+        }
+        if (summaryDto.getCoinTradeCounts() != null && !summaryDto.getCoinTradeCounts().isEmpty()) {
+            promptBuilder.append("코인별 거래 횟수:\n");
+            summaryDto.getCoinTradeCounts().forEach((symbol, count) ->
+                    promptBuilder.append(String.format("  - %s: %d회\n", symbol, count)));
+        }
+
+        promptBuilder.append(String.format("\n--- 투자 성향 지표 ---\n"));
+        if (summaryDto.getMostTradedCoinSymbol() != null) {
+            promptBuilder.append(String.format("가장 많이 거래한 코인: %s (총 거래 금액: %.0f KRW)\n",
+                    summaryDto.getMostTradedCoinSymbol(), summaryDto.getMostTradedCoinTradeVolume()));
+        }
+        if (summaryDto.getHighestProfitCoinSymbol() != null) {
+            promptBuilder.append(String.format("가장 수익을 많이 낸 코인: %s (수익 금액: %.0f KRW)\n",
+                    summaryDto.getHighestProfitCoinSymbol(), summaryDto.getHighestProfitCoinAmount()));
+        }
+        if (summaryDto.getLowestProfitCoinSymbol() != null) {
+            promptBuilder.append(String.format("가장 손실을 많이 낸 코인: %s (손실 금액: %.0f KRW)\n",
+                    summaryDto.getLowestProfitCoinSymbol(), summaryDto.getLowestProfitCoinAmount()));
+        }
+        if (summaryDto.getAvgTradesPerDay() != null) {
+            promptBuilder.append(String.format("하루 평균 거래 횟수: %.2f회\n", summaryDto.getAvgTradesPerDay()));
+        }
+        if (summaryDto.getFocusedOnFewCoins() != null) {
+            promptBuilder.append(String.format("소수 코인 집중 투자 여부: %s\n", summaryDto.getFocusedOnFewCoins() ? "예" : "아니오"));
+        }
+
+        String prompt = promptBuilder.toString();
+        log.info("Gemini AI 조언 생성 프롬프트:\n{}", prompt);
+
+        // --- Gemini API 호출 설정 ---
+        // Gemini API 호출 시 JSON 응답을 받기 위한 스키마 정의
+        // JSON 응답 스키마는 score (Integer)와 advice (String)를 예상
+        Map<String, Schema> adviceProperties = new HashMap<>(); // adviceProperties로 이름 변경
+        adviceProperties.put("score", Schema.builder().type(Type.Known.INTEGER).build()); // description 등 불필요한 필드는 제거하여 간결하게
+        adviceProperties.put("advice", Schema.builder().type(Type.Known.STRING).build());
+
+        Schema responseSchema = Schema.builder()
+                .type(Type.Known.OBJECT)
+                .properties(adviceProperties) // adviceProperties 사용
+                .required(List.of("score", "advice")) // 필수 필드 지정
+                .build();
+
+        GenerateContentConfig config = GenerateContentConfig.builder()
+                .temperature(0.8F)
+                .topK(1.0F)
+                .topP(1.0F)
+                .maxOutputTokens(1000)
+                .build();
+
+        GenerateContentResponse response = null;
+        try {
+            response = geminiClient.models
+                    .generateContent(modelName, Content.fromParts(Part.fromText(prompt)), config);
+        } catch (Exception e) {
+            log.error("Gemini API 호출 중 오류 발생 (AI 조언 생성): {}", e.getMessage(), e);
+            return null;
+        }
+
+        // --- Gemini 응답 파싱 ---
+        if (response != null && response.text() != null && !response.text().isEmpty()) {
+            try {
+                String jsonResponseText = response.text();
+                log.info("Gemini로부터 받은 AI 조언 원본 JSON: {}", jsonResponseText);
+
+                JsonNode rootNode = objectMapper.readTree(jsonResponseText);
+                int score = rootNode.path("score").asInt(0);
+                String advice = rootNode.path("advice").asText("");
+
+                return AiAdviceDto.builder()
+                        .score(score)
+                        .advice(advice)
+                        .build();
+
+            } catch (JsonProcessingException e) {
+                log.error("Gemini 응답 JSON 파싱 중 오류 발생: {}", e.getMessage(), e);
+                return null;
+            }
+        } else {
+            log.error("Gemini로부터 유효한 AI 조언 내용을 생성할 수 없습니다. 응답이 비어있거나 유효하지 않습니다.");
+            return null;
+        }
     }
 }

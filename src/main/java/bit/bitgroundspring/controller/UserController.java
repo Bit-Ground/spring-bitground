@@ -1,5 +1,6 @@
 package bit.bitgroundspring.controller;
 
+import bit.bitgroundspring.dto.TradeDetailDto;
 import bit.bitgroundspring.dto.TradeSummaryDto;
 import bit.bitgroundspring.dto.UserDto;
 import bit.bitgroundspring.entity.Season;
@@ -167,5 +168,25 @@ public class UserController {
         List<TradeSummaryDto> summaryList = orderService.getTradeSummary(user, season);
 
         return ResponseEntity.ok(summaryList);
+    }
+
+    @GetMapping("/trade-details")
+    public ResponseEntity<List<TradeDetailDto>> getTradeDetails(
+            @CookieValue(name = "jwt_token", required = false) String jwtToken,
+            @RequestParam("seasonId") Integer seasonId) {
+
+        // 1. 인증된 사용자 정보 가져오기
+        UserDto userDto = authService.getUserInfoFromToken(jwtToken);
+        Optional<User> userOpt = userService.getUserBySocialId(userDto.getProvider(), userDto.getProviderId());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(List.of());
+        }
+
+        // 2. 시즌과 사용자 기준으로 상세 내역 조회
+        User user = userOpt.get();
+        Season season = seasonService.getSeasonById(seasonId);
+        List<TradeDetailDto> details = orderService.getTradeDetails(user, season);
+
+        return ResponseEntity.ok(details);
     }
 }
