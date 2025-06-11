@@ -16,11 +16,13 @@ public interface BoardRepository extends JpaRepository<Post, Integer> {
             "(SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) AS commentCount " +
             "FROM posts p " +
             "JOIN users u ON p.user_id = u.id " +
-            "WHERE (:category IS NULL OR p.category = :category)",
-            countQuery = "SELECT COUNT(*) FROM posts p JOIN users u ON p.user_id = u.id WHERE (:category IS NULL OR p.category = :category)",
+            "WHERE p.is_deleted = false AND (:category IS NULL OR p.category = :category)",
+
+            countQuery = "SELECT COUNT(*) FROM posts p JOIN users u ON p.user_id = u.id " +
+                    "WHERE p.is_deleted = false AND (:category IS NULL OR p.category = :category)",
+
             nativeQuery = true)
     Page<Object[]> findAllBoardDtosRaw(@Param("category") String category, Pageable pageable);
-
     //게시글 상세보기
     @Query("SELECT p FROM Post p JOIN FETCH p.user WHERE p.id = :id")
     Optional<Post> findWithUserById(@Param("id") Integer id);
