@@ -1,6 +1,7 @@
 package bit.bitgroundspring.service;
 
 import bit.bitgroundspring.dto.projection.SeasonProjection;
+import bit.bitgroundspring.entity.Season;
 import bit.bitgroundspring.repository.SeasonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,11 @@ public class SeasonService {
     public List<SeasonProjection> getLatestSeasons() {
         return seasonRepository.findTop48ByOrderByIdDesc();
     }
-    
 
+    /*마이페이지용*/
+    public Season getSeasonById(Integer seasonId) {
+        return seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new RuntimeException("해당 시즌이 존재하지 않습니다."));
+    }
 
 }

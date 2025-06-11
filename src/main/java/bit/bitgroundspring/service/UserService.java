@@ -6,6 +6,8 @@ import bit.bitgroundspring.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +16,15 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String providerId = authentication.getName();
+        String provider = (String) authentication.getDetails();
+
+        return getUserBySocialId(provider, providerId)
+                .orElseThrow(() -> new RuntimeException("해당 유저를 찾을 수 없습니다."));
+    }
     
     private final UserRepository userRepository;
     private final NcpObjectStorageService objectStorageService;
@@ -77,4 +88,5 @@ public class UserService {
         user.setProviderId(null);
         userRepository.save(user);
     }
+
 }
