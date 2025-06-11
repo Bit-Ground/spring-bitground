@@ -2,7 +2,10 @@ package bit.bitgroundspring.service;
 
 import bit.bitgroundspring.dto.projection.UserAssetProjection;
 import bit.bitgroundspring.dto.response.UserAssetResponse;
+import bit.bitgroundspring.entity.Coin;
 import bit.bitgroundspring.entity.User;
+import bit.bitgroundspring.entity.UserAsset;
+import bit.bitgroundspring.repository.CoinRepository;
 import bit.bitgroundspring.repository.UserAssetRepository;
 import bit.bitgroundspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,16 +13,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserAssetService {
     private  final UserRepository userRepository;
     private final UserAssetRepository userAssetRepository;
+    private final CoinRepository coinRepository;
 
     /** userId 로 보유 코인 심볼 리스트만 **/
     public List<String> listOwnedSymbols(Integer userId) {
         return userAssetRepository.findOwnedSymbolsByUserId(userId);
+    }
+
+    @Transactional
+    public Optional<UserAsset> findByUserAndCoin(Integer userId, String symbol) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Coin coin = coinRepository.findBySymbol(symbol)
+                .orElseThrow(() -> new IllegalArgumentException("Coin not found"));
+        return userAssetRepository.findByUserAndCoinWithLock(user, coin);
     }
     
     /**
