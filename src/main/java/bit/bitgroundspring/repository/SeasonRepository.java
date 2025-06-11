@@ -15,4 +15,7 @@ public interface SeasonRepository extends JpaRepository<Season, Integer> {
     List<SeasonProjection> findTop48ByOrderByIdDesc();
 
     Optional<Season> findByStatus(Status status);
+
+    // ✅ 특정 상태(PENDING)의 시즌 중 가장 최근에 시작된 시즌 하나
+    Optional<Season> findTopByStatusOrderByStartAtDesc(Status status);
 }
