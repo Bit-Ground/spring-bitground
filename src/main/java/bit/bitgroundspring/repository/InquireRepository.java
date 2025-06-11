@@ -1,10 +1,15 @@
 package bit.bitgroundspring.repository;
 
 import bit.bitgroundspring.entity.Inquiry;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InquireRepository extends JpaRepository<Inquiry, Integer> {
 
+    @Query("SELECT i FROM Inquiry i JOIN FETCH i.user")
+    Page<Inquiry> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }
