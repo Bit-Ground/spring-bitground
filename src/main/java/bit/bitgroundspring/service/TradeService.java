@@ -37,6 +37,10 @@ public class TradeService {
 
     @Transactional
     public OrderResponseDto placeOrder(Integer userId, OrderRequestDto req) {
+        double qty = req.getAmount();
+        if (qty <= 0) {
+            throw new IllegalArgumentException("주문 수량은 0보다 커야 합니다.");
+        }
         // 1) 사용자 & 코인 엔티티 로드 (락 모드로 동시성 방어)
         User user = userRepository.findByIdWithPessimisticLock(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -73,8 +77,11 @@ public class TradeService {
 
         // 4) 비용 계산 및 잔액/수량 검증
         boolean isBuy = req.getOrderType() == OrderType.BUY;
-        double qty = req.getAmount();
 
+        double rawCost = qty * execPrice;
+        int cost = isBuy
+                ? (int) Math.ceil(rawCost)
+                : (int) Math.floor(rawCost);
         // 4) 비용 계산 및 잔액/수량 검증
         UserAsset asset = assetRepository.findByUserAndCoinWithLock(user, coin)
                 .orElseGet(() -> UserAsset.builder()
@@ -84,9 +91,8 @@ public class TradeService {
                         .avgPrice(0f)
                         .build());
 
-// 매수/매도 분기
+        // 매수/매도 분기
         if (isBuy) {
-            int cost = (int)(qty * execPrice);
             if (user.getCash() < cost) throw new IllegalArgumentException("잔액이 부족합니다.");
             user.setCash(user.getCash() - cost);
 
@@ -104,7 +110,6 @@ public class TradeService {
             float currentAmt = asset.getAmount();
             if (currentAmt + EPS < qty) throw new IllegalArgumentException("보유 수량이 부족합니다.");
 
-            int cost = (int)(qty * execPrice);
             user.setCash(user.getCash() + cost);
 
             float remaining = currentAmt - (float)qty;
