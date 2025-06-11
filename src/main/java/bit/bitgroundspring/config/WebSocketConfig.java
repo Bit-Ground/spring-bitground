@@ -21,6 +21,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
         // "/ws/trade/history" 경로로 들어오는 클라이언트 연결을 핸들러에 매핑
         registry
                 .addHandler(orderHistoryWebSocketHandler, "/ws/trade/history")
-                .setAllowedOrigins("https://*.bitground.kr", "http://localhost:5173");
+                .setAllowedOriginPatterns("https://*.bitground.kr", "https://bitground.kr", "http://localhost:5173");
     }
 }
