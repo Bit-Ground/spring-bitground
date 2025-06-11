@@ -11,6 +11,8 @@ public class InquireResponseDto {
     private String writer;
     private String content;
     private String createdAt;
+    private String answer;
+
 
     public InquireResponseDto(Inquiry inquiry) {
         this.id = inquiry.getId();
@@ -18,5 +20,6 @@ public class InquireResponseDto {
         this.writer = inquiry.getUser().getName();
         this.content = inquiry.getContent();
         this.createdAt = inquiry.getCreatedAt().toString();
+        this.answer = inquiry.getAnswer();
     }
 }
