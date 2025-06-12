@@ -14,6 +14,7 @@ public class InquireResponseDto {
     private String answer;
 
 
+
     public InquireResponseDto(Inquiry inquiry) {
         this.id = inquiry.getId();
         this.title = inquiry.getTitle();
