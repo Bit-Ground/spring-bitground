@@ -13,11 +13,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(
         name = "user_daily_balances",
-        uniqueConstraints = {
-                @UniqueConstraint( // Go 모델의 uniqueIndex와 일치하도록 설정
-                        name = "uq_user_daily_balances_user_season_snapshot",
-                        columnNames = {"user_id", "season_id", "snapshot_datetime"}
-                )
+        uniqueConstraints = {@UniqueConstraint(
+                name = "uq_user_daily_balances_user_id_season_id_snapshot_date",
+                columnNames = {"user_id", "season_id", "snapshot_date"})
         }
 )
 @Getter
@@ -60,13 +58,13 @@ public class UserDailyBalance {
     private LocalDate snapshotDate; // 스냅샷 기록 시각
 
     @Column(name = "total_value", nullable = false)
-    private Float totalValue; // 해당 시점의 총 자산 가치
+    private Integer totalValue; // 해당 시점의 총 자산 가치
 
     @Column(name = "cash_balance", nullable = false)
-    private Float cashBalance; // 해당 시점의 현금 잔고
+    private Integer cashBalance; // 해당 시점의 현금 잔고
 
     @Column(name = "coin_holdings_value", nullable = false)
-    private Float coinHoldingsValue; // 해당 시점의 보유 코인 평가액 합계
+    private Integer coinHoldingsValue; // 해당 시점의 보유 코인 평가액 합계
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
