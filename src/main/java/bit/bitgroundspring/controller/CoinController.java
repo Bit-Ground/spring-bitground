@@ -22,7 +22,6 @@ import java.util.Optional; // Optional 임포트 추가 (사용하지 않더라�
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
 @RequiredArgsConstructor // final 필드에 대한 생성자를 자동으로 생성
 @Slf4j // 로깅 사용
 public class CoinController {
