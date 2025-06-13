@@ -57,6 +57,7 @@ public class UserController {
                 .provider(user.get().getProvider())
                 .role(user.get().getRole())
                 .cash(user.get().getCash())
+                .tier(user.get().getTier())
                 .build();
 
         // 사용자 정보를 Map 형태로 변환합니다.
