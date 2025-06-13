@@ -1,5 +1,6 @@
 package bit.bitgroundspring.controller;
 
+import bit.bitgroundspring.dto.RankingDto;
 import bit.bitgroundspring.dto.projection.RankProjection;
 import bit.bitgroundspring.service.RankService;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +25,17 @@ public class RankController {
         return ResponseEntity.ok(rankService.getCurrentRankings());
     }
 
-    
     /**
      * 특정 시즌 랭킹 조회
      */
     @GetMapping("/{seasonId}")
     public ResponseEntity<List<RankProjection>> getSeasonRank(@PathVariable Integer seasonId) {
         return ResponseEntity.ok(rankService.getSeasonRankings(seasonId));
+    }
+
+    //툴팁용
+    @GetMapping("/current/detailed")
+    public ResponseEntity<List<RankingDto>> getCurrentRankDetailed() {
+        return ResponseEntity.ok(rankService.getCurrentRankingDtos());
     }
 }
