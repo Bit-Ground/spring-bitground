@@ -1,4 +1,46 @@
 package bit.bitgroundspring.service;
 
+import bit.bitgroundspring.dto.NoticeRequestDto;
+import bit.bitgroundspring.dto.NoticeResponseDto;
+import bit.bitgroundspring.entity.Notice;
+import bit.bitgroundspring.entity.User;
+import bit.bitgroundspring.repository.NoticeRepository;
+import bit.bitgroundspring.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
 public class NoticeService {
+    private final NoticeRepository noticeRepository;
+    private final UserRepository userRepository;
+
+    public Notice createNotice(NoticeRequestDto dto) {
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+
+        Notice notice = Notice.builder()
+                .user(user)
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .build();
+
+        return noticeRepository.save(notice);
+    }
+
+    public Page<NoticeResponseDto> getPagedNoticeDtos(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+
+        return noticeRepository.findAll(pageable) // ★ @EntityGraph로 user도 미리 로딩됨
+                .map(notice -> new NoticeResponseDto(
+                        notice.getId(),
+                        notice.getTitle(),
+                        notice.getUser().getName(), // Lazy 로딩 오류 ❌
+                        notice.getContent(),
+                        notice.getCreatedAt()
+                ));
+    }
 }

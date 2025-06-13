@@ -4,6 +4,8 @@ import bit.bitgroundspring.dto.AnswerDto;
 import bit.bitgroundspring.dto.InquireRequestDto;
 import bit.bitgroundspring.dto.InquireResponseDto;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
+import bit.bitgroundspring.repository.InquireRepository;
+import bit.bitgroundspring.repository.UserRepository;
 import bit.bitgroundspring.service.InquireService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
