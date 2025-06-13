@@ -4,8 +4,6 @@ import bit.bitgroundspring.dto.AnswerDto;
 import bit.bitgroundspring.dto.InquireRequestDto;
 import bit.bitgroundspring.dto.InquireResponseDto;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
-import bit.bitgroundspring.repository.InquireRepository;
-import bit.bitgroundspring.repository.UserRepository;
 import bit.bitgroundspring.service.InquireService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,5 +63,11 @@ public class InquireController {
     public ResponseEntity<Void> updateAnswer(@PathVariable Integer id, @RequestBody AnswerDto dto, Principal principal) {
         inquireService.updateAnswer(id, dto, principal.getName());
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteInquiry(@PathVariable Integer id) {
+        inquireService.deleteInquiry(id);
+        return ResponseEntity.noContent().build();  // 204
     }
 }

@@ -27,4 +27,10 @@ public class NoticeController {
             @RequestParam(defaultValue = "10") int size) {
         return noticeService.getPagedNoticeDtos(page, size);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteNotice(@PathVariable Integer id) {
+        noticeService.deleteNotice(id);
+        return ResponseEntity.ok().build();
+    }
 }
