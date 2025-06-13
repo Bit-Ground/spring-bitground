@@ -13,6 +13,7 @@ public class BoardDto {
     private Integer id;
     private Integer userId;      // User 엔티티 대신 ID만
     private String name;         // 작성자 이름 (응답용)
+    private String profileImage;
     private String title;
     private String content;
     private int tier;
@@ -26,7 +27,8 @@ public class BoardDto {
     private Long commentCount;
     private boolean hasImage;
 
-    public BoardDto(Integer id, Integer userId, String name, String title, String content,
+
+    public BoardDto(Integer id, Integer userId, String name, String profileImage, String title,  String content,
                     int tier, int likes, int dislikes, boolean isDeleted,
                     LocalDateTime createdAt, LocalDateTime updatedAt, String category,
                     int views, Long commentCount) {
@@ -34,6 +36,7 @@ public class BoardDto {
         this.userId = userId;
         this.name = name;
         this.title = title;
+        this.profileImage = profileImage;
         this.content = content;
         this.tier = tier;
         this.likes = likes;

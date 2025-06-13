@@ -131,6 +131,7 @@ public class BoardController {
                 post.getId(),
                 post.getUser().getId(),
                 post.getUser().getName(),
+                post.getUser().getProfileImage(),
                 post.getTitle(),
                 post.getContent(),
                 post.getTier(),
