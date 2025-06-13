@@ -84,7 +84,6 @@ public class UserService {
         user.setIsDeleted(true);
         user.setTier(0);
         user.setEmail(null);
-        user.setProfileImage(null);
         user.setProviderId(null);
         userRepository.save(user);
     }
