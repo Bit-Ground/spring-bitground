@@ -14,6 +14,8 @@ public class CommentResponseDto {
     private Integer parentId;
     private String content;
     private String userName;
+    private Integer userTier; // 👈 추가
+    private String profileImage;
     private Boolean isDeleted;
     private Integer likes;
     private Integer dislikes;
