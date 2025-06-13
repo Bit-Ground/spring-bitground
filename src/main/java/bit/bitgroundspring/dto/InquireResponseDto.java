@@ -12,6 +12,7 @@ public class InquireResponseDto {
     private String content;
     private String createdAt;
     private String answer;
+    private Integer writerId;
 
 
 
@@ -22,5 +23,6 @@ public class InquireResponseDto {
         this.content = inquiry.getContent();
         this.createdAt = inquiry.getCreatedAt().toString();
         this.answer = inquiry.getAnswer();
+        this.writerId = inquiry.getUser().getId();
     }
 }

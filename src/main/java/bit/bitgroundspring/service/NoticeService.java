@@ -40,7 +40,16 @@ public class NoticeService {
                         notice.getTitle(),
                         notice.getUser().getName(), // Lazy 로딩 오류 ❌
                         notice.getContent(),
-                        notice.getCreatedAt()
+                        notice.getCreatedAt(),
+                        notice.getUser().getId()
                 ));
+    }
+
+    public void deleteNotice(Integer id) {
+        if (!noticeRepository.existsById(id)) {
+            throw new IllegalArgumentException("해당 공지사항이 존재하지 않습니다");
+        }
+
+        noticeRepository.deleteById(id);
     }
 }
