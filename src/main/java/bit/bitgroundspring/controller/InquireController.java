@@ -8,6 +8,8 @@ import bit.bitgroundspring.service.InquireService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,12 +52,18 @@ public class InquireController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getInquiries(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Map<String, Object>> getInquiries(
+            @RequestParam(defaultValue = "") String keyword,
+            @PageableDefault(size = 10) Pageable pageable) {
 
-        Page<InquireResponseDto> pagedInquiries = inquireService.getPagedInquiries(page, size);
-        return ResponseEntity.ok(pagedInquiries);
+        Page<InquireResponseDto> page = inquireService.searchInquiries(keyword, pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", page.getContent());
+        response.put("totalPages", page.getTotalPages());
+        response.put("number", page.getNumber());
+
+        return ResponseEntity.ok(response);
     }
 
 

@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,10 +46,17 @@ public class InquireService {
     }
 
     @Transactional(readOnly = true)
-    public Page<InquireResponseDto> getPagedInquiries(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return inquireRepository.findByIsDeletedFalse(pageRequest)
-                .map(InquireResponseDto::new);
+    public Page<InquireResponseDto> searchInquiries(String keyword, Pageable pageable) {
+        Page<Inquiry> inquiryPage;
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            inquiryPage = inquireRepository.findAll(pageable); // @EntityGraph 적용됨
+        } else {
+            inquiryPage = inquireRepository.findByTitleContainingIgnoreCase(
+                    keyword, pageable); // @EntityGraph 적용됨
+        }
+
+        return inquiryPage.map(InquireResponseDto::new); // DTO 변환 (Lazy-safe)
     }
 
     // InquireService.java
