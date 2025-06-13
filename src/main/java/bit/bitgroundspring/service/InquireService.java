@@ -4,6 +4,7 @@ import bit.bitgroundspring.dto.AnswerDto;
 import bit.bitgroundspring.dto.InquireRequestDto;
 import bit.bitgroundspring.dto.InquireResponseDto;
 import bit.bitgroundspring.entity.Inquiry;
+import bit.bitgroundspring.entity.Role;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.repository.InquireRepository;
 import bit.bitgroundspring.repository.UserRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,10 +37,10 @@ public class InquireService {
                 .build();
         inquireRepository.save(inquiry);
     }
-
+    @Transactional(readOnly = true)
     public Page<InquireResponseDto> getPagedInquiries(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return inquireRepository.findAllByOrderByCreatedAtDesc(pageRequest)
+        return inquireRepository.findByIsDeletedFalse(pageRequest)
                 .map(InquireResponseDto::new);
     }
 
