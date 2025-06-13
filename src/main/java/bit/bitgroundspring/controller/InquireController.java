@@ -1,15 +1,20 @@
 package bit.bitgroundspring.controller;
 
-import bit.bitgroundspring.dto.InquireDto;
+import bit.bitgroundspring.dto.AnswerDto;
 import bit.bitgroundspring.dto.InquireRequestDto;
+import bit.bitgroundspring.dto.InquireResponseDto;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
+import bit.bitgroundspring.repository.InquireRepository;
+import bit.bitgroundspring.repository.UserRepository;
 import bit.bitgroundspring.service.InquireService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +48,22 @@ public class InquireController {
     @PostMapping
     public ResponseEntity<Void> createInquiry(@RequestBody InquireRequestDto dto) {
         inquireService.createInquiry(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getInquiries(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<InquireResponseDto> pagedInquiries = inquireService.getPagedInquiries(page, size);
+        return ResponseEntity.ok(pagedInquiries);
+    }
+
+
+    @PutMapping("/{id}/answer")
+    public ResponseEntity<Void> updateAnswer(@PathVariable Integer id, @RequestBody AnswerDto dto, Principal principal) {
+        inquireService.updateAnswer(id, dto, principal.getName());
         return ResponseEntity.ok().build();
     }
 }

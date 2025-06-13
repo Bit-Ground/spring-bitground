@@ -1,12 +1,23 @@
 package bit.bitgroundspring.service;
 
+import bit.bitgroundspring.dto.AnswerDto;
 import bit.bitgroundspring.dto.InquireRequestDto;
+import bit.bitgroundspring.dto.InquireResponseDto;
 import bit.bitgroundspring.entity.Inquiry;
+import bit.bitgroundspring.entity.Role;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.repository.InquireRepository;
 import bit.bitgroundspring.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +36,23 @@ public class InquireService {
                 .isAnswered(false)
                 .build();
         inquireRepository.save(inquiry);
+    }
+    @Transactional(readOnly = true)
+    public Page<InquireResponseDto> getPagedInquiries(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return inquireRepository.findByIsDeletedFalse(pageRequest)
+                .map(InquireResponseDto::new);
+    }
 
+    // InquireService.java
+    @Transactional
+    public void updateAnswer(Integer inquiryId, AnswerDto dto, String adminUsername) {
+        Inquiry inquiry = inquireRepository.findById(inquiryId)
+                .orElseThrow(() -> new EntityNotFoundException("Inquiry not found"));
+
+        inquiry.setAnswer(dto.getContent());
+        inquiry.setAnswerWriter(adminUsername);
+        inquiry.setAnsweredAt(LocalDateTime.now());
+        inquiry.setIsAnswered(true);
     }
 }
