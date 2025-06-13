@@ -43,32 +43,6 @@ public class BoardService {
         return boardRepository.save(post);
     }
 
-    //게시글 목록 출력
-//    public List<BoardDto> getAllBoardDtos() {
-//        List<Object[]> rows = boardRepository.findAllBoardDtosRaw();
-//
-//        List<BoardDto> result = new ArrayList<>();
-//
-//        for (Object[] row : rows) {
-//            BoardDto dto = new BoardDto(
-//                    (Integer) row[0], // p.id
-//                    (Integer) row[1], // userId
-//                    (String) row[2],  // u.name
-//                    (String) row[3],  // title
-//                    (String) row[4],  // content
-//                    ((Number) row[5]).intValue(), // tier
-//                    ((Number) row[6]).intValue(), // likes
-//                    ((Number) row[7]).intValue(), // dislikes
-//                    Boolean.TRUE.equals(row[8]), // ✅ isDeleted
-//                    ((Timestamp) row[9]).toLocalDateTime(), // ✅ createdAt
-//                    ((Timestamp) row[10]).toLocalDateTime(), // ✅ updatedAt
-//                    (String) row[11],  // ✅ category
-//                    ((Number) row[12]).intValue()// ✅ views
-//            );
-//            result.add(dto);
-//        }
-//        return result;
-//    }
     public Page<BoardDto> getBoardDtos(String category, Pageable pageable) {
         Page<Object[]> rowsPage = boardRepository.findAllBoardDtosRaw(category, pageable);
 
@@ -77,17 +51,18 @@ public class BoardService {
                     (Integer) row[0], // p.id
                     (Integer) row[1], // userId
                     (String) row[2],  // u.name
-                    (String) row[3],  // title
-                    (String) row[4],  // content
-                    ((Number) row[5]).intValue(), // tier
-                    ((Number) row[6]).intValue(), // likes
-                    ((Number) row[7]).intValue(), // dislikes
-                    Boolean.TRUE.equals(row[8]),  // is_deleted
-                    ((Timestamp) row[9]).toLocalDateTime(), // created_at
-                    ((Timestamp) row[10]).toLocalDateTime(), // updated_at
-                    (String) row[11],  // category
-                    ((Number) row[12]).intValue(), // views
-                    ((Number) row[13]).longValue()  // commentCount
+                    (String) row[3],  // ✅ u.profile_image
+                    (String) row[4],  // title
+                    (String) row[5],  // content
+                    ((Number) row[6]).intValue(), // tier
+                    ((Number) row[7]).intValue(), // likes
+                    ((Number) row[8]).intValue(), // dislikes
+                    Boolean.TRUE.equals(row[9]),  // is_deleted
+                    ((Timestamp) row[10]).toLocalDateTime(), // created_at
+                    ((Timestamp) row[11]).toLocalDateTime(), // updated_at
+                    (String) row[12],  // category
+                    ((Number) row[13]).intValue(), // views
+                    ((Number) row[14]).longValue() // commentCount
             );
 
             // ✅ <img 태그 포함 여부 확인해서 세팅
