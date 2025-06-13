@@ -33,7 +33,8 @@ public interface RankRepository extends JpaRepository<UserRanking, Integer> {
             "ur.ranks as ranks, " +
             "ur.tier as tier, " +
             "ur.totalValue as totalValue, " +
-            "ur.updatedAt as updatedAt " +
+            "ur.updatedAt as updatedAt, " +
+            "ur.season.id as seasonId " + //  이 줄 추가
             "FROM UserRanking ur " +
             "JOIN ur.user u " +
             "WHERE ur.season.status = 'PENDING' " +
@@ -41,4 +42,10 @@ public interface RankRepository extends JpaRepository<UserRanking, Integer> {
     List<RankProjection> findCurrentSeasonRankings();
 
     Optional<UserRanking> findByUserAndSeason(User user, Season season);
+
+    //툴팁용
+    List<UserRanking> findTop5ByUserOrderBySeasonIdDesc(User user);
+
+    @Query("SELECT MAX(ur.tier) FROM UserRanking ur WHERE ur.user = :user")
+    Integer findHighestTierByUser(@Param("user") User user);
 }
