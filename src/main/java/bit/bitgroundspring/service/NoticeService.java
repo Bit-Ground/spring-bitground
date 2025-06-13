@@ -48,7 +48,7 @@ public Page<NoticeResponseDto> searchNotices(String keyword, Pageable pageable) 
     Page<Notice> noticePage;
 
     if (keyword == null || keyword.trim().isEmpty()) {
-        noticePage = noticeRepository.findAll(pageable);
+        noticePage = noticeRepository.findAllByOrderByCreatedAtDesc(pageable);
     } else {
         noticePage = noticeRepository.findByTitleContainingIgnoreCase(keyword, pageable);
     }

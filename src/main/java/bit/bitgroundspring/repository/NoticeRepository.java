@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NoticeRepository  extends JpaRepository<Notice, Integer> {
     @EntityGraph(attributePaths = "user")
-    Page<Notice> findAll(Pageable pageable);
+    Page<Notice> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     @EntityGraph(attributePaths = "user")
     Page<Notice> findByTitleContainingIgnoreCase(
