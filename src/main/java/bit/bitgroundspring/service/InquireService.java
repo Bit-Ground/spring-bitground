@@ -50,7 +50,7 @@ public class InquireService {
         Page<Inquiry> inquiryPage;
 
         if (keyword == null || keyword.trim().isEmpty()) {
-            inquiryPage = inquireRepository.findAll(pageable); // @EntityGraph 적용됨
+            inquiryPage = inquireRepository.findAllByOrderByCreatedAtDesc(pageable); // @EntityGraph 적용됨
         } else {
             inquiryPage = inquireRepository.findByTitleContainingIgnoreCase(
                     keyword, pageable); // @EntityGraph 적용됨

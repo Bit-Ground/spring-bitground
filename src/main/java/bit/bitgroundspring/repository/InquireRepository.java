@@ -16,5 +16,5 @@ public interface InquireRepository extends JpaRepository<Inquiry, Integer> {
     );
 
     @EntityGraph(attributePaths = "user")
-    Page<Inquiry> findAll(Pageable pageable);
+    Page<Inquiry> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }
