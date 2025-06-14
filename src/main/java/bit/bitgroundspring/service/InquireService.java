@@ -4,7 +4,6 @@ import bit.bitgroundspring.dto.AnswerDto;
 import bit.bitgroundspring.dto.InquireRequestDto;
 import bit.bitgroundspring.dto.InquireResponseDto;
 import bit.bitgroundspring.entity.Inquiry;
-import bit.bitgroundspring.entity.Role;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.repository.InquireRepository;
 import bit.bitgroundspring.repository.UserRepository;
@@ -12,8 +11,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,11 +36,27 @@ public class InquireService {
                 .build();
         inquireRepository.save(inquiry);
     }
+
+    public void deleteInquiry(Integer id) {
+        if (!inquireRepository.existsById(id)) {
+            throw new IllegalArgumentException("해당 문의사항이 존재하지 않습니다.");
+        }
+
+        inquireRepository.deleteById(id);
+    }
+
     @Transactional(readOnly = true)
-    public Page<InquireResponseDto> getPagedInquiries(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return inquireRepository.findByIsDeletedFalse(pageRequest)
-                .map(InquireResponseDto::new);
+    public Page<InquireResponseDto> searchInquiries(String keyword, Pageable pageable) {
+        Page<Inquiry> inquiryPage;
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            inquiryPage = inquireRepository.findAllByOrderByCreatedAtDesc(pageable); // @EntityGraph 적용됨
+        } else {
+            inquiryPage = inquireRepository.findByTitleContainingIgnoreCase(
+                    keyword, pageable); // @EntityGraph 적용됨
+        }
+
+        return inquiryPage.map(InquireResponseDto::new); // DTO 변환 (Lazy-safe)
     }
 
     // InquireService.java

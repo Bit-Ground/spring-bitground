@@ -12,7 +12,9 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Post, Integer> {
 
     //게시글 목록 출력
-    @Query(value = "SELECT p.id, u.id, u.name, p.title, p.content, p.tier, p.likes, p.dislikes, p.is_deleted, p.created_at, p.updated_at, p.category, p.views, " +
+    @Query(value = "SELECT p.id, u.id AS userId, u.name, u.profile_image, " +  // ✅ 여기!
+            "p.title, p.content, p.tier, p.likes, p.dislikes, p.is_deleted, " +
+            "p.created_at, p.updated_at, p.category, p.views, " +
             "(SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) AS commentCount " +
             "FROM posts p " +
             "JOIN users u ON p.user_id = u.id " +

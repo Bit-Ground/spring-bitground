@@ -100,6 +100,8 @@ public class CommentService {
                 .parentId(comment.getParent() != null ? comment.getParent().getId() : null)
                 .content(comment.getContent())
                 .userName(comment.getUser().getName())
+                .userTier(comment.getUser().getTier()) // ✅ 추가
+                .profileImage(comment.getUser().getProfileImage()) // ✅ 추가
                 .isDeleted(comment.getIsDeleted())
                 .createdAt(comment.getCreatedAt())
                 .likes(comment.getLikes())
