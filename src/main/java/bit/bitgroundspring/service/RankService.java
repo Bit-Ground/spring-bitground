@@ -1,5 +1,6 @@
 package bit.bitgroundspring.service;
 
+import bit.bitgroundspring.dto.PastSeasonTierDto;
 import bit.bitgroundspring.dto.RankingDto;
 import bit.bitgroundspring.dto.projection.RankProjection;
 import bit.bitgroundspring.entity.User;
@@ -40,15 +41,18 @@ public class RankService {
             User user = userRepository.findById(proj.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found: " + proj.getUserId()));
 
-            // 🔹 지난 시즌 티어 5개
+            //  지난 시즌 티어 5개
+            List<PastSeasonTierDto> pastSeasonTiers = rankRepository.findTop5ByUserWithSeason(user).stream()
+                    .map(r -> new PastSeasonTierDto(r.getSeason().getName(), r.getTier()))
+                    .collect(Collectors.toList());
             List<Integer> pastTiers = rankRepository.findTop5ByUserOrderBySeasonIdDesc(user).stream()
                     .map(r -> r.getTier())
                     .collect(Collectors.toList());
 
-            // 🔹 최고 티어
+            //  최고 티어
             Integer highestTier = rankRepository.findHighestTierByUser(user);
 
-            // 🔹 현재 수익률 계산
+            //  현재 수익률 계산
             int initialCash = 10_000_000;
             int totalValue = proj.getTotalValue();
             int currentReturnRate = (int) (((double)(totalValue - initialCash) / initialCash) * 100);
@@ -64,6 +68,7 @@ public class RankService {
                     .pastTiers(pastTiers)
                     .highestTier(highestTier)
                     .currentReturnRate(currentReturnRate)
+                    .pastSeasonTiers(pastSeasonTiers)
                     .build();
 
         }).collect(Collectors.toList());
