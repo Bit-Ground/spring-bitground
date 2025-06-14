@@ -34,7 +34,8 @@ public interface RankRepository extends JpaRepository<UserRanking, Integer> {
             "ur.tier as tier, " +
             "ur.totalValue as totalValue, " +
             "ur.updatedAt as updatedAt, " +
-            "ur.season.id as seasonId " + //  이 줄 추가
+            "ur.season.id as seasonId, " + //  이 줄 추가
+            "ur.season.name as seasonName " +
             "FROM UserRanking ur " +
             "JOIN ur.user u " +
             "WHERE ur.season.status = 'PENDING' " +

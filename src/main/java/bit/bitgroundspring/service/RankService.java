@@ -37,29 +37,36 @@ public class RankService {
     public List<RankingDto> getCurrentRankingDtos() {
         List<RankProjection> projections = rankRepository.findCurrentSeasonRankings();
 
+        //  현재 시즌 이름 추출
+        String currentSeasonName = projections.stream()
+                .findFirst()
+                .map(RankProjection::getSeasonName)
+                .orElse(null);
+
         return projections.stream().map(proj -> {
             User user = userRepository.findById(proj.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found: " + proj.getUserId()));
 
-            //  지난 시즌 티어 5개
+            //  현재 시즌 제외한 지난 시즌 5개 티어
             List<PastSeasonTierDto> pastSeasonTiers = rankRepository.findTop5ByUserWithSeason(user).stream()
+                    .filter(r -> !r.getSeason().getName().equals(currentSeasonName))
                     .map(r -> new PastSeasonTierDto(r.getSeason().getName(), r.getTier()))
+                    .limit(5)
                     .collect(Collectors.toList());
+
             List<Integer> pastTiers = rankRepository.findTop5ByUserOrderBySeasonIdDesc(user).stream()
                     .map(r -> r.getTier())
                     .collect(Collectors.toList());
 
-            //  최고 티어
             Integer highestTier = rankRepository.findHighestTierByUser(user);
 
-            //  현재 수익률 계산
             int initialCash = 10_000_000;
             int totalValue = proj.getTotalValue();
             int currentReturnRate = (int) (((double)(totalValue - initialCash) / initialCash) * 100);
 
             return RankingDto.builder()
                     .userId(proj.getUserId())
-                    .seasonId(proj.getSeasonId()) // Projection에 포함돼 있어야 함
+                    .seasonId(proj.getSeasonId())
                     .name(proj.getName())
                     .profileImage(proj.getProfileImage())
                     .ranks(proj.getRanks())
@@ -69,8 +76,9 @@ public class RankService {
                     .highestTier(highestTier)
                     .currentReturnRate(currentReturnRate)
                     .pastSeasonTiers(pastSeasonTiers)
+                    .updatedAt(proj.getUpdatedAt())
+                    .currentSeasonName(currentSeasonName)
                     .build();
-
         }).collect(Collectors.toList());
     }
 }
