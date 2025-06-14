@@ -10,6 +10,7 @@ public interface RankProjection {
     Integer getTier();
     Integer getTotalValue();
     LocalDateTime getUpdatedAt();
+    String getSeasonName();
 
     Integer getSeasonId();
 }
