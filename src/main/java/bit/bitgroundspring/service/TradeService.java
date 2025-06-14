@@ -37,10 +37,7 @@ public class TradeService {
 
     @Transactional
     public OrderResponseDto placeOrder(Integer userId, OrderRequestDto req) {
-        double qty = req.getAmount();
-        if (qty <= 0) {
-            throw new IllegalArgumentException("주문 수량은 0보다 커야 합니다.");
-        }
+        double qty;
         // 1) 사용자 & 코인 엔티티 로드 (락 모드로 동시성 방어)
         User user = userRepository.findByIdWithPessimisticLock(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -61,13 +58,13 @@ public class TradeService {
         float marketPrice = ((Number)resp.getBody().get(0).get("trade_price")).floatValue();
 
         // 3) 주문 종류 분기
-        boolean isLimitOrder = req.getLimitPrice() != null;
+        boolean isLimitOrder = req.getReservePrice() != null;
         double execPrice = marketPrice;
         LocalDateTime now = LocalDateTime.now();
 
-        // 3-1) 지정가 주문: 허용 슬리피지 검증
+//        // 3-1) 지정가 주문: 허용 슬리피지 검증
         if (isLimitOrder) {
-            double limitPrice = req.getLimitPrice();
+            double limitPrice = req.getReservePrice();
             double diffRatio = Math.abs(limitPrice - marketPrice) / marketPrice;
             if (diffRatio > SLIPPAGE_TOLERANCE) {
                 throw new IllegalArgumentException("지정가가 시장가에서 너무 벗어났습니다.");
@@ -78,10 +75,6 @@ public class TradeService {
         // 4) 비용 계산 및 잔액/수량 검증
         boolean isBuy = req.getOrderType() == OrderType.BUY;
 
-        double rawCost = qty * execPrice;
-        int cost = isBuy
-                ? (int) Math.ceil(rawCost)
-                : (int) Math.floor(rawCost);
         // 4) 비용 계산 및 잔액/수량 검증
         UserAsset asset = assetRepository.findByUserAndCoinWithLock(user, coin)
                 .orElseGet(() -> UserAsset.builder()
@@ -93,11 +86,17 @@ public class TradeService {
 
         // 매수/매도 분기
         if (isBuy) {
-            if (user.getCash() < cost) throw new IllegalArgumentException("잔액이 부족합니다.");
-            user.setCash(user.getCash() - cost);
+            int rawTotalPrice = req.getTotalPrice();
+            if (user.getCash() < rawTotalPrice) {
+                throw new IllegalArgumentException("잔액이 부족합니다.");
+            }
+            user.setCash(user.getCash() - rawTotalPrice);
+            // 시장가 또는 예약가로 수량 역산
+            execPrice = isLimitOrder ? req.getReservePrice() : marketPrice;
+            qty = rawTotalPrice / execPrice;
 
             float newQty   = asset.getAmount() + (float)qty;
-            float newTotal = asset.getAmount()*asset.getAvgPrice() + cost;
+            float newTotal = asset.getAmount()*asset.getAvgPrice() + rawTotalPrice;
             asset.setAmount(newQty);
             asset.setAvgPrice(newTotal / newQty);
 
@@ -105,6 +104,12 @@ public class TradeService {
             userRepository.save(user);
 
         } else {  // SELL
+            qty = req.getAmount();
+            if (qty <= 0) {
+                throw new IllegalArgumentException("주문 수량은 0보다 커야 합니다.");
+            }
+            double rawCost = qty * execPrice;
+            int cost = (int) Math.floor(rawCost);
             // EPS 허용 오차
             final float EPS = 0.00000001f;
             float currentAmt = asset.getAmount();
