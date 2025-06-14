@@ -28,4 +28,7 @@ public class RankingDto {
     private Integer currentReturnRate;         // 현재 수익률
     private Integer highestTier;               // 최고 티어
     private List<Integer> pastTiers;           // 지난 시즌 티어 리스트 (최대 5개)
+
+    //추가 : 시즌 이름과 티어를 담은 리스트
+    private List<PastSeasonTierDto> pastSeasonTiers;
 }
