@@ -31,16 +31,36 @@ public class NoticeService {
         return noticeRepository.save(notice);
     }
 
-    public Page<NoticeResponseDto> getPagedNoticeDtos(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+//    public Page<NoticeResponseDto> getPagedNoticeDtos(int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+//
+//        return noticeRepository.findAll(pageable) // ★ @EntityGraph로 user도 미리 로딩됨
+//                .map(notice -> new NoticeResponseDto(
+//                        notice.getId(),
+//                        notice.getTitle(),
+//                        notice.getUser().getName(), // Lazy 로딩 오류 ❌
+//                        notice.getContent(),
+//                        notice.getCreatedAt(),
+//                        notice.getUser().getId()
+//                ));
+//    }
+public Page<NoticeResponseDto> searchNotices(String keyword, Pageable pageable) {
+    Page<Notice> noticePage;
 
-        return noticeRepository.findAll(pageable) // ★ @EntityGraph로 user도 미리 로딩됨
-                .map(notice -> new NoticeResponseDto(
-                        notice.getId(),
-                        notice.getTitle(),
-                        notice.getUser().getName(), // Lazy 로딩 오류 ❌
-                        notice.getContent(),
-                        notice.getCreatedAt()
-                ));
+    if (keyword == null || keyword.trim().isEmpty()) {
+        noticePage = noticeRepository.findAllByOrderByCreatedAtDesc(pageable);
+    } else {
+        noticePage = noticeRepository.findByTitleContainingIgnoreCase(keyword, pageable);
+    }
+
+    return noticePage.map(NoticeResponseDto::new); // ✅ DTO 변환
+}
+
+    public void deleteNotice(Integer id) {
+        if (!noticeRepository.existsById(id)) {
+            throw new IllegalArgumentException("해당 공지사항이 존재하지 않습니다");
+        }
+
+        noticeRepository.deleteById(id);
     }
 }
