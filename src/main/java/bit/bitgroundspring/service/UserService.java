@@ -1,10 +1,16 @@
 package bit.bitgroundspring.service;
 
+import bit.bitgroundspring.dto.TierDto;
+import bit.bitgroundspring.entity.Season;
 import bit.bitgroundspring.entity.User;
+import bit.bitgroundspring.entity.UserRanking;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
+import bit.bitgroundspring.repository.SeasonRepository;
+import bit.bitgroundspring.repository.UserRankingRepository;
 import bit.bitgroundspring.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -86,6 +92,48 @@ public class UserService {
         user.setEmail(null);
         user.setProviderId(null);
         userRepository.save(user);
+    }
+
+    //mypage trade info
+    @Autowired
+    private UserRankingRepository userRankingRepository;
+
+    @Autowired
+    private SeasonRepository seasonRepository;
+
+    public Integer getTierForUserAndSeason(User user, Integer seasonId) {
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new RuntimeException("시즌을 찾을 수 없습니다."));
+
+        return userRankingRepository.findByUserAndSeason(user, season)
+                .map(UserRanking::getTier)
+                .orElse(null);
+    }
+
+    public TierDto getTierDtoForUserAndSeason(User user, Integer seasonId) {
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new RuntimeException("시즌을 찾을 수 없습니다."));
+
+        return userRankingRepository.findByUserAndSeason(user, season)
+                .map(userRanking -> {
+                    int tier = userRanking.getTier();
+                    String tierName = getTierName(tier);
+                    return new TierDto(tier, tierName);
+                })
+                .orElse(null);
+    }
+
+    private String getTierName(int tier) {
+        return switch (tier) {
+            case 1 -> "Bronze";
+            case 2 -> "Silver";
+            case 3 -> "Gold";
+            case 4 -> "Platinum";
+            case 5 -> "Diamond";
+            case 6 -> "Master";
+            case 7 -> "Grandmaster";
+            default -> "Unranked";
+        };
     }
 
 }
