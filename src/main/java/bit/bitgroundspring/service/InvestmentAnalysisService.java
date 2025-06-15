@@ -83,7 +83,7 @@ public class InvestmentAnalysisService {
 
         // 평균 거래 금액 계산 (Order의 tradePrice와 amount는 Float/Double이므로, 결과는 Float 유지)
         Float totalTradeValueSum = completedOrders.stream()
-                .map(order -> order.getTradePrice() * order.getAmount())
+                .map(order -> (float) (order.getTradePrice() * order.getAmount()))
                 .reduce(0.0F, Float::sum);
         Float avgTradeAmount = (totalTradeCount > 0)
                 ? totalTradeValueSum / totalTradeCount
@@ -105,7 +105,7 @@ public class InvestmentAnalysisService {
             Float coinSellValue = 0.0F;
 
             for (Order order : coinOrders) {
-                Float tradeValue = order.getTradePrice() * order.getAmount();
+                Float tradeValue = (float)(order.getTradePrice() * order.getAmount());
                 if (order.getOrderType() == OrderType.BUY) {
                     coinBuyValue += tradeValue;
                 } else if (order.getOrderType() == OrderType.SELL) {
@@ -129,7 +129,7 @@ public class InvestmentAnalysisService {
             Map<String, Float> coinVolumes = new HashMap<>();
             for (Order order : completedOrders) {
                 String symbol = order.getCoin().getSymbol();
-                Float tradeVolume = order.getTradePrice() * order.getAmount();
+                Float tradeVolume = (float)(order.getTradePrice() * order.getAmount());
                 coinVolumes.put(symbol, coinVolumes.getOrDefault(symbol, 0.0F) + tradeVolume);
             }
 
