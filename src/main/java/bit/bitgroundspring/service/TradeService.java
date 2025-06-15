@@ -62,7 +62,6 @@ public class TradeService {
         double execPrice = marketPrice;
         LocalDateTime now = LocalDateTime.now();
 
-//        // 3-1) 지정가 주문: 허용 슬리피지 검증
         if (isLimitOrder) {
             double limitPrice = req.getReservePrice();
             double diffRatio = Math.abs(limitPrice - marketPrice) / marketPrice;
@@ -72,33 +71,33 @@ public class TradeService {
             execPrice = limitPrice;
         }
 
-        // 4) 비용 계산 및 잔액/수량 검증
         boolean isBuy = req.getOrderType() == OrderType.BUY;
 
-        // 4) 비용 계산 및 잔액/수량 검증
         UserAsset asset = assetRepository.findByUserAndCoinWithLock(user, coin)
                 .orElseGet(() -> UserAsset.builder()
                         .user(user)
                         .coin(coin)
-                        .amount(0f)
-                        .avgPrice(0f)
+                        .amount(0d)
+                        .avgPrice(0d)
                         .build());
 
-        // 매수/매도 분기
         if (isBuy) {
             int rawTotalPrice = req.getTotalPrice();
             if (user.getCash() < rawTotalPrice) {
                 throw new IllegalArgumentException("잔액이 부족합니다.");
             }
             user.setCash(user.getCash() - rawTotalPrice);
-            // 시장가 또는 예약가로 수량 역산
             execPrice = isLimitOrder ? req.getReservePrice() : marketPrice;
             qty = rawTotalPrice / execPrice;
+            qty = Math.floor(qty * 1e10) / 1e10;
 
-            float newQty   = asset.getAmount() + (float)qty;
-            float newTotal = asset.getAmount()*asset.getAvgPrice() + rawTotalPrice;
+            double newQty   = asset.getAmount() + qty;
+            double newTotal = asset.getAmount() * asset.getAvgPrice() + rawTotalPrice;
+            double newAvg   = newTotal / newQty;
+            newAvg = Math.floor(newAvg * 1e10) / 1e10;
+
             asset.setAmount(newQty);
-            asset.setAvgPrice(newTotal / newQty);
+            asset.setAvgPrice(newAvg);
 
             assetRepository.save(asset);
             userRepository.save(user);
@@ -110,14 +109,13 @@ public class TradeService {
             }
             double rawCost = qty * execPrice;
             int cost = (int) Math.floor(rawCost);
-            // EPS 허용 오차
             final float EPS = 0.00000001f;
-            float currentAmt = asset.getAmount();
+            double currentAmt = asset.getAmount();
             if (currentAmt + EPS < qty) throw new IllegalArgumentException("보유 수량이 부족합니다.");
 
             user.setCash(user.getCash() + cost);
 
-            float remaining = currentAmt - (float)qty;
+            double remaining = currentAmt - qty;
             if (remaining < EPS) {
                 assetRepository.delete(asset);
             } else {
@@ -127,22 +125,20 @@ public class TradeService {
             userRepository.save(user);
         }
 
-// 5) 주문 저장 및 이벤트 발행(공통)
         Order order = Order.builder()
                 .user(user)
                 .coin(coin)
                 .season(season)
                 .orderType(req.getOrderType())
                 .status(Status.COMPLETED)
-                .tradePrice((float)execPrice)
-                .amount((float)Math.abs(qty))
+                .tradePrice(execPrice)
+                .amount(Math.abs(qty))
                 .createdAt(now)
                 .updatedAt(now)
                 .build();
         Order savedOrder = orderRepository.save(order);
         eventPublisher.publishEvent(new OrderCreatedEvent(this, savedOrder));
 
-        // 6) 결과 반환
         return new OrderResponseDto(
                 order.getId(),
                 req.getSymbol(),

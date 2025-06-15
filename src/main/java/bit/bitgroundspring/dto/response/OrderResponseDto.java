@@ -13,7 +13,7 @@ public class OrderResponseDto {
     private String symbol;
     private String koreanName;
     private OrderType orderType;
-    private Float amount;
-    private Float tradePrice;
+    private Double amount;
+    private Double tradePrice;
     private LocalDateTime createdAt;
 }

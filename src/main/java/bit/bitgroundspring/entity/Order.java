@@ -51,11 +51,11 @@ public class Order {
     @Column(name = "reserve_price")
     private Float reservePrice;
     
-    @Column(name = "trade_price")
-    private Float tradePrice;
+    @Column(name = "trade_price", columnDefinition = "DOUBLE")
+    private Double tradePrice;
     
-    @Column(name = "amount", nullable = false)
-    private Float amount;
+    @Column(name = "amount", nullable = false, columnDefinition = "DOUBLE")
+    private Double amount;
     
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)")

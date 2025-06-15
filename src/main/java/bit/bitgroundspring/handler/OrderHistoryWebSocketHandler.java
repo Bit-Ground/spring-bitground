@@ -87,8 +87,8 @@ public class OrderHistoryWebSocketHandler
         String symbol = saved.getCoin().getSymbol();
         String koreanName = saved.getCoin().getKoreanName();
         OrderType orderType = saved.getOrderType();
-        Float amount = saved.getAmount();
-        Float tradePrice = saved.getTradePrice();
+        Double amount = saved.getAmount();
+        Double tradePrice = saved.getTradePrice();
         LocalDateTime createdAt = saved.getCreatedAt();
         LocalDateTime updatedAt = saved.getUpdatedAt();
 

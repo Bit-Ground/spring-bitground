@@ -42,7 +42,7 @@ public class UserAssetController {
         Optional<UserAsset> opt = assetService.findByUserAndCoin(userId, symbol);
         UserAssetDto dto = opt
                 .map(a -> new UserAssetDto(symbol, a.getAmount(), a.getAvgPrice()))
-                .orElse(new UserAssetDto(symbol, 0000000f, 0000000f));
+                .orElse(new UserAssetDto(symbol, 0000000d, 0000000d));
 
         return ResponseEntity.ok(dto);
     }

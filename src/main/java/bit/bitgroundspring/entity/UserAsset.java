@@ -38,11 +38,11 @@ public class UserAsset {
                     foreignKeyDefinition = "FOREIGN KEY (symbol_id) REFERENCES coins(id) ON DELETE CASCADE"))
     private Coin coin;
     
-    @Column(name = "amount", nullable = false)
-    private Float amount;
+    @Column(name = "amount", nullable = false, columnDefinition = "DOUBLE")
+    private Double amount;
     
-    @Column(name = "avg_price", nullable = false)
-    private Float avgPrice;
+    @Column(name = "avg_price", nullable = false, columnDefinition = "DOUBLE")
+    private Double avgPrice;
     
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")

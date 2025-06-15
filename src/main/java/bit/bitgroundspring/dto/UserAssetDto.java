@@ -9,6 +9,6 @@ import lombok.*;
 @Builder
 public class UserAssetDto {
     private String symbol;
-    private Float amount;
-    private Float avgPrice;
+    private Double amount;
+    private Double avgPrice;
 }
