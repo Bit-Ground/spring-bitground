@@ -3,15 +3,23 @@ package bit.bitgroundspring.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
 
 @Configuration
 @EnableCaching // Redis 캐시 사용을 위한 어노테이션
@@ -25,7 +33,9 @@ public class RedisConfig {
     
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(host, port);
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(host, port);
+        factory.setValidateConnection(true);
+        return factory;
     }
     
     @Bean
@@ -51,6 +61,33 @@ public class RedisConfig {
         // 기본 직렬화 설정 완료
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
+    }
+    
+    // Redisson 클라이언트 추가 (분산 락을 위해 필요)
+    @Bean
+    public RedissonClient redissonClient() {
+        Config config = new Config();
+        config.useSingleServer()
+                .setAddress("redis://" + host + ":" + port)
+                .setConnectionMinimumIdleSize(5)
+                .setConnectionPoolSize(20)
+                .setConnectTimeout(3000)
+                .setTimeout(3000)
+                .setRetryAttempts(3);
+        return Redisson.create(config);
+    }
+    
+    // Redis 캐시 매니저 설정
+    @Bean
+    public CacheManager cacheManager() {
+        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofMinutes(10));
+        
+        return RedisCacheManager.builder()
+                .cacheWriter(org.springframework.data.redis.cache.RedisCacheWriter
+                        .nonLockingRedisCacheWriter(redisConnectionFactory()))
+                .cacheDefaults(cacheConfiguration)
+                .build();
     }
     
 }

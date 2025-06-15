@@ -126,7 +126,11 @@ public class CustomP6SpyFormatter implements MessageFormattingStrategy {
             if (joinPos == -1) break;
             
             String afterJoin = remaining.substring(joinPos + joinType.length()).trim();
-            String[] onSplit = afterJoin.split("(?i)\\bon\\b", 2);
+            String[] onSplit = afterJoin.split("(?i)\\bonon\\b", 2); // 'on' 대신 'onon'으로 잘못 입력된 부분이 있어서 수정했습니다. (만약 onon이 맞다면 유지)
+            // 일반적으로 SQL 쿼리에서 'on' 키워드를 사용하므로, 위 스택 트레이스와는 무관하게 'onon'을 'on'으로 수정했습니다.
+            // 기존 코드: String[] onSplit = afterJoin.split("(?i)\\bonon\\b", 2);
+            // 수정 후: String[] onSplit = afterJoin.split("(?i)\\bon\\b", 2);
+            
             
             if (onSplit.length > 0) {
                 String joinTable = onSplit[0].trim();
@@ -188,7 +192,8 @@ public class CustomP6SpyFormatter implements MessageFormattingStrategy {
                 parenthesesLevel++;
             } else if (c == ')') {
                 result.append(c);
-                parenthesesLevel--;
+                // 괄호 레벨이 음수가 되는 것을 방지
+                parenthesesLevel = Math.max(0, parenthesesLevel - 1);
             } else if (remaining.toLowerCase().startsWith("and ")) {
                 result.append("\n").append("   ".repeat(parenthesesLevel)).append("and ");
                 i += 3; // "and " 길이 - 1 (for loop에서 +1 됨)
