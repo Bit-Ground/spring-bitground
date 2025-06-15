@@ -48,7 +48,7 @@ public class SecurityConfig {
                             response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"Authentication required\"}");
                         }))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/auth/refresh", "/auth/refresh", "/oauth2/**", "/error", "/favicon.ico", "/test",
+                        .requestMatchers("/api/auth/refresh", "/auth/refresh", "/oauth2/**", "/error", "/favicon.ico", "/test","/mypage/**",
                                 "/api/news/**", "/api/coin/**", "/api/public/**", "/public/**", "/auth/logout", "/api/market-index/**",
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/actuator/*", "/ws/**").permitAll()
                         .requestMatchers("/api/user/**").hasRole("USER")
