@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
@@ -72,4 +73,9 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     );
 
     List<Order> findByUserAndSeasonAndStatus(User user, Season season, Status status);
+    
+    
+    // 예약 매수 전용
+    Optional<Order> findByIdAndStatus(Integer id, Status status);
+    
 }

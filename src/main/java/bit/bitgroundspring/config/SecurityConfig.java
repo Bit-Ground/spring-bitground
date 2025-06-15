@@ -21,7 +21,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -50,7 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/auth/refresh", "/auth/refresh", "/oauth2/**", "/error", "/favicon.ico", "/test","/mypage/**",
                                 "/api/news/**", "/api/coin/**", "/api/public/**", "/public/**", "/auth/logout", "/api/market-index/**",
-                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/actuator/*", "/ws/**").permitAll()
+                                "/api/docs/**", "/actuator/*", "/ws/**").permitAll()
                         .requestMatchers("/api/user/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )

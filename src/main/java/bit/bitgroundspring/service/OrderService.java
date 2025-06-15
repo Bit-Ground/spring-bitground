@@ -1,18 +1,20 @@
 package bit.bitgroundspring.service;
 
-import bit.bitgroundspring.dto.OrderDto;
-import bit.bitgroundspring.dto.TradeDetailDto;
-import bit.bitgroundspring.dto.TradeDto;
-import bit.bitgroundspring.dto.TradeSummaryDto;
+import bit.bitgroundspring.dto.*;
 import bit.bitgroundspring.dto.projection.OrderProjection;
-import bit.bitgroundspring.entity.Order;
-import bit.bitgroundspring.entity.Season;
-import bit.bitgroundspring.entity.Status;
-import bit.bitgroundspring.entity.User;
+import bit.bitgroundspring.entity.*;
 import bit.bitgroundspring.repository.OrderRepository;
+import bit.bitgroundspring.repository.SeasonRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +23,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final SeasonRepository seasonRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final CoinService coinService;
 
     public List<OrderProjection> getOrdersBySeason(Integer seasonId, Integer userId) {
         return orderRepository.findBySeasonIdAndUserId(seasonId, userId);
@@ -120,5 +126,138 @@ public class OrderService {
                     .koreanName(koreanName)
                     .build();
         }).toList();
+    }
+    
+    
+    // 예약 주문 생성 메서드
+    @Transactional
+    public Order createReserveOrder(CreateOrderRequest request) {
+        validateOrderRequest(request);
+        
+        Coin coin = coinService.findBySymbol(request.getSymbol())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid symbol ID"));
+        
+        Season season = seasonRepository.findByStatus(Status.PENDING)
+                .orElseThrow(() -> new IllegalStateException("진행 중인 시즌이 없습니다."));
+        
+        if (Boolean.TRUE.equals(coin.getIsDeleted())) {
+            throw new IllegalArgumentException("Cannot trade deleted symbol");
+        }
+        
+        Order order = Order.builder()
+                .user(User.builder().id(request.getUserId()).build())
+                .season(season)
+                .coin(coin)
+                .orderType(request.getOrderType())
+                .amount(request.getAmount())
+                .reservePrice(request.getReservePrice())
+                .status(Status.PENDING)
+                .build();
+        
+        Order savedOrder = orderRepository.save(order);
+        saveOrderToRedis(savedOrder, coin.getSymbol());
+        
+        log.info("Created reserve order: {} for user: {}", savedOrder.getId(), savedOrder.getUser().getId());
+        return savedOrder;
+    }
+    
+    private void validateOrderRequest(CreateOrderRequest request) {
+        if (request.getAmount() == null || request.getAmount() <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+        if (request.getReservePrice() == null || request.getReservePrice() <= 0) {
+            throw new IllegalArgumentException("Reserve price must be positive");
+        }
+        if (request.getUserId() == null) {
+            throw new IllegalArgumentException("User ID is required");
+        }
+        if (request.getSymbol() == null) {
+            throw new IllegalArgumentException("Symbol is required");
+        }
+        if (request.getOrderType() == null) {
+            throw new IllegalArgumentException("Order type is required");
+        }
+    }
+    
+    private void saveOrderToRedis(Order order, String symbol) {
+        try {
+            String orderId = String.valueOf(order.getId());
+            
+            // 주문 정보를 OrderRedisDto로 변환하여 저장 (Jackson 직렬화 활용)
+            OrderRedisDto orderDto = OrderRedisDto.builder()
+                    .id(order.getId())
+                    .userId(order.getUser().getId())
+                    .symbolId(order.getCoin().getId())
+                    .symbol(symbol)
+                    .orderType(order.getOrderType())
+                    .amount(order.getAmount())
+                    .reservePrice(order.getReservePrice())
+                    .status(order.getStatus())
+                    .createdAt(order.getCreatedAt())
+                    .build();
+            
+            redisTemplate.execute(new SessionCallback<Object>() {
+                @Override
+                public Object execute(RedisOperations operations) throws DataAccessException {
+                    operations.multi();
+                    
+                    // Hash로 주문 상세 정보 저장 (객체 직렬화)
+                    operations.opsForValue().set("order:" + orderId, orderDto, Duration.ofDays(30));
+                    
+                    // Sorted Set으로 가격별 주문 저장
+                    String orderTypeKey = order.getOrderType() == OrderType.BUY ?
+                            "buy_orders:" + symbol : "sell_orders:" + symbol;
+                    operations.opsForZSet().add(orderTypeKey, orderId, order.getReservePrice());
+                    operations.expire(orderTypeKey, Duration.ofDays(30));
+                    
+                    return operations.exec();
+                }
+            });
+            
+        } catch (Exception e) {
+            log.error("Failed to save order to Redis: {}", order.getId(), e);
+            throw new RuntimeException("Failed to save order to cache", e);
+        }
+    }
+    
+    public void cancelOrder(Integer orderId, Integer userId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        
+        if (!order.getUser().getId().equals(userId)) {
+            throw new SecurityException("Unauthorized to cancel this order");
+        }
+        
+        if (order.getStatus() != Status.PENDING) {
+            throw new IllegalStateException("Cannot cancel non-pending order");
+        }
+        
+        orderRepository.delete(order);
+        
+        removeOrderFromRedis(order);
+        
+        log.info("Cancelled order: {} by user: {}", orderId, userId);
+    }
+    
+    private void removeOrderFromRedis(Order order) {
+        try {
+            String orderId = String.valueOf(order.getId());
+            String symbol = coinService.getSymbolById(order.getCoin().getId());
+            String orderTypeKey = order.getOrderType() == OrderType.BUY ?
+                    "buy_orders:" + symbol : "sell_orders:" + symbol;
+            
+            redisTemplate.execute(new SessionCallback<Object>() {
+                @Override
+                public Object execute(RedisOperations operations) throws DataAccessException {
+                    operations.multi();
+                    operations.opsForZSet().remove(orderTypeKey, orderId);
+                    operations.delete("order:" + orderId);
+                    return operations.exec();
+                }
+            });
+            
+        } catch (Exception e) {
+            log.error("Failed to remove order from Redis: {}", order.getId(), e);
+        }
     }
 }

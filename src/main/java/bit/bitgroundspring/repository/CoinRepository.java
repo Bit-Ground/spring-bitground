@@ -21,4 +21,8 @@ public interface CoinRepository extends JpaRepository<Coin, Integer> {
     List<CoinSymbolDto> findAllSymbols();
 
     List<Coin> findAllBySymbolIn(Collection<String> symbols);
+    
+    List<Coin> findByIsDeletedFalse();
+    
+    // id
 }

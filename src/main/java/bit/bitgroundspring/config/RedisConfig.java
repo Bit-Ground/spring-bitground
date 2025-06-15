@@ -3,6 +3,9 @@ package bit.bitgroundspring.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +28,9 @@ public class RedisConfig {
     
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(host, port);
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(host, port);
+        factory.setValidateConnection(true);
+        return factory;
     }
     
     @Bean
@@ -51,6 +56,20 @@ public class RedisConfig {
         // 기본 직렬화 설정 완료
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
+    }
+    
+    // Redisson 클라이언트 추가 (분산 락을 위해 필요)
+    @Bean
+    public RedissonClient redissonClient() {
+        Config config = new Config();
+        config.useSingleServer()
+                .setAddress("redis://" + host + ":" + port)
+                .setConnectionMinimumIdleSize(5)
+                .setConnectionPoolSize(20)
+                .setConnectTimeout(3000)
+                .setTimeout(3000)
+                .setRetryAttempts(3);
+        return Redisson.create(config);
     }
     
 }
