@@ -49,8 +49,7 @@ public class UserSseEmitters {
         
         for (SseEmitter emitter : emitters) {
             try {
-                emitter.send(SseEmitter.event()
-                        .data(data));
+                emitter.send(SseEmitter.event().data(data));
             } catch (Exception e) {
                 log.error("사용자 {}에게 데이터 전송 중 오류 발생: {}", userId, e.getMessage());
                 deadEmitters.add(emitter);
@@ -138,11 +137,11 @@ public class UserSseEmitters {
                     공지사항 탭에서 확인해보세요.
                     [%s]
                     """, title);
+            
             Notification notification = Notification.builder()
                     .user(User.builder().id(1).build())
                     .messageType(request.getMessage())
-                    .message(message)
-                    .build();
+                    .message(message).build();
             notificationService.saveNotification(notification);
         }
         return results;
@@ -157,10 +156,9 @@ public class UserSseEmitters {
                     이전 랭킹과 수익률을 확인해보세요.""", seasonName);
         } else if (seasonFlag.equals("split")) {
             message = String.format("""
-                            🚀 %s 스플릿 2 🚀
-                            새로운 스플릿이 시작되었습니다!
-                            10,000,000원의 추가 자금이 지급됩니다."""
-                    , seasonName);
+                    🚀 %s 스플릿 2 🚀
+                    새로운 스플릿이 시작되었습니다!
+                    10,000,000원의 추가 자금이 지급됩니다.""", seasonName);
         }
         return message;
     }
