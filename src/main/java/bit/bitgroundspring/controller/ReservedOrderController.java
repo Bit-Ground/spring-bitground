@@ -14,7 +14,7 @@ public class ReservedOrderController {
     
     private final OrderService orderService;
     private final AuthService authService;
-    
+
     @PostMapping
     public ResponseEntity<?> placeReservedOrder(
             @CookieValue(value = "jwt_token", required = false) String jwtToken,
@@ -29,4 +29,25 @@ public class ReservedOrderController {
         
         return ResponseEntity.ok().build();
     }
+
+    // ✅ 미체결(예약) 주문 조회
+    @GetMapping
+    public ResponseEntity<?> getPendingReserveOrders(
+            @CookieValue(value = "jwt_token", required = false) String jwtToken
+    ) {
+        Integer userId = authService.getUserIdFromToken(jwtToken);
+        return ResponseEntity.ok(orderService.getPendingOrdersByUserId(userId));
+    }
+
+//    삭제
+@DeleteMapping("/{orderId}")
+public ResponseEntity<?> cancelReservedOrder(
+        @PathVariable Integer orderId,
+        @CookieValue(value = "jwt_token", required = false) String jwtToken) {
+
+    Integer userId = authService.getUserIdFromToken(jwtToken);
+    orderService.cancelOrder(orderId, userId);
+    return ResponseEntity.ok().build();
+}
+
 }

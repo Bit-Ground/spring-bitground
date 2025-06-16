@@ -4,7 +4,9 @@ import bit.bitgroundspring.dto.*;
 import bit.bitgroundspring.dto.projection.OrderProjection;
 import bit.bitgroundspring.entity.*;
 import bit.bitgroundspring.repository.OrderRepository;
+import bit.bitgroundspring.repository.PendingOrderProjection;
 import bit.bitgroundspring.repository.SeasonRepository;
+import bit.bitgroundspring.security.oauth2.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -30,6 +32,9 @@ public class OrderService {
     private final SeasonRepository seasonRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final CoinService coinService;
+
+
+    private final AuthService authService;
 
     public List<OrderProjection> getOrdersBySeason(Integer seasonId, Integer userId) {
         return orderRepository.findBySeasonIdAndUserId(seasonId, userId);
@@ -149,7 +154,7 @@ public class OrderService {
                 .season(season)
                 .coin(coin)
                 .orderType(request.getOrderType())
-                .amount(request.getAmount())
+                .amount(request.getAmount().doubleValue())
                 .reservePrice(request.getReservePrice())
                 .status(Status.PENDING)
                 .build();
@@ -190,7 +195,7 @@ public class OrderService {
                     .symbolId(order.getCoin().getId())
                     .symbol(symbol)
                     .orderType(order.getOrderType())
-                    .amount(order.getAmount())
+                    .amount(order.getAmount().floatValue())
                     .reservePrice(order.getReservePrice())
                     .status(order.getStatus())
                     .createdAt(order.getCreatedAt())
@@ -260,4 +265,10 @@ public class OrderService {
             log.error("Failed to remove order from Redis: {}", order.getId(), e);
         }
     }
+    
+    //지훈테스트
+    public List<PendingOrderProjection> getPendingOrdersByUserId(Integer userId) {
+        return orderRepository.findPendingReserveOrdersByUserId(userId);
+    }
+
 }
