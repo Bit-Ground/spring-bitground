@@ -23,7 +23,7 @@ public class CreateOrderRequest {
     
     @NotNull
     @Positive
-    private Float amount;
+    private Double amount;
     
     @NotNull
     @Positive

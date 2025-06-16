@@ -81,7 +81,7 @@ public class OrderExecutionService {
             
             Order order = orderOpt.get();
             order.setStatus(Status.COMPLETED);
-            order.setTradePrice((float) executionPrice);
+            order.setTradePrice(executionPrice);
             order.setUpdatedAt(LocalDateTime.now());
             
             orderRepository.save(order);
@@ -92,7 +92,7 @@ public class OrderExecutionService {
             String symbol = coinRepository.findById(order.getCoin().getId())
                     .map(Coin::getSymbol)
                     .orElse("Unknown");
-            float amount = order.getAmount();
+            double amount = order.getAmount();
             float tradePrice = order.getTradePrice().intValue();
             Map<String, Object> data = Map.of(
                     "orderType", orderType.name(),

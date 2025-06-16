@@ -19,7 +19,7 @@ public class OrderRedisDto { // 주문 정보를 Redis에 저장하기 위한 DT
     private Integer symbolId;
     private String symbol;
     private OrderType orderType;
-    private Float amount;
+    private Double amount;
     private Float reservePrice;
     private Status status;
     private LocalDateTime createdAt;
