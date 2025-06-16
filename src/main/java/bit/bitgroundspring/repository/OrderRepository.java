@@ -78,27 +78,19 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     // 예약 매수 전용
     Optional<Order> findByIdAndStatus(Integer id, Status status);
 
-//    지훈테스트
-@Query("""
-    SELECT 
-        o.id as id,
-        c.koreanName as coin,
-        c.symbol as symbol,
-        o.orderType as orderType,
-        o.amount as quantity,
-        o.reservePrice as watchPrice,
-        o.tradePrice as tradePrice,
-        o.createdAt as orderTime,
-        o.amount as remainingQuantity
-    FROM Order o
-    JOIN o.coin c
-    JOIN o.season s
-    WHERE o.user.id = :userId
-      AND o.status = 'PENDING'
-      AND s.status = 'PENDING'
-    ORDER BY o.createdAt DESC
-""")
-List<PendingOrderProjection> findPendingReserveOrdersByUserId(@Param("userId") Integer userId);
-
+    // 거래 가능 자산 조회 위한 메서드
+    @Query("""
+        SELECT CAST(ROUND(SUM(o.reservePrice * o.amount)) AS integer)
+        FROM Order o
+        WHERE o.user.id = :userId
+          AND o.status = 'PENDING'
+          AND o.orderType = 'BUY'
+          AND o.season = (
+              SELECT s
+              FROM Season s
+              WHERE s.status = 'PENDING'
+          )
+    """)
+    Integer calculateTotalReservePriceForBuyOrdersByUserId(@Param("userId") Integer userId);
 
 }

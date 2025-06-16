@@ -17,30 +17,38 @@ public interface UserAssetRepository extends JpaRepository<UserAsset, Integer> {
     //유저가 가지고있는 보유자산 목록
     List<UserAsset> findByUser(User user);
 
-    @Query("""
-      select ua.coin.symbol
-      from UserAsset ua
-      where ua.user.id = :userId
-        and ua.amount > 0
-    """)
-    List<String> findOwnedSymbolsByUserId(@Param("userId") Integer userId);
-    
-    
-    /**
-     * 유저의 보유 자산 정보 조회
-     * @param userId 유저 ID
-     * @return 보유 자산 정보 리스트
-     */
-    @Query("SELECT c.symbol as symbol, ua.amount as amount, ua.avgPrice as avgPrice " +
-            "FROM UserAsset ua " +
-            "JOIN ua.coin c " +
-            "WHERE ua.user.id = :userId")
-    List<UserAssetProjection> findUserAssetProjectionsByUserId(@Param("userId") Integer userId);
-
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT a FROM UserAsset a WHERE a.user = :user AND a.coin = :coin")
     Optional<UserAsset> findByUserAndCoinWithLock(
             @Param("user") User user,
             @Param("coin") Coin coin
     );
+    
+    // 유저의 매도 가능 자산 조회
+    @Query("""
+    SELECT
+        ua.coin.symbol as symbol,
+        CASE
+            WHEN COALESCE(SUM(o.amount), 0.0) <= ua.amount
+            THEN ua.amount - COALESCE(SUM(o.amount), 0.0)
+            ELSE 0.0
+        END as amount,
+        ua.avgPrice as avgPrice
+    FROM UserAsset ua
+    LEFT JOIN Order o ON o.coin.id = ua.coin.id
+        AND o.user.id = ua.user.id
+        AND o.orderType = 'SELL'
+        AND o.status = 'PENDING'
+        AND o.season.id = (
+            SELECT s.id FROM Season s WHERE s.status = 'PENDING'
+        )
+    WHERE ua.user.id = :userId
+    GROUP BY ua.coin.id, ua.coin.symbol, ua.amount, ua.avgPrice
+    HAVING CASE
+        WHEN COALESCE(SUM(o.amount), 0.0) <= ua.amount
+        THEN ua.amount - COALESCE(SUM(o.amount), 0.0)
+        ELSE 0.0
+    END > 0
+    """)
+    List<UserAssetProjection> findUserAssetsWithAvailableAmount(@Param("userId") Integer userId);
 }
