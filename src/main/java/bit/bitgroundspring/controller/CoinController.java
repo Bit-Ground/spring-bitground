@@ -30,7 +30,6 @@ import java.util.HashSet; // HashSet 임포트 유지
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api")
 public class CoinController {
 
     private final CoinRepository coinRepository;
