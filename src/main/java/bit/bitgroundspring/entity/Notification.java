@@ -1,5 +1,6 @@
 package bit.bitgroundspring.entity;
 
+import bit.bitgroundspring.dto.response.Message;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,14 +28,14 @@ public class Notification {
                     foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"))
     private User user;
     
-    @Column(name = "fcm_token", nullable = false)
-    private String fcmToken;
+    @Column(name = "message", nullable = false)
+    private String message;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "message_type", nullable = false)
+    private Message messageType;
     
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
     private LocalDateTime createdAt;
-    
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)")
-    private LocalDateTime updatedAt;
 }
