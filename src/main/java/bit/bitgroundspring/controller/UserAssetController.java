@@ -1,16 +1,11 @@
 package bit.bitgroundspring.controller;
 
-import bit.bitgroundspring.dto.UserAssetDto;
 import bit.bitgroundspring.dto.response.UserAssetResponse;
-import bit.bitgroundspring.entity.UserAsset;
 import bit.bitgroundspring.security.oauth2.AuthService;
 import bit.bitgroundspring.service.UserAssetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/assets")
