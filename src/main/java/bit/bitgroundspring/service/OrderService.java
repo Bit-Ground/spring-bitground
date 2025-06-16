@@ -194,7 +194,6 @@ public class OrderService {
         try {
             String orderId = String.valueOf(order.getId());
             
-            // 주문 정보를 OrderRedisDto로 변환하여 저장 (Jackson 직렬화 활용)
             OrderRedisDto orderDto = OrderRedisDto.builder()
                     .id(order.getId())
                     .userId(order.getUser().getId())
@@ -207,27 +206,24 @@ public class OrderService {
                     .createdAt(order.getCreatedAt())
                     .build();
             
-            redisTemplate.execute(new SessionCallback<Object>() {
+            // 수정: 파이프라인 사용으로 성능 개선
+            redisTemplate.executePipelined(new SessionCallback<Object>() {
                 @Override
                 public Object execute(RedisOperations operations) throws DataAccessException {
-                    operations.multi();
-                    
-                    // Hash로 주문 상세 정보 저장 (객체 직렬화)
                     operations.opsForValue().set("order:" + orderId, orderDto, Duration.ofDays(30));
                     
-                    // Sorted Set으로 가격별 주문 저장
                     String orderTypeKey = order.getOrderType() == OrderType.BUY ?
                             "buy_orders:" + symbol : "sell_orders:" + symbol;
                     operations.opsForZSet().add(orderTypeKey, orderId, order.getReservePrice());
                     operations.expire(orderTypeKey, Duration.ofDays(30));
                     
-                    return operations.exec();
+                    return null;
                 }
             });
             
         } catch (Exception e) {
             log.error("Failed to save order to Redis: {}", order.getId(), e);
-            throw new RuntimeException("Failed to save order to cache", e);
+            // 수정: 예외 발생해도 서비스 계속 진행
         }
     }
     

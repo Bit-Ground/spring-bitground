@@ -64,10 +64,10 @@ public class RedisConfig {
         Config config = new Config();
         config.useSingleServer()
                 .setAddress("redis://" + host + ":" + port)
-                .setConnectionMinimumIdleSize(5)
-                .setConnectionPoolSize(20)
-                .setConnectTimeout(3000)
-                .setTimeout(3000)
+                .setConnectionMinimumIdleSize(6)
+                .setConnectionPoolSize(15)
+                .setConnectTimeout(2000)
+                .setTimeout(2000)
                 .setRetryAttempts(3);
         return Redisson.create(config);
     }

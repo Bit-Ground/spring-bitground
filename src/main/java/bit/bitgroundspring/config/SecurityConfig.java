@@ -50,7 +50,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/refresh", "/auth/refresh", "/oauth2/**", "/error", "/favicon.ico", "/test","/mypage/**",
                                 "/api/news/**", "/api/coin/**", "/api/public/**", "/public/**", "/auth/logout", "/api/market-index/**",
                                 "/api/docs/**", "/actuator/*", "/ws/**", "/seasons/update").permitAll()
-                        .requestMatchers("/api/user/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
