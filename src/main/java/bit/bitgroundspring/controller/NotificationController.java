@@ -2,7 +2,6 @@ package bit.bitgroundspring.controller;
 
 import bit.bitgroundspring.dto.response.NotificationResponse;
 import bit.bitgroundspring.security.oauth2.AuthService;
-import bit.bitgroundspring.service.UserService;
 import bit.bitgroundspring.util.UserSseEmitters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -10,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,20 +40,7 @@ public class NotificationController {
     @PostMapping("/send")
     public ResponseEntity<Map<String, Integer>> sendToMultipleUsers(
             @RequestBody NotificationResponse request) {
-        
-        Set<Integer> userIds = userSseEmitters.getOnlineUsers();
-        Map<String, Integer> results = new HashMap<>();
-        int successCount = 0;
-        int failureCount = 0;
-        for (Integer userId : userIds) {
-            boolean sent = userSseEmitters.sendToUser(userId, request);
-            if (sent) successCount++;
-            else failureCount++;
-        }
-        
-        results.put("success", successCount);
-        results.put("failure", failureCount);
-        
+        Map<String, Integer> results = userSseEmitters.sendToAll(request); // 모든 사용자에게 알림 전송
         return ResponseEntity.ok(results);
     }
 }

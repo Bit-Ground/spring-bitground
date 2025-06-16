@@ -1,12 +1,12 @@
 package bit.bitgroundspring.controller;
 
 import bit.bitgroundspring.dto.projection.SeasonProjection;
+import bit.bitgroundspring.service.OrderService;
 import bit.bitgroundspring.service.SeasonService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,6 +15,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SeasonController {
     private final SeasonService seasonService;
+    private final OrderService orderService;
+    
+    @Value("${season.update.key}")
+    private String seasonUpdateKey;
     
     /**
      * 모든 시즌 목록 조회
@@ -31,6 +35,18 @@ public class SeasonController {
     public ResponseEntity<Integer> getCurrentSeasonId() {
         Integer currentId = seasonService.getCurrentSeasonId();
         return ResponseEntity.ok(currentId);
+    }
+    
+    @PostMapping("/update")
+    public ResponseEntity<String> updateSeasons(@RequestBody String secretKey) {
+        // 비밀 키 검증
+        if (!secretKey.equals(seasonUpdateKey)) {
+            return ResponseEntity.status(403).body("Forbidden: Invalid secret key");
+        }
+        
+        orderService.seasonUpdate();
+        
+        return ResponseEntity.ok("success");
     }
     
 }

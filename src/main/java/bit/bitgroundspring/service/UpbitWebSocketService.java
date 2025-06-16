@@ -111,7 +111,7 @@ public class UpbitWebSocketService {
         }
     }
     
-    @Scheduled(cron = "0 5 0 * * ?") // 매일 0시 5분
+    @Scheduled(cron = "0 3 0 * * ?") // 매일 0시 3분
     public void updateSymbolList() {
         if (isShuttingDown.get()) {
             return;

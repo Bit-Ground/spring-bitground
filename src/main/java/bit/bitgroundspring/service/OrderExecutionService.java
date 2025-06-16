@@ -104,7 +104,6 @@ public class OrderExecutionService {
             
             orderRepository.save(order);
             
-            // SSE 알림 전송
             int userId = order.getUser().getId();
             OrderType orderType = order.getOrderType();
             String symbol = coinRepository.findById(order.getCoin().getId())
@@ -153,7 +152,7 @@ public class OrderExecutionService {
                 userAssetRepository.save(newUserAsset);
             }
             
-            
+            // SSE 알림 전송
             float tradePrice = order.getTradePrice().intValue();
             Map<String, Object> data = Map.of(
                     "orderType", orderType.name(),

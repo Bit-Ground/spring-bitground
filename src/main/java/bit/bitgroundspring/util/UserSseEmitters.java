@@ -1,13 +1,11 @@
 package bit.bitgroundspring.util;
 
+import bit.bitgroundspring.dto.response.NotificationResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -72,5 +70,23 @@ public class UserSseEmitters {
     public int getUserConnectionCount(Integer userId) {
         List<SseEmitter> emitters = userEmitters.get(userId);
         return emitters != null ? emitters.size() : 0;
+    }
+    
+    public Map<String, Integer> sendToAll(NotificationResponse request) {
+        Set<Integer> userIds = getOnlineUsers();
+        Map<String, Integer> results = new HashMap<>();
+        int successCount = 0;
+        int failureCount = 0;
+        for (Integer userId : userIds) {
+            boolean sent = sendToUser(userId, request);
+            if (sent) successCount++;
+            else failureCount++;
+        }
+        
+        results.put("success", successCount);
+        results.put("failure", failureCount);
+        
+        log.info("모든 사용자에게 알림 전송 완료. 성공: {}, 실패: {}", successCount, failureCount);
+        return results;
     }
 }

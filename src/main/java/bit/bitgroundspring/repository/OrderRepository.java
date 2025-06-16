@@ -93,4 +93,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     """)
     Integer calculateTotalReservePriceForBuyOrdersByUserId(@Param("userId") Integer userId);
     
+    // pending 상태 주문 조회
+    List<Order> findByStatus(Status status);
+    
 }
