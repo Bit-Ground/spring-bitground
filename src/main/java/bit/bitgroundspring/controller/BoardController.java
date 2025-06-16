@@ -9,6 +9,7 @@ import bit.bitgroundspring.repository.BoardRepository;
 import bit.bitgroundspring.repository.CommentRepository;
 import bit.bitgroundspring.repository.UserRepository;
 import bit.bitgroundspring.service.BoardService;
+import bit.bitgroundspring.service.RankService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,7 @@ public class BoardController {
     private final NcpObjectStorageService objectStorageService;
     private final BoardService boardService;
     private final CommentRepository commentRepository;
+    private final RankService rankService;
 
 
     @Value("${ncp.bucket}")
@@ -143,7 +145,8 @@ public class BoardController {
                 post.getCategory().name(),
                 post.getViews(),
                 commentCount,
-                hasImage
+                hasImage,
+                rankService.getHighestTierByUserId(post.getUser().getId())
         );
 
         return ResponseEntity.ok(dto);

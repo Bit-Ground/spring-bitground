@@ -47,9 +47,9 @@ public interface RankRepository extends JpaRepository<UserRanking, Integer> {
     //툴팁용
     List<UserRanking> findTop5ByUserOrderBySeasonIdDesc(User user);
 
-    @Query("SELECT MAX(ur.tier) FROM UserRanking ur WHERE ur.user = :user")
-    Integer findHighestTierByUser(@Param("user") User user);
-
     @Query("SELECT ur FROM UserRanking ur JOIN FETCH ur.season WHERE ur.user = :user ORDER BY ur.season.id DESC")
     List<UserRanking> findTop5ByUserWithSeason(@Param("user") User user);
+
+    @Query("SELECT MAX(r.tier) FROM UserRanking r WHERE r.user = :user AND r.season.name <> :seasonName")
+    Integer findHighestTierByUserExcludingSeason(@Param("user") User user, @Param("seasonName") String seasonName);
 }
