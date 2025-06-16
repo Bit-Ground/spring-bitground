@@ -74,11 +74,11 @@ public class UserSseEmitters {
             String symbol = (String) dataMap.get("symbol");
             String cutSymbol = symbol.split("-")[1];
             Double amount = (Double) dataMap.get("amount");
-            String tradePrice = (String) dataMap.get("tradePrice");
+            Float tradePrice = (Float) dataMap.get("tradePrice");
             String message = String.format("""
                     예약 %s 주문이 체결되었습니다.
                     수량 : %.7f %s
-                    체결 : 개당 %s원
+                    체결 : 개당 %f원
                     """, orderType, amount, cutSymbol, tradePrice);
             
             Notification notification = Notification.builder()
