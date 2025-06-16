@@ -26,12 +26,13 @@ public class BoardDto {
     private int views;
     private Long commentCount;
     private boolean hasImage;
+    private int highestTier;
 
 
     public BoardDto(Integer id, Integer userId, String name, String profileImage, String title,  String content,
                     int tier, int likes, int dislikes, boolean isDeleted,
                     LocalDateTime createdAt, LocalDateTime updatedAt, String category,
-                    int views, Long commentCount) {
+                    int views, Long commentCount, int highestTier) {
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -48,6 +49,7 @@ public class BoardDto {
         this.views = views;
         this.commentCount = commentCount;
         this.hasImage = false; // 기본값 (나중에 setHasImage로 따로 설정 가능)
+        this.highestTier = highestTier;
     }
 }
 
