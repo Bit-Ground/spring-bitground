@@ -73,7 +73,7 @@ public class UserSseEmitters {
             String orderType = dataMap.get("orderType").equals("BUY") ? "매수" : "매도";
             String symbol = (String) dataMap.get("symbol");
             String cutSymbol = symbol.split("-")[1];
-            Float amount = (Float) dataMap.get("amount");
+            Double amount = (Double) dataMap.get("amount");
             String tradePrice = (String) dataMap.get("tradePrice");
             String message = String.format("""
                     예약 %s 주문이 체결되었습니다.
