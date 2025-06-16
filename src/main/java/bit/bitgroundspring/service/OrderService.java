@@ -6,8 +6,10 @@ import bit.bitgroundspring.dto.response.Message;
 import bit.bitgroundspring.dto.response.MessageType;
 import bit.bitgroundspring.dto.response.NotificationResponse;
 import bit.bitgroundspring.entity.*;
+import bit.bitgroundspring.repository.CoinRepository;
 import bit.bitgroundspring.repository.OrderRepository;
 import bit.bitgroundspring.repository.SeasonRepository;
+import bit.bitgroundspring.repository.UserRepository;
 import bit.bitgroundspring.util.UserSseEmitters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +35,9 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final SeasonRepository seasonRepository;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final CoinService coinService;
+    private final CoinRepository coinRepository;
     private final UserSseEmitters userSseEmitters;
+    private final UserRepository userRepository;
 
     public List<OrderProjection> getOrdersBySeason(Integer seasonId, Integer userId) {
         return orderRepository.findBySeasonIdAndUserId(seasonId, userId);
@@ -139,7 +142,10 @@ public class OrderService {
     public Order createReserveOrder(CreateOrderRequest request) {
         validateOrderRequest(request);
         
-        Coin coin = coinService.findBySymbol(request.getSymbol())
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        Coin coin = coinRepository.findBySymbol(request.getSymbol())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid symbol ID"));
         
         Season season = seasonRepository.findByStatus(Status.PENDING)
@@ -150,7 +156,7 @@ public class OrderService {
         }
         
         Order order = Order.builder()
-                .user(User.builder().id(request.getUserId()).build())
+                .user(user)
                 .season(season)
                 .coin(coin)
                 .orderType(request.getOrderType())
@@ -247,7 +253,10 @@ public class OrderService {
     private void removeOrderFromRedis(Order order) {
         try {
             String orderId = String.valueOf(order.getId());
-            String symbol = coinService.getSymbolById(order.getCoin().getId());
+            Integer symbolId = order.getCoin().getId();
+            String symbol = coinRepository.findById(symbolId)
+                    .map(Coin::getSymbol)
+                    .orElseThrow(() -> new IllegalArgumentException("Symbol not found: " + symbolId));
             String orderTypeKey = order.getOrderType() == OrderType.BUY ?
                     "buy_orders:" + symbol : "sell_orders:" + symbol;
             
@@ -266,31 +275,33 @@ public class OrderService {
         }
     }
     
-    
-    public void seasonUpdate() {
+    public void seasonUpdate(String seasonFlag) {
         // 대부분의 로직은 go serverless로 처리, 나머지 것들을 수행하자
         
-        // redis에 저장된 예약 주문 목록 제거
-        List<Order> pendingOrders = orderRepository.findByStatus(Status.PENDING);
-        if (pendingOrders.isEmpty()) {
-            log.info("No pending orders to process for season update");
-        }
-        for (Order order : pendingOrders) {
-            try {
-                removeOrderFromRedis(order);
-                log.info("Removed pending order {} from Redis", order.getId());
-            } catch (Exception e) {
-                log.error("Failed to remove pending order {} from Redis: {}", order.getId(), e.getMessage());
+        if (seasonFlag.equals("season")) {
+            // redis에 저장된 예약 주문 목록 제거
+            List<Order> pendingOrders = orderRepository.findByStatus(Status.PENDING);
+            if (pendingOrders.isEmpty()) {
+                log.info("No pending orders to process for season update");
+            }
+            for (Order order : pendingOrders) {
+                try {
+                    removeOrderFromRedis(order);
+                    log.info("Removed pending order {} from Redis", order.getId());
+                } catch (Exception e) {
+                    log.error("Failed to remove pending order {} from Redis: {}", order.getId(), e.getMessage());
+                }
             }
         }
         
-        // 사용자에게 시즌 종료 알림 전송
+        // 사용자에게 시즌 종료 / 스플릿 업데이트 알림 전송
         Season currentSeason = seasonRepository.findByStatus(Status.PENDING)
                 .orElseThrow(() -> new IllegalStateException("진행 중인 시즌이 없습니다."));
         String seasonName = currentSeason.getName();
         
         Map<String, Object> data = Map.of(
-                "seasonName", seasonName
+                "seasonName", seasonName,
+                "seasonFlag", seasonFlag
         );
         NotificationResponse notificationResponse = NotificationResponse.builder()
                 .messageType(MessageType.INFO)

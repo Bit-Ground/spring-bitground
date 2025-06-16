@@ -38,15 +38,17 @@ public class SeasonController {
     }
     
     @PostMapping("/update")
-    public ResponseEntity<String> updateSeasons(@RequestBody String secretKey) {
+    public ResponseEntity<?> updateSeasons(@RequestParam String secretKey,
+                                           @RequestParam String seasonFlag) {
         // 비밀 키 검증
         if (!secretKey.equals(seasonUpdateKey)) {
             return ResponseEntity.status(403).body("Forbidden: Invalid secret key");
         }
         
-        orderService.seasonUpdate();
+        // 시즌 업데이트
+        orderService.seasonUpdate(seasonFlag);
         
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok().build();
     }
     
 }
