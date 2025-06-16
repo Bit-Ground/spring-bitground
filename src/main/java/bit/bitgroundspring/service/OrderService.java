@@ -195,7 +195,7 @@ public class OrderService {
                     .symbolId(order.getCoin().getId())
                     .symbol(symbol)
                     .orderType(order.getOrderType())
-                    .amount(order.getAmount().floatValue())
+                    .amount(order.getAmount())
                     .reservePrice(order.getReservePrice())
                     .status(order.getStatus())
                     .createdAt(order.getCreatedAt())
