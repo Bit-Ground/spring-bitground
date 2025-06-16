@@ -5,12 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
@@ -23,22 +28,30 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class UpbitWebSocketService {
     
     private final CoinService coinService;
     private final PriceUpdateService priceUpdateService;
     private final RedisTemplate<String, Object> redisTemplate;
+    
+    // 추가: Config 클래스에서 생성한 TaskExecutor 주입
+    @Qualifier("webSocketTaskExecutor")
+    private final Executor webSocketTaskExecutor;
+    
+    // 추가: Spring의 스케줄러 주입
+    private final TaskScheduler taskScheduler;
     
     @Value("${upbit.websocket.ticker-url}")
     private String websocketUrl;
@@ -61,46 +74,41 @@ public class UpbitWebSocketService {
     private volatile boolean isReconnecting = false;
     private final AtomicBoolean isShuttingDown = new AtomicBoolean(false);
     
+    public UpbitWebSocketService(
+            CoinService coinService,
+            PriceUpdateService priceUpdateService,
+            RedisTemplate<String, Object> redisTemplate,
+            @Qualifier("webSocketTaskExecutor") Executor webSocketTaskExecutor,
+            TaskScheduler taskScheduler) {
+        this.coinService = coinService;
+        this.priceUpdateService = priceUpdateService;
+        this.redisTemplate = redisTemplate;
+        this.webSocketTaskExecutor = webSocketTaskExecutor;
+        this.taskScheduler = taskScheduler;
+    }
+    
     @EventListener(ContextRefreshedEvent.class)
     public void onApplicationReady() {
-        connectToUpbit();
+        webSocketTaskExecutor.execute(this::connectToUpbit);
     }
     
     @PreDestroy
     public void shutdown() {
-        log.info("Shutting down WebSocket connection...");
+        log.info("Shutting down UpbitWebSocketService...");
+        isShuttingDown.set(true); // 종료 플래그 설정
         
-        // 종료 플래그 설정 (가장 먼저 해야 함)
-        isShuttingDown.set(true);
-        
-        try {
-            // WebSocket 연결 먼저 종료
-            if (session != null && session.isOpen()) {
-                session.close(CloseStatus.GOING_AWAY);
-                log.info("WebSocket session closed");
-            }
-        } catch (Exception e) {
-            log.warn("Error closing WebSocket session", e);
+        // 1. ConnectionManager를 먼저 중지시켜 재연결 로직을 차단합니다.
+        if (connectionManager != null) {
+            connectionManager.stop();
         }
         
-        try {
-            // ConnectionManager 종료
-            if (connectionManager != null && connectionManager.isRunning()) {
-                connectionManager.stop();
-                log.info("WebSocket connection manager stopped");
-            }
-        } catch (Exception e) {
-            log.warn("Error stopping connection manager", e);
+        // 2. 주입받은 Executor를 명시적으로 종료시킵니다.
+        // TaskExecutor가 ThreadPoolTaskExecutor의 인스턴스일 경우에만 종료 가능
+        if (webSocketTaskExecutor instanceof ThreadPoolTaskExecutor) {
+            ((ThreadPoolTaskExecutor) webSocketTaskExecutor).shutdown();
         }
         
-        // 정리 대기
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        
-        session = null;
+        log.info("UpbitWebSocketService has been shut down.");
     }
     
     @Scheduled(fixedDelay = 30000) // 30초마다 연결 상태 체크
@@ -136,7 +144,7 @@ public class UpbitWebSocketService {
             }
             
             StandardWebSocketClient client = new StandardWebSocketClient();
-            client.setTaskExecutor(new SimpleAsyncTaskExecutor("WebSocketClient-"));
+            client.setTaskExecutor((AsyncTaskExecutor) webSocketTaskExecutor);
             client.getUserProperties().put("org.apache.tomcat.websocket.IO_TIMEOUT_MS", String.valueOf(connectionTimeout));
             
             UpbitWebSocketHandler handler = new UpbitWebSocketHandler();
@@ -199,13 +207,12 @@ public class UpbitWebSocketService {
             UpbitWebSocketService.this.session = session;
             log.info("WebSocket connection established to Upbit");
             
-            CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS)
-                    .execute(() -> {
-                        if (!isShuttingDown.get()) {
-                            List<String> activeSymbols = coinService.getActiveSymbols();
-                            sendSymbolRequest(activeSymbols);
-                        }
-                    });
+            taskScheduler.schedule(() -> {
+                if (!isShuttingDown.get()) {
+                    List<String> activeSymbols = coinService.getActiveSymbols();
+                    sendSymbolRequest(activeSymbols);
+                }
+            }, Instant.now().plusSeconds(1));
         }
         
         @Override
@@ -333,12 +340,7 @@ public class UpbitWebSocketService {
         
         log.info("Scheduling reconnection attempt {} in {} ms", currentAttempt + 1, delay);
         
-        CompletableFuture.delayedExecutor(delay, TimeUnit.MILLISECONDS)
-                .execute(() -> {
-                    if (!isShuttingDown.get()) {
-                        connectToUpbit();
-                    }
-                });
+        taskScheduler.schedule(this::connectToUpbit, Instant.now().plusMillis(delay));
     }
     
     public boolean isConnected() {

@@ -26,6 +26,7 @@ import java.util.Map;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class NewsController {
+    private final RestTemplate restTemplate;
 
     private String cleanHTMLExceptBold(String html) {
         return html.replaceAll("<(?!/?b>)[^>]+>", ""); // <b> 태그만 유지
@@ -49,8 +50,7 @@ public class NewsController {
                     .queryParam("sort", "date")
                     .build()
                     .toUri();
-
-            RestTemplate restTemplate = new RestTemplate();
+            
             RequestEntity<Void> req = RequestEntity
                     .get(uri)
                     .header("X-Naver-Client-Id","Czd_lY45xNZVMbwiOqTF")

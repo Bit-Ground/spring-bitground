@@ -69,9 +69,6 @@ dependencies {
 
     // websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
-    // Redisson (분산 락용)
-    implementation 'org.redisson:redisson-spring-boot-starter:3.24.3'
 }
 
 tasks.named('test') {

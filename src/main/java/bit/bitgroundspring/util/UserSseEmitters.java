@@ -27,7 +27,7 @@ public class UserSseEmitters {
     public void addUser(Integer userId, SseEmitter emitter) {
         userEmitters.computeIfAbsent(userId, k -> new CopyOnWriteArrayList<>()).add(emitter);
         
-        // ✅ 추가: 연결 관리 콜백
+        // 추가: 연결 관리 콜백
         emitter.onTimeout(() -> removeUser(userId, emitter));
         emitter.onCompletion(() -> removeUser(userId, emitter));
         emitter.onError((ex) -> removeUser(userId, emitter));
@@ -41,7 +41,7 @@ public class UserSseEmitters {
             return false;
         }
         
-        // ✅ 수정: 동시성 문제 해결
+        // 수정: 동시성 문제 해결
         List<SseEmitter> emittersCopy = new ArrayList<>(emitters);
         List<SseEmitter> deadEmitters = new ArrayList<>();
         
@@ -66,29 +66,32 @@ public class UserSseEmitters {
         }
         
         // 수정: 비동기 알림 저장
-        if (data.getMessage() == Message.ORDER_EXECUTION) {
-            CompletableFuture.runAsync(() -> saveNotification(userId, data));
-        }
+        CompletableFuture.runAsync(() -> saveNotification(userId, data, data.getMessage()));
+        
         
         return !emittersCopy.isEmpty();
     }
     
-    // ✅ 추가: 비동기 알림 저장 메서드
-    private void saveNotification(Integer userId, NotificationResponse data) {
+    // 추가: 비동기 알림 저장 메서드
+    private void saveNotification(Integer userId, NotificationResponse data, Message messageType) {
         try {
             Map<String, Object> dataMap = data.getData();
-            String orderType = dataMap.get("orderType").equals("BUY") ? "매수" : "매도";
-            String symbol = (String) dataMap.get("symbol");
-            String cutSymbol = symbol.split("-")[1];
-            Float amount = (Float) dataMap.get("amount");
-            String tradePrice = (String) dataMap.get("tradePrice");
-            
-            String message = String.format("예약 %s 주문이 체결되었습니다.\n수량 : %.7f %s\n체결 : 개당 %s원",
-                    orderType, amount, cutSymbol, tradePrice);
-            
+            String message = "";
+            if (messageType == Message.ORDER_EXECUTION) {
+                String orderType = dataMap.get("orderType").equals("BUY") ? "매수" : "매도";
+                String symbol = (String) dataMap.get("symbol");
+                String cutSymbol = symbol.split("-")[1];
+                Float amount = (Float) dataMap.get("amount");
+                String tradePrice = (String) dataMap.get("tradePrice");
+                message = String.format("예약 %s 주문이 체결되었습니다.\n수량 : %.7f %s\n체결 : 개당 %s원",
+                        orderType, amount, cutSymbol, tradePrice);
+            } else if (messageType == Message.INQUIRY_UPDATE) {
+                String title = (String) dataMap.get("title");
+                message = String.format("작성하신 문의사항에 답변이 등록되었습니다.\n지금 바로 확인해보세요.\n📩[%s]", title);
+            }
             Notification notification = Notification.builder()
                     .user(User.builder().id(userId).build())
-                    .messageType(data.getMessage())
+                    .messageType(messageType)
                     .message(message)
                     .build();
             notificationService.saveNotification(notification);
@@ -98,7 +101,7 @@ public class UserSseEmitters {
         }
     }
     
-    // ✅ 수정: 병렬 처리로 성능 개선
+    // 수정: 병렬 처리로 성능 개선
     public Map<String, Integer> sendToAll(NotificationResponse request) {
         Set<Integer> userIds = getOnlineUsers();
         
@@ -123,7 +126,7 @@ public class UserSseEmitters {
         return result;
     }
     
-    // ✅ 추가: 시스템 알림 저장
+    // 추가: 시스템 알림 저장
     private void saveSystemNotification(NotificationResponse request) {
         try {
             Map<String, Object> dataMap = request.getData();
@@ -135,7 +138,7 @@ public class UserSseEmitters {
                 message = getMessage(seasonFlag, seasonName);
             } else if (request.getMessage() == Message.NOTICE) {
                 String title = (String) dataMap.get("title");
-                message = String.format("🔔 새로운 공지사항이 등록되었습니다.\n공지사항 탭에서 확인해보세요.\n[%s]", title);
+                message = String.format("🔔 새로운 공지사항이 등록되었습니다.\n고객센터 탭에서 확인해보세요.\n[%s]", title);
             }
             
             Notification notification = Notification.builder()

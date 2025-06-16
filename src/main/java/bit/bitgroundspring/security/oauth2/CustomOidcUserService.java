@@ -29,6 +29,7 @@ import java.util.Optional;
 public class CustomOidcUserService extends OidcUserService {
     private final UserRepository userRepository;
     private final InitialCashUtil initialCashUtil;
+    private final RestTemplate restTemplate;
     
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
@@ -94,7 +95,6 @@ public class CustomOidcUserService extends OidcUserService {
     
     // 네이버 API에서 사용자 정보 가져오기
     private Map<String, Object> getUserInfo(OAuth2AccessToken accessToken) {
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken.getTokenValue());
         

@@ -45,6 +45,18 @@ public class AsyncConfig implements AsyncConfigurer {
         return executor;
     }
     
+    // TaskExecutorConfig에서 가져온 Bean
+    @Bean(name = "webSocketTaskExecutor")
+    public Executor webSocketTaskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(8);
+        executor.setQueueCapacity(100);
+        executor.setThreadNamePrefix("WebSocket-IO-");
+        executor.initialize();
+        return executor;
+    }
+    
     @Override
     public Executor getAsyncExecutor() {
         return orderExecutionTaskExecutor();

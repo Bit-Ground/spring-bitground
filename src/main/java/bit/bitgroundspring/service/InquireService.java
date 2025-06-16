@@ -3,10 +3,14 @@ package bit.bitgroundspring.service;
 import bit.bitgroundspring.dto.AnswerDto;
 import bit.bitgroundspring.dto.InquireRequestDto;
 import bit.bitgroundspring.dto.InquireResponseDto;
+import bit.bitgroundspring.dto.response.Message;
+import bit.bitgroundspring.dto.response.MessageType;
+import bit.bitgroundspring.dto.response.NotificationResponse;
 import bit.bitgroundspring.entity.Inquiry;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.repository.InquireRepository;
 import bit.bitgroundspring.repository.UserRepository;
+import bit.bitgroundspring.util.UserSseEmitters;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,12 +21,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class InquireService {
     private final InquireRepository inquireRepository;
     private final UserRepository userRepository;
+    private final UserSseEmitters userSseEmitters;
 
     public void createInquiry(InquireRequestDto dto) {
         User user = userRepository.findById(dto.getUser().getId())
@@ -69,5 +75,18 @@ public class InquireService {
         inquiry.setAnswerWriter(adminUsername);
         inquiry.setAnsweredAt(LocalDateTime.now());
         inquiry.setIsAnswered(true);
+        
+        // SSE 알림 전송
+        String title = inquiry.getTitle();
+        Integer userId = inquiry.getUser().getId();
+        Map<String, Object> data = Map.of(
+                "title", title
+        );
+        NotificationResponse notificationResponse = NotificationResponse.builder()
+                .messageType(MessageType.INFO)
+                .message(Message.INQUIRY_UPDATE)
+                .data(data)
+                .build();
+        userSseEmitters.sendToUser(userId, notificationResponse);
     }
 }

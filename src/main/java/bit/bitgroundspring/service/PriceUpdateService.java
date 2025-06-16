@@ -3,8 +3,6 @@ package bit.bitgroundspring.service;
 import bit.bitgroundspring.entity.OrderType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -23,32 +20,19 @@ public class PriceUpdateService {
     
     private final RedisTemplate<String, Object> redisTemplate;
     private final OrderExecutionService orderExecutionService;
-    private final RedissonClient redissonClient;
     
     @Async("priceUpdateTaskExecutor")
     public CompletableFuture<Void> checkAndExecuteOrdersAsync(String symbol, double currentPrice) {
-        String lockKey = "lock:orders:" + symbol;
-        RLock lock = redissonClient.getLock(lockKey);
-        
+        // 락(Lock) 관련 로직 제거
         try {
-            if (lock.tryLock(1, 5, TimeUnit.SECONDS)) {
-                processOrdersForType(symbol, currentPrice, OrderType.BUY);
-                processOrdersForType(symbol, currentPrice, OrderType.SELL);
-            } else {
-                log.debug("Could not acquire lock for symbol: {}", symbol);
-            }
+            // 락 획득 과정 없이 바로 주문 처리 로직 호출
+            processOrdersForType(symbol, currentPrice, OrderType.BUY);
+            processOrdersForType(symbol, currentPrice, OrderType.SELL);
+            
             return CompletableFuture.completedFuture(null);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            log.error("Interrupted while waiting for lock", e);
-            return CompletableFuture.failedFuture(e);
         } catch (Exception e) {
             log.error("Error processing orders for symbol: {}", symbol, e);
             return CompletableFuture.failedFuture(e);
-        } finally {
-            if (lock.isHeldByCurrentThread()) {
-                lock.unlock();
-            }
         }
     }
     

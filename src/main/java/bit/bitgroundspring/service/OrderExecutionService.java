@@ -16,8 +16,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -88,7 +89,6 @@ public class OrderExecutionService {
         }
     }
     
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void executeOrder(Integer orderId, double executionPrice) {
         try {
             Optional<Order> orderOpt = orderRepository.findByIdAndStatus(orderId, Status.PENDING);
@@ -152,14 +152,38 @@ public class OrderExecutionService {
                 userAssetRepository.save(newUserAsset);
             }
             
-            // SSE 알림 전송
-            float tradePrice = order.getTradePrice().intValue();
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    // 이 블록은 트랜잭션이 성공적으로 DB에 커밋된 후에만 호출됩니다.
+                    sendSseNotification(order);
+                }
+            });
+            
+            log.info("Order executed: {} at price {} for user {}",
+                    orderId, executionPrice, order.getUser().getId());
+            
+        } catch (Exception e) {
+            log.error("Failed to execute order: {}", orderId, e);
+        }
+    }
+    
+    /**
+     * SSE 알림 전송을 담당하는 별도의 public 메서드 (트랜잭션과 무관)
+     */
+    public void sendSseNotification(Order order) {
+        try {
+            int userId = order.getUser().getId();
+            int finalCash = userRepository.findById(userId)
+                    .map(User::getCash)
+                    .orElse(0);
+            
             Map<String, Object> data = Map.of(
-                    "orderType", orderType.name(),
-                    "symbol", symbol,
-                    "amount", amount,
-                    "tradePrice", tradePrice,
-                    "cash", user.getCash()
+                    "orderType", order.getOrderType().name(),
+                    "symbol", order.getCoin().getSymbol(),
+                    "amount", order.getAmount(),
+                    "tradePrice", order.getTradePrice().floatValue(),
+                    "cash", finalCash
             );
             NotificationResponse notificationResponse = NotificationResponse.builder()
                     .messageType(MessageType.INFO)
@@ -167,12 +191,8 @@ public class OrderExecutionService {
                     .data(data)
                     .build();
             userSseEmitters.sendToUser(userId, notificationResponse);
-            
-            log.info("Order executed: {} at price {} for user {}",
-                    orderId, executionPrice, order.getUser().getId());
-            
         } catch (Exception e) {
-            log.error("Failed to execute order: {}", orderId, e);
+            log.error("Failed to send SSE notification for order {}", order.getId(), e);
         }
     }
 }

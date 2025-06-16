@@ -28,6 +28,7 @@ public class TradeService {
     private final OrderRepository orderRepository;
     private final SeasonRepository seasonRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final RestTemplate restTemplate;
 
     /** 슬리피지 허용 범위: 0.5% */
     private static final double SLIPPAGE_TOLERANCE = 0.005;
@@ -47,8 +48,7 @@ public class TradeService {
 
         Season season = seasonRepository.findByStatus(Status.PENDING)
                 .orElseThrow(() -> new IllegalStateException("진행 중인 시즌이 없습니다."));
-
-        RestTemplate restTemplate = new RestTemplate();
+        
         // 2) 현재 시장가 조회
         String url = tickerUrl.replace("{symbol}", req.getSymbol());
         ResponseEntity<List<Map<String,Object>>> resp = restTemplate.exchange(
