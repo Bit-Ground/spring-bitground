@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/notices")
+@RequestMapping("/notices")
 @RequiredArgsConstructor
 public class NoticeController {
     private final NoticeService noticeService;
