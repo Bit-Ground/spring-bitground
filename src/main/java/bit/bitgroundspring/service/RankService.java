@@ -58,7 +58,69 @@ public class RankService {
                     .map(r -> r.getTier())
                     .collect(Collectors.toList());
 
-            Integer highestTier = rankRepository.findHighestTierByUser(user);
+            Integer highestTier = rankRepository.findHighestTierByUserExcludingSeason(user, currentSeasonName);
+
+            int initialCash = 10_000_000;
+            int totalValue = proj.getTotalValue();
+            int currentReturnRate = (int) (((double)(totalValue - initialCash) / initialCash) * 100);
+
+            return RankingDto.builder()
+                    .userId(proj.getUserId())
+                    .seasonId(proj.getSeasonId())
+                    .name(proj.getName())
+                    .profileImage(proj.getProfileImage())
+                    .ranks(proj.getRanks())
+                    .tier(proj.getTier())
+                    .totalValue(totalValue)
+                    .pastTiers(pastTiers)
+                    .highestTier(highestTier)
+                    .currentReturnRate(currentReturnRate)
+                    .pastSeasonTiers(pastSeasonTiers)
+                    .updatedAt(proj.getUpdatedAt())
+                    .currentSeasonName(currentSeasonName)
+                    .build();
+        }).collect(Collectors.toList());
+    }
+    //BoardSErvice 용
+    public int getHighestTierByUserId(Integer userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found: " + userId));
+
+        String currentSeasonName = rankRepository.findCurrentSeasonRankings().stream()
+                .findFirst()
+                .map(RankProjection::getSeasonName)
+                .orElse(null);
+
+        Integer tier = rankRepository.findHighestTierByUserExcludingSeason(user, currentSeasonName);
+
+        return tier != null ? tier : 0;
+    }
+
+    //과거시즌툴팁용
+    public List<RankingDto> getSeasonRankingDtos(int seasonId) {
+        List<RankProjection> projections = rankRepository.findRankingsBySeasonId(seasonId);
+
+        String currentSeasonName = rankRepository.findCurrentSeasonRankings().stream()
+                .findFirst()
+                .map(RankProjection::getSeasonName)
+                .orElse(null);
+
+        return projections.stream().map(proj -> {
+            User user = userRepository.findById(proj.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found: " + proj.getUserId()));
+
+            List<PastSeasonTierDto> pastSeasonTiers = rankRepository.findTop5ByUserWithSeason(user).stream()
+                    .filter(r -> !r.getSeason().getName().equals(currentSeasonName))
+                    .map(r -> new PastSeasonTierDto(r.getSeason().getName(), r.getTier()))
+                    .limit(5)
+                    .collect(Collectors.toList());
+
+            List<Integer> pastTiers = rankRepository.findTop5ByUserOrderBySeasonIdDesc(user).stream()
+                    .map(r -> r.getTier())
+                    .collect(Collectors.toList());
+
+            Integer highestTier = rankRepository.findHighestTierByUserExcludingSeason(user, currentSeasonName);
 
             int initialCash = 10_000_000;
             int totalValue = proj.getTotalValue();

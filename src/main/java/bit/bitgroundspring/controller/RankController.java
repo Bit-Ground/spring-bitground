@@ -38,4 +38,10 @@ public class RankController {
     public ResponseEntity<List<RankingDto>> getCurrentRankDetailed() {
         return ResponseEntity.ok(rankService.getCurrentRankingDtos());
     }
+
+    //과거시즌툴팁용
+    @GetMapping("/{seasonId}/detailed")
+    public ResponseEntity<List<RankingDto>> getPastRankDetailed(@PathVariable Integer seasonId) {
+        return ResponseEntity.ok(rankService.getSeasonRankingDtos(seasonId));
+    }
 }
