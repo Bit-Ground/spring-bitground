@@ -267,8 +267,8 @@ public class OrderService {
     }
     
     //지훈테스트
-    public List<PendingOrderProjection> getPendingOrdersByUserId(Integer userId) {
-        return orderRepository.findPendingReserveOrdersByUserId(userId);
-    }
+//    public List<PendingOrderProjection> getPendingOrdersByUserId(Integer userId) {
+//        return orderRepository.findPendingReserveOrdersByUserId(userId);
+//    }
 
 }

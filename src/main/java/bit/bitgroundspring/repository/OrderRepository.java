@@ -93,4 +93,5 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     """)
     Integer calculateTotalReservePriceForBuyOrdersByUserId(@Param("userId") Integer userId);
 
+//    List<PendingOrderProjection> findPendingReserveOrdersByUserId(Integer userId);
 }
