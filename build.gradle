@@ -72,9 +72,6 @@ dependencies {
 
     // Redisson (분산 락용)
     implementation 'org.redisson:redisson-spring-boot-starter:3.24.3'
-
-    // firebase
-    implementation 'com.google.firebase:firebase-admin:9.4.3'
 }
 
 tasks.named('test') {
