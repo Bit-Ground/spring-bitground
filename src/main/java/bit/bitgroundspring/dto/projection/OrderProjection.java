@@ -7,6 +7,7 @@ public interface OrderProjection {
     String getCoinName();       // coin 테이블
     Double getAmount();         // orders 테이블
     Double getTradePrice();     // orders 테이블
+    String getStatus();
     LocalDateTime getCreatedAt();
     LocalDateTime getUpdatedAt();
     String getOrderType();      // orders 테이블
