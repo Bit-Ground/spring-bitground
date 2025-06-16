@@ -26,7 +26,7 @@ public class AsyncConfig implements AsyncConfigurer {
         executor.setThreadNamePrefix("OrderExecution-");
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.setWaitForTasksToCompleteOnShutdown(true);
-        executor.setAwaitTerminationSeconds(60);
+        executor.setAwaitTerminationSeconds(10);
         executor.initialize();
         return executor;
     }
@@ -40,7 +40,7 @@ public class AsyncConfig implements AsyncConfigurer {
         executor.setThreadNamePrefix("PriceUpdate-");
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.setWaitForTasksToCompleteOnShutdown(true);
-        executor.setAwaitTerminationSeconds(60);
+        executor.setAwaitTerminationSeconds(10);
         executor.initialize();
         return executor;
     }

@@ -78,4 +78,19 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     // 예약 매수 전용
     Optional<Order> findByIdAndStatus(Integer id, Status status);
     
+    // 거래 가능 자산 조회 위한 메서드
+    @Query("""
+        SELECT CAST(ROUND(SUM(o.reservePrice * o.amount)) AS integer)
+        FROM Order o
+        WHERE o.user.id = :userId
+          AND o.status = 'PENDING'
+          AND o.orderType = 'BUY'
+          AND o.season = (
+              SELECT s
+              FROM Season s
+              WHERE s.status = 'PENDING'
+          )
+    """)
+    Integer calculateTotalReservePriceForBuyOrdersByUserId(@Param("userId") Integer userId);
+    
 }

@@ -22,7 +22,6 @@ public class ReservedOrderController {
             ) {
         // JWT 토큰에서 사용자 ID 추출
         Integer userId = authService.getUserIdFromToken(jwtToken);
-        System.out.println(createOrderRequest.getReservePrice());
         createOrderRequest.setUserId(userId);
         // 예약 주문 처리
         orderService.createReserveOrder(createOrderRequest);
