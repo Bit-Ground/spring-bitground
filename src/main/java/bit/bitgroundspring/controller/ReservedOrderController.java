@@ -1,6 +1,7 @@
 package bit.bitgroundspring.controller;
 
 import bit.bitgroundspring.dto.CreateOrderRequest;
+import bit.bitgroundspring.entity.Order;
 import bit.bitgroundspring.security.oauth2.AuthService;
 import bit.bitgroundspring.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class ReservedOrderController {
     private final AuthService authService;
     
     @PostMapping
-    public ResponseEntity<?> placeReservedOrder(
+    public ResponseEntity<Order> placeReservedOrder(
             @CookieValue(value = "jwt_token", required = false) String jwtToken,
             @RequestBody CreateOrderRequest createOrderRequest
             ) {
@@ -24,8 +25,8 @@ public class ReservedOrderController {
         Integer userId = authService.getUserIdFromToken(jwtToken);
         createOrderRequest.setUserId(userId);
         // 예약 주문 처리
-        orderService.createReserveOrder(createOrderRequest);
+        Order reserveOrder = orderService.createReserveOrder(createOrderRequest);
         
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(reserveOrder);
     }
 }
