@@ -1,4 +1,4 @@
-// bit/bitgroundspring/repository/UserDailyBalanceRepository.java
+// src/main/java/bit/bitgroundspring/repository/UserDailyBalanceRepository.java
 
 package bit.bitgroundspring.repository;
 
@@ -8,7 +8,7 @@ import bit.bitgroundspring.entity.UserDailyBalance;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;   // LocalDate 임포트
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +27,17 @@ public interface UserDailyBalanceRepository extends JpaRepository<UserDailyBalan
     Optional<UserDailyBalance> findByUserAndSeasonAndSnapshotDate(User user, Season season, LocalDate snapshotDate);
 
     /**
+     * 특정 사용자 및 스냅샷 날짜에 해당하는 일일 잔고 스냅샷을 조회합니다.
+     * 이 메서드는 UserDailyBalance에 Season 정보가 없거나,
+     * 특정 날짜에 대한 User의 총 잔고만 필요한 경우에 사용될 수 있습니다.
+     *
+     * @param user 조회할 User 엔티티
+     * @param snapshotDate 조회할 스냅샷 날짜
+     * @return 해당 UserDailyBalance 엔티티 (존재할 경우)
+     */
+    Optional<UserDailyBalance> findByUserAndSnapshotDate(User user, LocalDate snapshotDate); // 추가된 메서드
+
+    /**
      * 특정 사용자 및 시즌에 대해 지정된 기간 내의 모든 일별 잔고 스냅샷을 조회합니다.
      *
      * @param user 조회할 User 엔티티
@@ -36,13 +47,4 @@ public interface UserDailyBalanceRepository extends JpaRepository<UserDailyBalan
      * @return 기간 내의 UserDailyBalance 엔티티 목록 (snapshotDate 오름차순 정렬)
      */
     List<UserDailyBalance> findByUserAndSeasonAndSnapshotDateBetweenOrderBySnapshotDateAsc(User user, Season season, LocalDate start, LocalDate end);
-
-    /**
-     * 특정 사용자 및 시즌에 대해 가장 최근의 일별 잔고 스냅샷을 조회합니다.
-     *
-     * @param user 조회할 User 엔티티
-     * @param season 조회할 Season 엔티티
-     * @return 가장 최근의 UserDailyBalance 엔티티 (존재할 경우)
-     */
-    Optional<UserDailyBalance> findTopByUserAndSeasonOrderBySnapshotDateDesc(User user, Season season);
 }

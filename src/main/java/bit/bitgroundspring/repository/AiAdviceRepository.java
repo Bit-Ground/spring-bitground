@@ -21,14 +21,4 @@ public interface AiAdviceRepository extends JpaRepository<AiAdvice, Integer> {
      * @return 해당 AiAdvice 엔티티 (존재할 경우)
      */
     Optional<AiAdvice> findByUserAndSeason(User user, Season season);
-
-    /**
-     * 사용자 ID와 시즌 ID를 사용하여 AI 조언을 조회합니다.
-     * API 엔드포인트에서 ID를 받아 직접 조회할 때 유용합니다.
-     *
-     * @param userId 조회할 사용자의 ID
-     * @param seasonId 조회할 시즌의 ID
-     * @return 해당 AiAdvice 엔티티 (존재할 경우)
-     */
-    Optional<AiAdvice> findByUser_IdAndSeason_Id(Integer userId, Integer seasonId);
 }

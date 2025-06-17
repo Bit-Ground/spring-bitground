@@ -1,36 +1,43 @@
 // src/main/java/bit/bitgroundspring/service/InvestmentAnalysisService.java
-
 package bit.bitgroundspring.service;
 
 import bit.bitgroundspring.dto.InvestmentSummaryDto;
 import bit.bitgroundspring.entity.*;
 import bit.bitgroundspring.repository.OrderRepository;
-import bit.bitgroundspring.repository.RankRepository; // UserRankingRepository로 변경 권장
-import bit.bitgroundspring.repository.UserRepository; // User 엔티티 조회용
-import bit.bitgroundspring.repository.SeasonRepository; // Season 엔티티 조회용
-import bit.bitgroundspring.util.InitialCashUtil; // InitialCashUtil 임포트
+import bit.bitgroundspring.repository.RankRepository;
+import bit.bitgroundspring.repository.UserRepository;
+import bit.bitgroundspring.repository.SeasonRepository;
+import bit.bitgroundspring.repository.UserDailyBalanceRepository; // UserDailyBalanceRepository 임포트
+import bit.bitgroundspring.repository.CoinPriceHistoryRepository; // CoinPriceHistoryRepository 임포트
+import bit.bitgroundspring.repository.CoinRepository; // CoinRepository 임포트
+import bit.bitgroundspring.util.InitialCashUtil;
 
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate; // LocalDate 임포트
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j // 로깅을 위한 Lombok 어노테이션
+@Slf4j
 public class InvestmentAnalysisService {
 
     private final OrderRepository orderRepository;
-    private final RankRepository userRankingRepository; // RankRepository 대신 UserRankingRepository 사용 권장
-    private final UserRepository userRepository; // User 엔티티를 찾기 위해 추가
-    private final SeasonRepository seasonRepository; // Season 엔티티를 찾기 위해 추가
-    private final InitialCashUtil initialCashUtil; // InitialCashUtil 주입
+    private final RankRepository userRankingRepository;
+    private final UserRepository userRepository;
+    private final SeasonRepository seasonRepository;
+    private final InitialCashUtil initialCashUtil;
+    private final UserDailyBalanceRepository userDailyBalanceRepository;
+    private final CoinPriceHistoryRepository coinPriceHistoryRepository; // ✅ 추가: CoinPriceHistoryRepository 주입
+    private final CoinRepository coinRepository; // ✅ 추가: CoinRepository 주입
 
     /**
      * 특정 사용자 및 시즌에 대한 투자 요약 데이터를 생성합니다.
@@ -39,6 +46,7 @@ public class InvestmentAnalysisService {
      * @param userId 분석할 사용자의 ID
      * @param seasonId 분석할 시즌의 ID
      * @return InvestmentSummaryDto DTO (분석 결과 요약)
+     * @throws IllegalArgumentException 사용자를 찾을 수 없거나 시즌을 찾을 수 없는 경우
      */
     public InvestmentSummaryDto getUserInvestmentSummaryForSeason(Integer userId, Integer seasonId) {
         User user = userRepository.findById(userId)
@@ -46,30 +54,26 @@ public class InvestmentAnalysisService {
         Season season = seasonRepository.findById(seasonId)
                 .orElseThrow(() -> new IllegalArgumentException("Season not found with ID: " + seasonId));
 
+        log.info("사용자 ID: {}, 시즌 ID: {}에 대한 투자 요약 계산 시작.", user.getId(), season.getId());
+
         // 1. 시즌 전체 성과 지표 로딩 및 계산
-        UserRanking userRanking = userRankingRepository.findByUserAndSeason(user, season)
-                .orElse(null); // 해당 시즌의 랭킹이 없을 수도 있음
+        Optional<UserRanking> userRankingOptional = userRankingRepository.findByUserAndSeason(user, season);
+        UserRanking userRanking = userRankingOptional.orElse(null);
 
-        // finalTotalValue는 UserRanking에서 Integer로 가져오며, DTO에도 Integer로 전달
         Integer finalTotalValue = (userRanking != null && userRanking.getTotalValue() != null)
-                ? userRanking.getTotalValue() // Integer totalValue를 그대로 사용
-                : 0; // Integer 기본값
+                ? userRanking.getTotalValue()
+                : 0;
 
-        // InitialCashUtil에서 가져온 값은 Double이므로 Integer로 변환
-        Integer initialCashBalance = (int) initialCashUtil.getInitialCash(); // Double -> Integer로 변환
+        Integer initialCashBalance = initialCashUtil.getInitialCash();
 
-        // 총 손익 금액 계산 (Integer)
         Integer totalProfitLossAmount = finalTotalValue - initialCashBalance;
 
-        // 총 수익률 계산 (Float으로 형변환하여 소수점 계산)
         Float totalProfitLossPercentage = 0.0F;
-        // initialCashBalance가 0이 아닌 경우에만 수익률 계산
         if (initialCashBalance != 0) {
             totalProfitLossPercentage = ((float) totalProfitLossAmount / initialCashBalance) * 100.0F;
         }
 
         // 2. 거래 활동 요약 (Order 엔티티 기반)
-        // 해당 시즌의 완료된 주문만 조회 (PENDING 상태는 제외)
         List<Order> completedOrders = orderRepository.findByUserAndSeasonAndStatus(
                 user, season, Status.COMPLETED);
 
@@ -81,16 +85,13 @@ public class InvestmentAnalysisService {
                 .filter(order -> order.getOrderType() == OrderType.SELL)
                 .count();
 
-        // 평균 거래 금액 계산 (Order의 tradePrice와 amount는 Float/Double이므로, 결과는 Float 유지)
         Float totalTradeValueSum = completedOrders.stream()
-                .map(order -> (float) (order.getTradePrice() * order.getAmount()))
+                .map(order -> (float)(order.getTradePrice() * order.getAmount()))
                 .reduce(0.0F, Float::sum);
         Float avgTradeAmount = (totalTradeCount > 0)
                 ? totalTradeValueSum / totalTradeCount
                 : 0.0F;
 
-        // 시즌 동안의 총 실현 손익 및 코인별 실현 손익 계산 (단순화된 현금 흐름 기반)
-        // Order의 tradePrice와 amount는 Float/Double이므로, 결과는 Float 유지
         Float totalRealizedProfitLoss = 0.0F;
         Map<String, Float> coinRealizedProfitLoss = new HashMap<>();
 
@@ -117,14 +118,13 @@ public class InvestmentAnalysisService {
             totalRealizedProfitLoss += currentCoinPL;
         }
 
-        // 코인별 거래 횟수
         Map<String, Integer> coinTradeCounts = completedOrders.stream()
                 .collect(Collectors.groupingBy(order -> order.getCoin().getSymbol(),
                         Collectors.summingInt(order -> 1)));
 
         // 3. 투자 성향 관련 지표 (Order 엔티티 기반 심화 분석)
         String mostTradedCoinSymbol = null;
-        Float mostTradedCoinTradeVolume = 0.0F; // Float 유지
+        Float mostTradedCoinTradeVolume = 0.0F;
         if (!completedOrders.isEmpty()) {
             Map<String, Float> coinVolumes = new HashMap<>();
             for (Order order : completedOrders) {
@@ -140,7 +140,6 @@ public class InvestmentAnalysisService {
             mostTradedCoinTradeVolume = coinVolumes.getOrDefault(mostTradedCoinSymbol, 0.0F);
         }
 
-        // 가장 수익/손실 많이 낸 코인 (coinRealizedProfitLoss 맵 활용) - Float 유지
         String highestProfitCoinSymbol = null;
         Float highestProfitCoinAmount = 0.0F;
         String lowestProfitCoinSymbol = null;
@@ -160,24 +159,68 @@ public class InvestmentAnalysisService {
             lowestProfitCoinAmount = coinRealizedProfitLoss.getOrDefault(lowestProfitCoinSymbol, 0.0F);
         }
 
-        // 하루 평균 거래 횟수
-        long seasonDurationDays = ChronoUnit.DAYS.between(season.getStartAt(), season.getEndAt().plusDays(1)); // endAt 포함
+        long seasonDurationDays = ChronoUnit.DAYS.between(season.getStartAt(), season.getEndAt().plusDays(1));
         Double avgTradesPerDay = (seasonDurationDays > 0)
                 ? (double) totalTradeCount / seasonDurationDays
                 : (totalTradeCount > 0 ? (double)totalTradeCount : 0.0);
 
-        // 소수 코인에 집중했는지 여부
         Boolean focusedOnFewCoins = false;
         if (totalTradeCount > 0) {
             long distinctCoinsTraded = completedOrders.stream()
                     .map(order -> order.getCoin().getSymbol())
                     .distinct()
                     .count();
+            // 전체 거래 중 3개 이하의 코인에 집중했을 경우 true
             if (distinctCoinsTraded <= 3 && totalTradeCount > 0) {
                 focusedOnFewCoins = true;
             }
         }
 
+        // 4. 일별 자산 잔고 추이 데이터 조회 및 추가
+        List<UserDailyBalance> dailyBalanceTrend = userDailyBalanceRepository
+                .findByUserAndSeasonAndSnapshotDateBetweenOrderBySnapshotDateAsc(
+                        user, season, season.getStartAt(), season.getEndAt()
+                );
+
+        // ⭐⭐⭐ 새로 추가되는 로직: 주요 코인들의 시즌 내 시세 변동 요약 (새로운 Repository 메서드 사용) ⭐⭐⭐
+        Map<String, String> coinMarketPerformanceSummary = new HashMap<>();
+        List<String> keyCoinSymbols = new java.util.ArrayList<>();
+        if (mostTradedCoinSymbol != null) keyCoinSymbols.add(mostTradedCoinSymbol);
+        if (highestProfitCoinSymbol != null && !keyCoinSymbols.contains(highestProfitCoinSymbol)) keyCoinSymbols.add(highestProfitCoinSymbol);
+        if (lowestProfitCoinSymbol != null && !keyCoinSymbols.contains(lowestProfitCoinSymbol)) keyCoinSymbols.add(lowestProfitCoinSymbol);
+
+        for (String symbol : keyCoinSymbols) {
+            Optional<Coin> coinOptional = coinRepository.findBySymbol(symbol);
+            if (coinOptional.isPresent()) {
+                Coin coin = coinOptional.get();
+
+                // 시즌 시작일의 시가: 해당 날짜의 가장 이른 시간 데이터의 openPrice
+                List<CoinPriceHistory> startDayPrices = coinPriceHistoryRepository.findByCoinAndDateOrderByHourAsc(coin, season.getStartAt());
+                Float startPrice = startDayPrices.isEmpty() ? null : startDayPrices.get(0).getOpenPrice();
+
+                // 시즌 종료일의 종가: 해당 날짜의 가장 늦은 시간 데이터의 closePrice
+                List<CoinPriceHistory> endDayPrices = coinPriceHistoryRepository.findByCoinAndDateOrderByHourDesc(coin, season.getEndAt());
+                Float endPrice = endDayPrices.isEmpty() ? null : endDayPrices.get(0).getClosePrice();
+
+                if (startPrice != null && endPrice != null && startPrice != 0) {
+                    String performanceSummary = String.format(
+                            "초기 %.2f원 -> 최종 %.2f원 (변동률: %.2f%%)",
+                            startPrice,
+                            endPrice,
+                            ((endPrice - startPrice) / startPrice) * 100
+                    );
+                    coinMarketPerformanceSummary.put(symbol, performanceSummary);
+                } else {
+                    log.warn("코인 {}의 시즌 시작/종료 가격 데이터를 찾을 수 없거나 시작 가격이 0입니다. (시즌 기간: {} ~ {})",
+                            symbol, season.getStartAt(), season.getEndAt());
+                }
+            } else {
+                log.warn("코인 심볼 {}에 해당하는 Coin 엔티티를 찾을 수 없습니다.", symbol);
+            }
+        }
+
+
+        // 6. 모든 정보를 포함하는 InvestmentSummaryDto 빌드
         return InvestmentSummaryDto.builder()
                 .userId(user.getId())
                 .userName(user.getName())
@@ -185,10 +228,10 @@ public class InvestmentAnalysisService {
                 .seasonName(season.getName())
                 .seasonStartAt(season.getStartAt())
                 .seasonEndAt(season.getEndAt())
-                .initialCashBalance(initialCashBalance) // Integer 값 전달
-                .finalTotalValue(finalTotalValue)    // Integer 값 전달
-                .totalProfitLossAmount(totalProfitLossAmount) // Integer 값 전달
-                .totalProfitLossPercentage(totalProfitLossPercentage) // Float 값 전달
+                .initialCashBalance(initialCashBalance)
+                .finalTotalValue(finalTotalValue)
+                .totalProfitLossAmount(totalProfitLossAmount)
+                .totalProfitLossPercentage(totalProfitLossPercentage)
                 .finalRank((userRanking != null && userRanking.getRanks() != null) ? userRanking.getRanks() : null)
                 .totalTradeCount(totalTradeCount)
                 .buyOrderCount(buyOrderCount)
@@ -205,6 +248,8 @@ public class InvestmentAnalysisService {
                 .lowestProfitCoinAmount(lowestProfitCoinAmount)
                 .avgTradesPerDay(avgTradesPerDay)
                 .focusedOnFewCoins(focusedOnFewCoins)
+                .dailyBalanceTrend(dailyBalanceTrend)
+                .coinMarketPerformanceSummary(coinMarketPerformanceSummary) // ✅ 새로 추가된 필드 설정
                 .build();
     }
 }
