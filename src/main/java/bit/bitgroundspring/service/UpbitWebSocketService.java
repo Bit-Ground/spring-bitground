@@ -3,15 +3,12 @@ package bit.bitgroundspring.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PreDestroy;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.task.AsyncTaskExecutor;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,14 +24,11 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -238,54 +232,24 @@ public class UpbitWebSocketService {
         }
         
         private void processTickerMessage(String jsonString) {
-            // 종료 중이면 처리하지 않음
             if (isShuttingDown.get()) {
                 return;
             }
-            
+
             try {
                 JsonNode tickerData = objectMapper.readTree(jsonString);
-                
+
                 if (!tickerData.has("cd") || !tickerData.has("tp")) {
                     return;
                 }
-                
+
                 String symbol = tickerData.get("cd").asText();
-                JsonNode tpNode = tickerData.get("tp");
+                double price = tickerData.get("tp").asDouble();
                 
-                if (symbol == null || symbol.trim().isEmpty() || tpNode.isNull()) {
-                    return;
+                if (symbol != null && !symbol.trim().isEmpty() && price > 0) {
+                    // 변경: 개선된 updatePrice 메서드 호출
+                    priceUpdateService.updatePrice(symbol, price);
                 }
-                
-                double price = tpNode.asDouble();
-                if (price <= 0) {
-                    return;
-                }
-                
-                // Redis 연결 상태 확인 후 저장 (종료 중이 아닐 때만)
-                if (!isShuttingDown.get()) {
-                    try {
-                        redisTemplate.opsForValue().set("price:" + symbol, String.valueOf(price),
-                                Duration.ofMinutes(5));
-                    } catch (Exception e) {
-                        // Redis 연결이 끊어진 경우 로그만 남기고 계속 진행
-                        if (!isShuttingDown.get()) {
-                            log.debug("Failed to save price to Redis for symbol {}: {}", symbol, e.getMessage());
-                        }
-                    }
-                }
-                
-                // 주문 실행 체크 (종료 중이 아닐 때만)
-                if (!isShuttingDown.get()) {
-                    try {
-                        priceUpdateService.checkAndExecuteOrdersAsync(symbol, price);
-                    } catch (Exception e) {
-                        if (!isShuttingDown.get()) {
-                            log.error("Failed to check and execute orders for symbol {}", symbol, e);
-                        }
-                    }
-                }
-                
             } catch (Exception e) {
                 if (!isShuttingDown.get()) {
                     log.error("Failed to process ticker message: {}", jsonString, e);

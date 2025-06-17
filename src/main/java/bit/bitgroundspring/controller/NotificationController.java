@@ -19,19 +19,16 @@ public class NotificationController {
     private final UserSseEmitters userSseEmitters;
     private final AuthService authService;
     
+    private static final Long SSE_TIMEOUT = 30 * 60 * 1000L; // 30분
+    
     // 사용자별 SSE 구독 엔드포인트
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribe(@CookieValue(name = "jwt_token", required = false) String jwtToken) {
         // JWT 토큰에서 사용자 ID 추출
         Integer userId = authService.getUserIdFromToken(jwtToken);
         
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE); // 무제한 대기 시간 설정
+        SseEmitter emitter = new SseEmitter(SSE_TIMEOUT);
         userSseEmitters.addUser(userId, emitter);
-        
-        // 연결 종료 시 정리
-        emitter.onCompletion(() -> userSseEmitters.removeUser(userId, emitter));
-        emitter.onTimeout(() -> userSseEmitters.removeUser(userId, emitter));
-        emitter.onError((e) -> userSseEmitters.removeUser(userId, emitter));
         
         return emitter;
     }
