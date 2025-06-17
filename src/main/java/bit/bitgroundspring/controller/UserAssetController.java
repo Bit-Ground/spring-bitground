@@ -1,6 +1,7 @@
 package bit.bitgroundspring.controller;
 
 import bit.bitgroundspring.dto.projection.UserAssetProjection;
+import bit.bitgroundspring.dto.response.UserAssetOwnedResponseDto;
 import bit.bitgroundspring.dto.response.UserAssetResponse;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.repository.UserRepository;
@@ -38,15 +39,16 @@ public class UserAssetController {
 
     //투자내역 보유자산
     @GetMapping("/owned")
-    public ResponseEntity<UserAssetResponse> getOwnedAssets(
+    public ResponseEntity<UserAssetOwnedResponseDto> getOwnedAssets(
             @CookieValue(value = "jwt_token", required = false) String jwtToken) {
 
         Integer userId = authService.getUserIdFromToken(jwtToken);
 
         List<UserAssetProjection> assets = assetService.getOnlyUserAssets(userId);
         Integer cash = userService.getCashByUserId(userId); // 💡 이거 미리 구현해놔야 해
+        Integer availableCash = assetService.getAvailableCash(userId);
 
-        UserAssetResponse response = new UserAssetResponse(cash, assets);
+        UserAssetOwnedResponseDto response = new UserAssetOwnedResponseDto(cash, assets, availableCash);
         return ResponseEntity.ok(response);
     }
 
