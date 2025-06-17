@@ -29,7 +29,7 @@ public class OrderController {
         Integer userId = authService.getUserIdFromToken(jwtToken); // ✅ 로그인한 사용자만
         return orderService.getOrdersBySeason(seasonId, userId);
     }
-
+    
     @GetMapping("/reserve")
     public ResponseEntity<List<OrderDto>> getReserveOrders(
             @CookieValue("jwt_token") String jwtToken) {
@@ -46,6 +46,16 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
+    //삭제
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<?> cancelReserveOrder(
+            @PathVariable Integer orderId,
+            @CookieValue("jwt_token") String jwtToken) {
+
+        Integer userId = authService.getUserIdFromToken(jwtToken);
+        orderService.cancelOrder(orderId, userId);
+        return ResponseEntity.ok().build();
+    }
 
 
 }
