@@ -4,7 +4,6 @@ import bit.bitgroundspring.dto.*;
 import bit.bitgroundspring.dto.projection.OrderProjection;
 import bit.bitgroundspring.entity.*;
 import bit.bitgroundspring.repository.OrderRepository;
-import bit.bitgroundspring.repository.PendingOrderProjection;
 import bit.bitgroundspring.repository.SeasonRepository;
 import bit.bitgroundspring.security.oauth2.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -265,10 +264,30 @@ public class OrderService {
             log.error("Failed to remove order from Redis: {}", order.getId(), e);
         }
     }
-    
-    //지훈테스트
-//    public List<PendingOrderProjection> getPendingOrdersByUserId(Integer userId) {
-//        return orderRepository.findPendingReserveOrdersByUserId(userId);
-//    }
+
+    //미체결
+    public List<OrderDto> getPendingOrders(Integer userId, Integer seasonId) {
+        List<Order> orders = orderRepository.findPendingOrdersByUserAndSeason(userId, seasonId);
+        return orders.stream().map(o ->
+                new OrderDto(
+                        o.getCoin().getSymbol(),
+                        o.getCoin().getKoreanName(),
+                        o.getAmount(),
+                        o.getTradePrice(),
+                        o.getReservePrice(),
+                        o.getCreatedAt(),
+                        o.getUpdatedAt(),
+                        o.getOrderType().name()
+                )
+        ).toList();
+    }
+
+    // 현재 시즌 ID 반환
+    public Integer getCurrentSeasonId() {
+        return seasonRepository.findByStatus(Status.PENDING)
+                .orElseThrow(() -> new IllegalStateException("진행 중인 시즌이 없습니다."))
+                .getId();
+    }
+
 
 }

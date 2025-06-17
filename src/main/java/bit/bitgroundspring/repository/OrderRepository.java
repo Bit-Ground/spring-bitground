@@ -93,5 +93,11 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     """)
     Integer calculateTotalReservePriceForBuyOrdersByUserId(@Param("userId") Integer userId);
 
-//    List<PendingOrderProjection> findPendingReserveOrdersByUserId(Integer userId);
+    //미체결
+    @Query("SELECT o FROM Order o " +
+            "JOIN FETCH o.coin " +
+            "WHERE o.user.id = :userId AND o.season.id = :seasonId AND o.status = bit.bitgroundspring.entity.Status.PENDING")
+    List<Order> findPendingOrdersByUserAndSeason(@Param("userId") Integer userId,
+                                                 @Param("seasonId") Integer seasonId);
+
 }

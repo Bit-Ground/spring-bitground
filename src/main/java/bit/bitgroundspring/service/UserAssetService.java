@@ -52,4 +52,11 @@ public class UserAssetService {
         return new UserAssetResponse(cash, userAssets);
     }
 
+    //투자내역 보유자산목록
+    public List<UserAssetProjection> getOnlyUserAssets(Integer userId) {
+        return userAssetRepository.findByUserId(userId);
+    }
+
+
+
 }
