@@ -4,6 +4,7 @@ import bit.bitgroundspring.dto.response.Message;
 import bit.bitgroundspring.dto.response.MessageType;
 import bit.bitgroundspring.dto.response.NotificationResponse;
 import bit.bitgroundspring.entity.*;
+import bit.bitgroundspring.event.OrderCreatedEvent;
 import bit.bitgroundspring.repository.CoinRepository;
 import bit.bitgroundspring.repository.OrderRepository;
 import bit.bitgroundspring.repository.UserAssetRepository;
@@ -13,6 +14,7 @@ import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ public class OrderExecutionService {
     private final UserSseEmitters userSseEmitters;
     private final UserRepository userRepository;
     private final UserAssetRepository userAssetRepository;
+    private final ApplicationEventPublisher eventPublisher;
     
     @Value("${upbit.order.execution.queue}")
     private String executionQueueName;
@@ -103,6 +106,7 @@ public class OrderExecutionService {
             order.setUpdatedAt(LocalDateTime.now());
             
             orderRepository.save(order);
+            eventPublisher.publishEvent(new OrderCreatedEvent(this, order));
             
             int userId = order.getUser().getId();
             OrderType orderType = order.getOrderType();
@@ -156,7 +160,7 @@ public class OrderExecutionService {
                 @Override
                 public void afterCommit() {
                     // 이 블록은 트랜잭션이 성공적으로 DB에 커밋된 후에만 호출됩니다.
-                    sendSseNotification(order);
+                    sendSseNotification(order, symbol);
                 }
             });
             
@@ -171,7 +175,7 @@ public class OrderExecutionService {
     /**
      * SSE 알림 전송을 담당하는 별도의 public 메서드 (트랜잭션과 무관)
      */
-    public void sendSseNotification(Order order) {
+    public void sendSseNotification(Order order, String symbol) {
         try {
             int userId = order.getUser().getId();
             int finalCash = userRepository.findById(userId)
@@ -180,7 +184,7 @@ public class OrderExecutionService {
             
             Map<String, Object> data = Map.of(
                     "orderType", order.getOrderType().name(),
-                    "symbol", order.getCoin().getSymbol(),
+                    "symbol", symbol,
                     "amount", order.getAmount(),
                     "tradePrice", order.getTradePrice().floatValue(),
                     "cash", finalCash
