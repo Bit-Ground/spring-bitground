@@ -37,4 +37,8 @@ public class Notification {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
     private LocalDateTime createdAt;
+    
+    @Column(name = "is_read", columnDefinition = "tinyint(1) default 0")
+    @Builder.Default
+    private Boolean isRead = false;
 }

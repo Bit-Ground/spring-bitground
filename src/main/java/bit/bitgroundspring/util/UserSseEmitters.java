@@ -93,7 +93,7 @@ public class UserSseEmitters {
         cleanupDeadWrappers(userId, deadWrappers);
         
         // 비동기 알림 저장
-        if (hasSuccessfulSend) {
+        if (hasSuccessfulSend && (data.getMessage() == Message.ORDER_EXECUTION || data.getMessage() == Message.INQUIRY_UPDATE)) {
             CompletableFuture.runAsync(() -> saveNotification(userId, data, data.getMessage()));
         }
         
