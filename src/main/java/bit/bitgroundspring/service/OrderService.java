@@ -314,6 +314,7 @@ public class OrderService {
         List<Order> orders = orderRepository.findPendingOrdersByUserAndSeason(userId, seasonId);
         return orders.stream().map(o ->
                 new OrderDto(
+                        o.getId(),
                         o.getCoin().getSymbol(),
                         o.getCoin().getKoreanName(),
                         o.getAmount(),

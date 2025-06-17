@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class OrderDto {
+    private Integer id;
     private String symbol;
     private String koreanName;
     private Double amount;

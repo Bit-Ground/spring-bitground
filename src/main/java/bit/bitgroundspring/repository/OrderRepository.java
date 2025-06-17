@@ -21,13 +21,15 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("SELECT o FROM Order o JOIN FETCH o.coin WHERE o.user = :user AND o.season = :season")
     List<Order> findByUserAndSeason(@Param("user") User user, @Param("season") Season season);
 
-    @Query("SELECT c.symbol AS symbol, c.koreanName AS coinName, " +
+    @Query("SELECT o.id AS id, " +  // ✅ 추가
+            "c.symbol AS symbol, c.koreanName AS coinName, " +
             "o.amount AS amount, o.tradePrice AS tradePrice, " +
-            "o.status AS status, " +  // ✅ 이 줄 추가!
-            "o.createdAt AS createdAt, o.updatedAt AS updatedAt, " +
+            "o.reservePrice AS reservePrice, " +  // 필요 시 추가
+            "o.status AS status, o.createdAt AS createdAt, o.updatedAt AS updatedAt, " +
             "o.orderType AS orderType " +
             "FROM Order o JOIN o.coin c WHERE o.user.id = :userId AND o.season.id = :seasonId")
     List<OrderProjection> findBySeasonIdAndUserId(@Param("seasonId") Integer seasonId, @Param("userId") Integer userId);
+
 
 
     @Query(
