@@ -15,7 +15,7 @@ public class ReservedOrderController {
     
     private final OrderService orderService;
     private final AuthService authService;
-    
+
     @PostMapping
     public ResponseEntity<Order> placeReservedOrder(
             @CookieValue(value = "jwt_token", required = false) String jwtToken,
@@ -29,4 +29,6 @@ public class ReservedOrderController {
         
         return ResponseEntity.ok(reserveOrder);
     }
+
+
 }

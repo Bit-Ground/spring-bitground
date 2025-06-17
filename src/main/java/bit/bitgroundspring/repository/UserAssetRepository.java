@@ -51,4 +51,16 @@ public interface UserAssetRepository extends JpaRepository<UserAsset, Integer> {
     END > 0
     """)
     List<UserAssetProjection> findUserAssetsWithAvailableAmount(@Param("userId") Integer userId);
+
+    // 전체 보유 자산 조회용 projection 쿼리
+    @Query("""
+    SELECT 
+        ua.coin.symbol as symbol,
+        ua.coin.koreanName as coinName,
+        ua.amount as amount,
+        ua.avgPrice as avgPrice
+    FROM UserAsset ua
+    WHERE ua.user.id = :userId
+    """)
+    List<UserAssetProjection> findByUserId(@Param("userId") Integer userId);
 }

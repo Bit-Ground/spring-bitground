@@ -23,12 +23,12 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query("SELECT c.symbol AS symbol, c.koreanName AS coinName, " +
             "o.amount AS amount, o.tradePrice AS tradePrice, " +
-            "o.createdAt AS createdAt, o.updatedAt AS updatedAt, o.orderType AS orderType " +
-            "FROM Order o JOIN o.coin c " +
-            "WHERE o.season.id = :seasonId AND o.user.id = :userId")
-    List<OrderProjection> findBySeasonIdAndUserId(
-            @Param("seasonId") Integer seasonId,
-            @Param("userId") Integer userId);
+            "o.status AS status, " +  // ✅ 이 줄 추가!
+            "o.createdAt AS createdAt, o.updatedAt AS updatedAt, " +
+            "o.orderType AS orderType " +
+            "FROM Order o JOIN o.coin c WHERE o.user.id = :userId AND o.season.id = :seasonId")
+    List<OrderProjection> findBySeasonIdAndUserId(@Param("seasonId") Integer seasonId, @Param("userId") Integer userId);
+
 
     @Query(
             "SELECT new bit.bitgroundspring.dto.TradeDto( " +
@@ -92,8 +92,16 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
           )
     """)
     Integer calculateTotalReservePriceForBuyOrdersByUserId(@Param("userId") Integer userId);
-    
+
+    //미체결
+    @Query("SELECT o FROM Order o " +
+            "JOIN FETCH o.coin " +
+            "WHERE o.user.id = :userId AND o.season.id = :seasonId AND o.status = bit.bitgroundspring.entity.Status.PENDING")
+    List<Order> findPendingOrdersByUserAndSeason(@Param("userId") Integer userId,
+                                                 @Param("seasonId") Integer seasonId);
+
+
     // pending 상태 주문 조회
     List<Order> findByStatus(Status status);
-    
+
 }

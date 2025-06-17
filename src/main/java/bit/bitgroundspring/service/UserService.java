@@ -136,4 +136,10 @@ public class UserService {
         };
     }
 
+    public Integer getCashByUserId(Integer userId) {
+        return userRepository.findById(userId)
+                .map(user -> user.getCash())
+                .orElse(0);
+    }
+
 }

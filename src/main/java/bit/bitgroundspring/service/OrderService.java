@@ -9,6 +9,7 @@ import bit.bitgroundspring.entity.*;
 import bit.bitgroundspring.repository.CoinRepository;
 import bit.bitgroundspring.repository.OrderRepository;
 import bit.bitgroundspring.repository.SeasonRepository;
+import bit.bitgroundspring.security.oauth2.AuthService;
 import bit.bitgroundspring.repository.UserRepository;
 import bit.bitgroundspring.util.UserSseEmitters;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class OrderService {
     private final CoinRepository coinRepository;
     private final UserSseEmitters userSseEmitters;
     private final UserRepository userRepository;
+    private final AuthService authService;
 
     public List<OrderProjection> getOrdersBySeason(Integer seasonId, Integer userId) {
         return orderRepository.findBySeasonIdAndUserId(seasonId, userId);
@@ -144,7 +146,7 @@ public class OrderService {
         
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        
+
         Coin coin = coinRepository.findBySymbol(request.getSymbol())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid symbol ID"));
         
@@ -193,7 +195,7 @@ public class OrderService {
     private void saveOrderToRedis(Order order, String symbol) {
         try {
             String orderId = String.valueOf(order.getId());
-            
+
             OrderRedisDto orderDto = OrderRedisDto.builder()
                     .id(order.getId())
                     .userId(order.getUser().getId())
@@ -211,7 +213,7 @@ public class OrderService {
                 @Override
                 public Object execute(RedisOperations operations) throws DataAccessException {
                     operations.opsForValue().set("order:" + orderId, orderDto, Duration.ofDays(30));
-                    
+
                     String orderTypeKey = order.getOrderType() == OrderType.BUY ?
                             "buy_orders:" + symbol : "sell_orders:" + symbol;
                     operations.opsForZSet().add(orderTypeKey, orderId, order.getReservePrice());
@@ -270,10 +272,10 @@ public class OrderService {
             log.error("Failed to remove order from Redis: {}", order.getId(), e);
         }
     }
-    
+
     public void seasonUpdate(String seasonFlag) {
         // 대부분의 로직은 go serverless로 처리, 나머지 것들을 수행하자
-        
+
         if (seasonFlag.equals("season")) {
             // redis에 저장된 예약 주문 목록 제거
             List<Order> pendingOrders = orderRepository.findByStatus(Status.PENDING);
@@ -289,12 +291,12 @@ public class OrderService {
                 }
             }
         }
-        
+
         // 사용자에게 시즌 종료 / 스플릿 업데이트 알림 전송
         Season currentSeason = seasonRepository.findByStatus(Status.PENDING)
                 .orElseThrow(() -> new IllegalStateException("진행 중인 시즌이 없습니다."));
         String seasonName = currentSeason.getName();
-        
+
         Map<String, Object> data = Map.of(
                 "seasonName", seasonName,
                 "seasonFlag", seasonFlag
@@ -306,4 +308,30 @@ public class OrderService {
                 .build();
         userSseEmitters.sendToAll(notificationResponse);
     }
+
+    //미체결
+    public List<OrderDto> getPendingOrders(Integer userId, Integer seasonId) {
+        List<Order> orders = orderRepository.findPendingOrdersByUserAndSeason(userId, seasonId);
+        return orders.stream().map(o ->
+                new OrderDto(
+                        o.getCoin().getSymbol(),
+                        o.getCoin().getKoreanName(),
+                        o.getAmount(),
+                        o.getTradePrice(),
+                        o.getReservePrice(),
+                        o.getCreatedAt(),
+                        o.getUpdatedAt(),
+                        o.getOrderType().name()
+                )
+        ).toList();
+    }
+
+    // 현재 시즌 ID 반환
+    public Integer getCurrentSeasonId() {
+        return seasonRepository.findByStatus(Status.PENDING)
+                .orElseThrow(() -> new IllegalStateException("진행 중인 시즌이 없습니다."))
+                .getId();
+    }
+
+
 }
