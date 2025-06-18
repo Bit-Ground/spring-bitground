@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/auth/refresh", "/oauth2/**", "/error", "/favicon.ico", "/test", "/ws/**", "/actuator/*", // 인증, 테스트
                                 "/coins/**", "/coins", "/news", "/market-index/**", "/ai-insights/**", "/public/**", // 공개 API
-                                "/auth/logout").permitAll()
+                                "/auth/logout", "/seasons/update").permitAll()
                         .requestMatchers("/inquiries/*/answer", "/api/docs/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
