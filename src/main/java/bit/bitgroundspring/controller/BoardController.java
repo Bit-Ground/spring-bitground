@@ -2,6 +2,7 @@ package bit.bitgroundspring.controller;
 
 import bit.bitgroundspring.dto.BoardDto;
 import bit.bitgroundspring.dto.PageResponseDto;
+import bit.bitgroundspring.dto.PastSeasonTierDto;
 import bit.bitgroundspring.entity.Post;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -145,9 +147,12 @@ public class BoardController {
                 post.getCategory().name(),
                 post.getViews(),
                 commentCount,
-                hasImage,
-                rankService.getHighestTierByUserId(post.getUser().getId())
+                hasImage
         );
+        // 나머지는 setter로 추가
+        Map<String, Object> tierInfo = rankService.getUserTierDetails(post.getUser().getId());
+        dto.setHighestTier((Integer) tierInfo.get("highestTier"));
+        dto.setPastSeasonTiers((List<PastSeasonTierDto>) tierInfo.get("pastSeasonTiers"));
 
         return ResponseEntity.ok(dto);
     }
