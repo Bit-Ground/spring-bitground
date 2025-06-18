@@ -9,7 +9,9 @@ import bit.bitgroundspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -146,5 +148,30 @@ public class RankService {
                     .currentSeasonName(currentSeasonName)
                     .build();
         }).collect(Collectors.toList());
+    }
+
+    public Map<String, Object> getUserTierDetails(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found: " + userId));
+
+        String currentSeasonName = rankRepository.findCurrentSeasonRankings().stream()
+                .findFirst()
+                .map(RankProjection::getSeasonName)
+                .orElse(null);
+
+        Integer highestTier = (currentSeasonName != null)
+                ? rankRepository.findHighestTierByUserExcludingSeason(user, currentSeasonName)
+                : rankRepository.findHighestTierByUser(user);
+
+        List<PastSeasonTierDto> pastSeasonTiers = rankRepository.findTop5ByUserWithSeason(user).stream()
+                .filter(r -> !r.getSeason().getName().equals(currentSeasonName))
+                .map(r -> new PastSeasonTierDto(r.getSeason().getName(), r.getTier()))
+                .limit(5)
+                .collect(Collectors.toList());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("highestTier", highestTier != null ? highestTier : 0);
+        result.put("pastSeasonTiers", pastSeasonTiers);
+        return result;
     }
 }
