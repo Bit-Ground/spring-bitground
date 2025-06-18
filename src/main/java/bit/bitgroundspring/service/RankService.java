@@ -58,7 +58,9 @@ public class RankService {
                     .map(r -> r.getTier())
                     .collect(Collectors.toList());
 
-            Integer highestTier = rankRepository.findHighestTierByUserExcludingSeason(user, currentSeasonName);
+            Integer highestTier = (currentSeasonName != null)
+                    ? rankRepository.findHighestTierByUserExcludingSeason(user, currentSeasonName)
+                    : rankRepository.findHighestTierByUser(user);
 
             int initialCash = 10_000_000;
             int totalValue = proj.getTotalValue();
@@ -120,7 +122,9 @@ public class RankService {
                     .map(r -> r.getTier())
                     .collect(Collectors.toList());
 
-            Integer highestTier = rankRepository.findHighestTierByUserExcludingSeason(user, currentSeasonName);
+            Integer highestTier = (currentSeasonName != null)
+                    ? rankRepository.findHighestTierByUserExcludingSeason(user, currentSeasonName)
+                    : rankRepository.findHighestTierByUser(user);
 
             int initialCash = 10_000_000;
             int totalValue = proj.getTotalValue();
