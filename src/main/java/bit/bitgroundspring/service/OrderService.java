@@ -334,6 +334,20 @@ public class OrderService {
                 .getId();
     }
 
+    //수정
+    @Transactional
+    public void updateReservePrice(Integer orderId, Double newPrice) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을 수 없습니다: " + orderId));
+
+        // 주문 상태가 PENDING인지 확인 (선택 사항)
+        if (order.getStatus() != Status.PENDING) {
+            throw new IllegalStateException("체결되지 않은 예약 주문만 수정할 수 있습니다.");
+        }
+
+        order.setReservePrice(newPrice.floatValue());
+        orderRepository.save(order); // 변경 감지로 인해 생략 가능하나 명시적으로 저장해도 무방
+    }
 
 
 }

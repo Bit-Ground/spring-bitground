@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import bit.bitgroundspring.security.oauth2.AuthService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/orders")
@@ -56,6 +57,15 @@ public class OrderController {
         orderService.cancelOrder(orderId, userId);
         return ResponseEntity.ok().build();
     }
-
+    
+    //수정
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateOrderPrice(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Object> body) {
+        Double reservePrice = Double.parseDouble(body.get("reservePrice").toString());
+        orderService.updateReservePrice(id, reservePrice);
+        return ResponseEntity.ok().build();
+    }
 
 }
