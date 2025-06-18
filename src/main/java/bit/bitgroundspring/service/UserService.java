@@ -5,8 +5,8 @@ import bit.bitgroundspring.entity.Season;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.entity.UserRanking;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
+import bit.bitgroundspring.repository.RankRepository;
 import bit.bitgroundspring.repository.SeasonRepository;
-import bit.bitgroundspring.repository.UserRankingRepository;
 import bit.bitgroundspring.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -96,7 +96,7 @@ public class UserService {
 
     //mypage trade info
     @Autowired
-    private UserRankingRepository userRankingRepository;
+    private RankRepository rankRepository;
 
     @Autowired
     private SeasonRepository seasonRepository;
@@ -105,7 +105,7 @@ public class UserService {
         Season season = seasonRepository.findById(seasonId)
                 .orElseThrow(() -> new RuntimeException("시즌을 찾을 수 없습니다."));
 
-        return userRankingRepository.findByUserAndSeason(user, season)
+        return rankRepository.findByUserAndSeason(user, season)
                 .map(UserRanking::getTier)
                 .orElse(null);
     }
@@ -114,7 +114,7 @@ public class UserService {
         Season season = seasonRepository.findById(seasonId)
                 .orElseThrow(() -> new RuntimeException("시즌을 찾을 수 없습니다."));
 
-        return userRankingRepository.findByUserAndSeason(user, season)
+        return rankRepository.findByUserAndSeason(user, season)
                 .map(userRanking -> {
                     int tier = userRanking.getTier();
                     String tierName = getTierName(tier);
