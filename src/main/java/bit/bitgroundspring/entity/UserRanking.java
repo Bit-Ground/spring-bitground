@@ -13,6 +13,11 @@ import java.time.LocalDateTime;
         uniqueConstraints = {@UniqueConstraint(
                 name = "uq_user_rankings_user_symbol",
                 columnNames = {"user_id", "season_id"})
+        },
+        indexes = {
+                @Index(name = "idx_user_rankings_season_ranks", columnList = "season_id, ranks"),
+                @Index(name = "idx_user_rankings_user_season", columnList = "user_id, season_id"), // 기존 uniqueConstraint와 동일한 컬럼이더라도, index로 명시하여 명확성을 높일 수 있습니다. (DB가 알아서 최적화)
+                @Index(name = "idx_user_rankings_user_tier_desc", columnList = "user_id, tier DESC")
         })
 @Getter
 @Setter

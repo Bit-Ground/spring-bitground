@@ -9,7 +9,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "comments")
+@Table(name = "comments",
+        indexes = {
+                @Index(name = "idx_comments_post_parent_created_at", columnList = "post_id, parent_id, created_at")
+})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

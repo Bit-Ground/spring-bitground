@@ -17,6 +17,9 @@ import java.time.LocalDateTime;
         uniqueConstraints = {@UniqueConstraint(
                 name = "uq_coins_symbol",
                 columnNames = {"symbol"})
+        },
+        indexes = {
+                @Index(name = "idx_is_deleted_symbol_id", columnList = "is_deleted,symbol,id")
         })
 @Getter
 @Setter

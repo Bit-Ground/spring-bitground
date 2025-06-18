@@ -8,7 +8,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        indexes = {
+                @Index(name = "idx_provider_provider_id", columnList = "provider,provider_id"),
+                @Index(name = "idx_is_deleted", columnList = "is_deleted")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -59,7 +65,4 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)")
     private LocalDateTime updatedAt;
-
-    public int getCash() { return cash; }
-    public void setCash(Integer cash) { this.cash = cash; }
 }

@@ -8,7 +8,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "posts",
+        indexes = {
+                @Index(name = "idx_posts_deleted_category_created_at_desc", columnList = "is_deleted, category, created_at DESC")
+        })
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
