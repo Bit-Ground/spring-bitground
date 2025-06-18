@@ -33,6 +33,7 @@ ENTRYPOINT ["java", \
             "-javaagent:/app/pinpoint-agent/pinpoint-bootstrap.jar", \
             "-Dpinpoint.agentId=bitground", \
             "-Dpinpoint.applicationName=bitground-spring", \
+            "-Duser.timezone=Asia/Seoul", \
             "-jar", \
             "app.jar"]
 

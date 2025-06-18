@@ -6,11 +6,7 @@ import bit.bitgroundspring.dto.response.Message;
 import bit.bitgroundspring.dto.response.MessageType;
 import bit.bitgroundspring.dto.response.NotificationResponse;
 import bit.bitgroundspring.entity.*;
-import bit.bitgroundspring.repository.CoinRepository;
-import bit.bitgroundspring.repository.OrderRepository;
-import bit.bitgroundspring.repository.SeasonRepository;
-import bit.bitgroundspring.security.oauth2.AuthService;
-import bit.bitgroundspring.repository.UserRepository;
+import bit.bitgroundspring.repository.*;
 import bit.bitgroundspring.util.UserSseEmitters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,7 +36,7 @@ public class OrderService {
     private final CoinRepository coinRepository;
     private final UserSseEmitters userSseEmitters;
     private final UserRepository userRepository;
-    private final AuthService authService;
+    private final UserAssetRepository userAssetRepository;
 
     public List<OrderProjection> getOrdersBySeason(Integer seasonId, Integer userId) {
         return orderRepository.findBySeasonIdAndUserId(seasonId, userId);
@@ -47,11 +44,6 @@ public class OrderService {
 
     public List<TradeDto> getRecentTrades(String symbol) {
         return orderRepository.findTop30ByCoinSymbolAndStatus(symbol, Status.COMPLETED);
-    }
-
-    // 이후 변경분만
-    public List<TradeDto> getNewTradesSince(String symbol, LocalDateTime since) {
-        return orderRepository.findNewTradesByCoinSymbolAndStatusSince(symbol, Status.COMPLETED, since);
     }
 
     public List<TradeSummaryDto> getTradeSummary(User user, Season season) {
@@ -166,6 +158,22 @@ public class OrderService {
                 .reservePrice(request.getReservePrice())
                 .status(Status.PENDING)
                 .build();
+        
+        // 주문 유효성 검사
+        if (request.getOrderType() == OrderType.BUY) {
+            Integer totalReservePrice = orderRepository.calculateTotalReservePriceForBuyOrdersByUserId(user.getId());
+            if (totalReservePrice != null && totalReservePrice + request.getAmount() * request.getReservePrice() > user.getCash()) {
+                throw new IllegalArgumentException("예약 주문 금액이 잔액을 초과합니다.");
+            }
+        } else if (request.getOrderType() == OrderType.SELL) {
+            Optional<UserAsset> userAsset = userAssetRepository.findByUserAndCoinWithLock(user, coin);
+            if (userAsset.isEmpty()) {
+                throw new IllegalArgumentException("매도 가능한 자산이 없습니다.");
+            }
+            if (userAsset.get().getAmount() < request.getAmount()) {
+                throw new IllegalArgumentException("매도 가능한 자산이 부족합니다.");
+            }
+        }
         
         Order savedOrder = orderRepository.save(order);
         saveOrderToRedis(savedOrder, coin.getSymbol());

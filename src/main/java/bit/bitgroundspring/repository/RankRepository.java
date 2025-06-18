@@ -19,7 +19,10 @@ public interface RankRepository extends JpaRepository<UserRanking, Integer> {
             "u.profileImage as profileImage, " +
             "ur.ranks as ranks, " +
             "ur.tier as tier, " +
-            "ur.totalValue as totalValue " +
+            "ur.totalValue as totalValue, " +
+            "ur.updatedAt as updatedAt, " +             // 필요하면 포함
+            "ur.season.id as seasonId, " +              // 이 줄 추가
+            "ur.season.name as seasonName " +
             "FROM UserRanking ur " +
             "JOIN ur.user u " +
             "WHERE ur.season.id = :seasonId " +
@@ -52,4 +55,7 @@ public interface RankRepository extends JpaRepository<UserRanking, Integer> {
 
     @Query("SELECT MAX(r.tier) FROM UserRanking r WHERE r.user = :user AND r.season.name <> :seasonName")
     Integer findHighestTierByUserExcludingSeason(@Param("user") User user, @Param("seasonName") String seasonName);
+
+    @Query("SELECT MAX(r.tier) FROM UserRanking r WHERE r.user = :user")
+    Integer findHighestTierByUser(@Param("user") User user);
 }
