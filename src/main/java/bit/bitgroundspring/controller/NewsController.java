@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/news")
 @RequiredArgsConstructor
 public class NewsController {
     private final RestTemplate restTemplate;
@@ -32,7 +32,7 @@ public class NewsController {
         return html.replaceAll("<(?!/?b>)[^>]+>", ""); // <b> 태그만 유지
     }
 
-    @GetMapping("/news")
+    @GetMapping
     public ResponseEntity<List<Map<String, Object>>> getNews(
         @RequestParam("keyword") String keyword,
         @RequestParam(value ="display", defaultValue = "10") int display,
