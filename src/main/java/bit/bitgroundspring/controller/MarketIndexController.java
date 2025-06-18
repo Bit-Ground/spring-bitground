@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/market-index")
+@RequestMapping("/market-index")
 public class MarketIndexController {
     private final MarketIndexService marketIndexService;
 

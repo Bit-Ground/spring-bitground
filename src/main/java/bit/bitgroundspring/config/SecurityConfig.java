@@ -48,7 +48,7 @@ public class SecurityConfig {
                         }))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/auth/refresh", "/auth/refresh", "/oauth2/**", "/error", "/favicon.ico", "/test","/mypage/**",
-                                "/api/news/**", "/api/coin/**", "/api/public/**", "/public/**", "/auth/logout", "/api/market-index/**",
+                                "/api/news/**", "/api/coin/**", "/api/public/**", "/public/**", "/auth/logout", "/market-index/**",
                                 "/api/docs/**", "/actuator/*", "/ws/**", "/seasons/update").permitAll()
                         .anyRequest().authenticated()
                 )
