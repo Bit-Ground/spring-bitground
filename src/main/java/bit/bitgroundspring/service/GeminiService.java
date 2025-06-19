@@ -37,7 +37,7 @@ public class GeminiService {
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=";
 
-    public GeminiService(@Value("${gemini.model-name:gemini-pro}") String modelName,
+    public GeminiService(@Value("${gemini.model-name}") String modelName,
                          @Value("${gemini.api-key}") String apiKey,
                          ObjectMapper objectMapper) {
         this.modelName = modelName;
