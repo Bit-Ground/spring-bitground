@@ -1,5 +1,6 @@
 package bit.bitgroundspring.dto;
 
+import bit.bitgroundspring.dto.projection.PastSeasonTierProjection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ public class BoardDto {
 
     // 이 두 개는 상세 보기용에서만 사용
     private int highestTier;
-    private List<PastSeasonTierDto> pastSeasonTiers;
+    private List<PastSeasonTierProjection> pastSeasonTiers;
 
     // 목록 조회용 생성자 (기본 필드만)
     public BoardDto(Integer id, Integer userId, String name, String profileImage,

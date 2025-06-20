@@ -2,7 +2,7 @@ package bit.bitgroundspring.controller;
 
 import bit.bitgroundspring.dto.BoardDto;
 import bit.bitgroundspring.dto.PageResponseDto;
-import bit.bitgroundspring.dto.PastSeasonTierDto;
+import bit.bitgroundspring.dto.response.RankDetailResponse;
 import bit.bitgroundspring.entity.Post;
 import bit.bitgroundspring.entity.User;
 import bit.bitgroundspring.naver.NcpObjectStorageService;
@@ -12,6 +12,7 @@ import bit.bitgroundspring.repository.UserRepository;
 import bit.bitgroundspring.service.BoardService;
 import bit.bitgroundspring.service.RankService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,9 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
@@ -79,7 +80,7 @@ public class BoardController {
             return ResponseEntity.ok("글 등록 성공");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("글 등록 중 오류 발생", e);
             return ResponseEntity.status(500).body("글 등록 실패");
         }
     }
@@ -150,9 +151,9 @@ public class BoardController {
                 hasImage
         );
         // 나머지는 setter로 추가
-        Map<String, Object> tierInfo = rankService.getUserTierDetails(post.getUser().getId());
-        dto.setHighestTier((Integer) tierInfo.get("highestTier"));
-        dto.setPastSeasonTiers((List<PastSeasonTierDto>) tierInfo.get("pastSeasonTiers"));
+        RankDetailResponse tierInfo = rankService.getUserTierDetails(post.getUser().getId());
+        dto.setHighestTier(tierInfo.getHighestTier());
+        dto.setPastSeasonTiers(tierInfo.getPastSeasonTiers());
 
         return ResponseEntity.ok(dto);
     }
