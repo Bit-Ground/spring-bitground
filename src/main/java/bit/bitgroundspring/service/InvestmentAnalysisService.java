@@ -36,8 +36,8 @@ public class InvestmentAnalysisService {
     private final SeasonRepository seasonRepository;
     private final InitialCashUtil initialCashUtil;
     private final UserDailyBalanceRepository userDailyBalanceRepository;
-    private final CoinPriceHistoryRepository coinPriceHistoryRepository; // ✅ 추가: CoinPriceHistoryRepository 주입
-    private final CoinRepository coinRepository; // ✅ 추가: CoinRepository 주입
+    private final CoinPriceHistoryRepository coinPriceHistoryRepository;
+    private final CoinRepository coinRepository;
 
     /**
      * 특정 사용자 및 시즌에 대한 투자 요약 데이터를 생성합니다.
@@ -57,23 +57,14 @@ public class InvestmentAnalysisService {
         log.info("사용자 ID: {}, 시즌 ID: {}에 대한 투자 요약 계산 시작.", user.getId(), season.getId());
 
         // 1. 시즌 전체 성과 지표 로딩 및 계산
+        // userRankingOptional은 순위 정보만 사용하고 totalValue는 아래에서 재계산합니다.
         Optional<UserRanking> userRankingOptional = userRankingRepository.findByUserAndSeason(user, season);
         UserRanking userRanking = userRankingOptional.orElse(null);
 
-        Integer finalTotalValue = (userRanking != null && userRanking.getTotalValue() != null)
-                ? userRanking.getTotalValue()
-                : 0;
-
         Integer initialCashBalance = initialCashUtil.getInitialCash();
 
-        Integer totalProfitLossAmount = finalTotalValue - initialCashBalance;
-
-        Float totalProfitLossPercentage = 0.0F;
-        if (initialCashBalance != 0) {
-            totalProfitLossPercentage = ((float) totalProfitLossAmount / initialCashBalance) * 100.0F;
-        }
-
         // 2. 거래 활동 요약 (Order 엔티티 기반)
+        // season.getStatus() == Status.COMPLETED 조건 확인
         List<Order> completedOrders = orderRepository.findByUserAndSeasonAndStatus(
                 user, season, Status.COMPLETED);
 
@@ -182,7 +173,7 @@ public class InvestmentAnalysisService {
                         user, season, season.getStartAt(), season.getEndAt()
                 );
 
-        // ⭐⭐⭐ 새로 추가되는 로직: 주요 코인들의 시즌 내 시세 변동 요약 (새로운 Repository 메서드 사용) ⭐⭐⭐
+        // 5. 주요 코인들의 시즌 내 시세 변동 요약
         Map<String, String> coinMarketPerformanceSummary = new HashMap<>();
         List<String> keyCoinSymbols = new java.util.ArrayList<>();
         if (mostTradedCoinSymbol != null) keyCoinSymbols.add(mostTradedCoinSymbol);
@@ -219,6 +210,34 @@ public class InvestmentAnalysisService {
             }
         }
 
+        // ⭐⭐ 수정된 부분: finalTotalValue와 totalProfitLossAmount/Percentage 재계산 ⭐⭐
+        // 시즌이 COMPLETED 상태라면, 모든 자산이 매도 처리되어 totalRealizedProfitLoss에 반영되었다고 가정합니다.
+        // 따라서 최종 총 자산은 초기 자산 + 총 실현 손익으로 계산합니다.
+        Integer finalTotalValue;
+        Integer totalProfitLossAmountRecalculated; // 기존 totalProfitLossAmount와 구분
+        Float totalProfitLossPercentageRecalculated; // 기존 totalProfitLossPercentage와 구분
+
+        if (season.getStatus() == Status.COMPLETED) {
+            // 시즌이 완료된 경우, 최종 총 자산은 초기 현금에 총 실현 손익을 더한 값으로 간주
+            finalTotalValue = initialCashBalance + Math.round(totalRealizedProfitLoss);
+            totalProfitLossAmountRecalculated = finalTotalValue - initialCashBalance;
+            totalProfitLossPercentageRecalculated = (initialCashBalance != 0) ?
+                    ((float) totalProfitLossAmountRecalculated / initialCashBalance) * 100.0F : 0.0F;
+            log.info("COMPLETED 시즌의 finalTotalValue 재계산: 초기자금 {} + 실현손익 {} = 최종자산 {}",
+                    initialCashBalance, totalRealizedProfitLoss, finalTotalValue);
+        } else {
+            // 진행 중인 시즌의 경우, user_rankings의 totalValue를 사용 (혹은 실시간 자산 평가 로직)
+            // 현재는 user_rankings의 값을 그대로 사용하거나, 필요시 실시간 평가 로직 추가
+            finalTotalValue = (userRanking != null && userRanking.getTotalValue() != null)
+                    ? userRanking.getTotalValue()
+                    : initialCashBalance; // 랭크 데이터 없으면 초기 현금으로 시작 (임시)
+            totalProfitLossAmountRecalculated = finalTotalValue - initialCashBalance;
+            totalProfitLossPercentageRecalculated = (initialCashBalance != 0) ?
+                    ((float) totalProfitLossAmountRecalculated / initialCashBalance) * 100.0F : 0.0F;
+            log.info("ACTIVE 시즌의 finalTotalValue 사용: UserRanking의 최종자산 {} (초기자금 {})",
+                    finalTotalValue, initialCashBalance);
+        }
+
 
         // 6. 모든 정보를 포함하는 InvestmentSummaryDto 빌드
         return InvestmentSummaryDto.builder()
@@ -229,9 +248,9 @@ public class InvestmentAnalysisService {
                 .seasonStartAt(season.getStartAt())
                 .seasonEndAt(season.getEndAt())
                 .initialCashBalance(initialCashBalance)
-                .finalTotalValue(finalTotalValue)
-                .totalProfitLossAmount(totalProfitLossAmount)
-                .totalProfitLossPercentage(totalProfitLossPercentage)
+                .finalTotalValue(finalTotalValue) // ✅ 재계산된 값 사용
+                .totalProfitLossAmount(totalProfitLossAmountRecalculated) // ✅ 재계산된 값 사용
+                .totalProfitLossPercentage(totalProfitLossPercentageRecalculated) // ✅ 재계산된 값 사용
                 .finalRank((userRanking != null && userRanking.getRanks() != null) ? userRanking.getRanks() : null)
                 .totalTradeCount(totalTradeCount)
                 .buyOrderCount(buyOrderCount)
@@ -249,7 +268,7 @@ public class InvestmentAnalysisService {
                 .avgTradesPerDay(avgTradesPerDay)
                 .focusedOnFewCoins(focusedOnFewCoins)
                 .dailyBalanceTrend(dailyBalanceTrend)
-                .coinMarketPerformanceSummary(coinMarketPerformanceSummary) // ✅ 새로 추가된 필드 설정
+                .coinMarketPerformanceSummary(coinMarketPerformanceSummary)
                 .build();
     }
 }

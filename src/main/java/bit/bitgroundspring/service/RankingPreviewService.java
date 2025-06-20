@@ -3,7 +3,10 @@ package bit.bitgroundspring.service;
 import bit.bitgroundspring.dto.PublicRankingDto;
 import bit.bitgroundspring.dto.projection.RankProjection;
 import bit.bitgroundspring.dto.response.PublicRankingResponse;
+import bit.bitgroundspring.entity.Season;
+import bit.bitgroundspring.entity.Status;
 import bit.bitgroundspring.repository.RankRepository;
+import bit.bitgroundspring.repository.SeasonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,24 +19,28 @@ import java.util.stream.Collectors;
 public class RankingPreviewService {
 
     private final RankRepository rankRepository;
+    private final SeasonRepository seasonRepository;
 
     public PublicRankingResponse getPublicRankingPreview() {
         List<RankProjection> projections = rankRepository.findCurrentSeasonRankings();
 
+        String seasonName;
+        LocalDateTime baseTime;
+
         if (projections.isEmpty()) {
-            return PublicRankingResponse.builder()
-                    .seasonName("시즌 정보 없음")
-                    .updatedAtText("-")
-                    .minutesLeftText("-")
-                    .rankings(List.of())
-                    .build();
+            // 참여한 유저가 없을 경우, 현재 시즌 이름만 따로 불러옴
+            Season currentSeason = seasonRepository.findByStatus(Status.PENDING).orElse(null);
+            seasonName = (currentSeason != null) ? currentSeason.getName() : "시즌 정보 없음";
+            baseTime = LocalDateTime.now();
+        } else {
+            // 참여한 유저가 있으면 첫 번째 projection에서 시간과 시즌 정보 추출
+            RankProjection first = projections.get(0);
+            seasonName = first.getSeasonName(); // ← 이 줄 중요
+            baseTime = first.getUpdatedAt();
         }
 
-        RankProjection first = projections.get(0);
-        LocalDateTime updatedAt = first.getUpdatedAt();
-        String seasonName = "데브 시즌 " + first.getSeasonId();
-        String updatedAtText = formatUpdatedTime(updatedAt);
-        String minutesLeftText = formatMinutesLeft(updatedAt);
+        String updatedAtText = formatUpdatedTime(baseTime);
+        String minutesLeftText = formatMinutesLeft(baseTime);
 
         List<PublicRankingDto> rankingDtos = projections.stream()
                 .limit(5)
@@ -63,7 +70,7 @@ public class RankingPreviewService {
     private String formatMinutesLeft(LocalDateTime updatedAt) {
         LocalDateTime nextHour = updatedAt.plusHours(1).withMinute(0).withSecond(0).withNano(0);
         long minutesLeft = java.time.Duration.between(LocalDateTime.now(), nextHour).toMinutes();
-        minutesLeft = Math.max(0, minutesLeft); // 음수 방지
+        minutesLeft = Math.max(0, minutesLeft);
         return String.format("다음 갱신까지 %d분 남았습니다", minutesLeft);
     }
 }
