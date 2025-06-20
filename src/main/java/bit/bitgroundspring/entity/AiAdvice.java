@@ -40,7 +40,7 @@ public class AiAdvice {
     @Column(name = "score", nullable = false , columnDefinition = "tinyint")
     private Integer score;
     
-    @Column(name = "advice", length = 1000, nullable = false)
+    @Column(name = "advice", length = 2000, nullable = false)
     private String advice;
     
     @CreationTimestamp
