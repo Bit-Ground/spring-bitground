@@ -37,6 +37,9 @@ out/
 .vscode/
 
 ### naver ###
-*.properties
 *.yml
 *.yaml
+
+### firebase ###
+/firebase
+bitground-94600-firebase-adminsdk-fbsvc-c571747185.json
